@@ -1,8 +1,6 @@
-﻿bin/
-gen/
-libs/
-.settings/
+R.java
 .classpath
 .project
-proguard-project.txt
+bin/
+gen/
 project.properties
