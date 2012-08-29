@@ -4,3 +4,4 @@ R.java
 bin/
 gen/
 project.properties
+target/
