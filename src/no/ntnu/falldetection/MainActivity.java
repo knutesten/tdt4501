@@ -1,8 +1,15 @@
 package no.ntnu.falldetection;
 
+import java.io.IOException;
+
+import motej.android.Mote;
+import motej.android.event.AccelerometerEvent;
+import motej.android.event.AccelerometerListener;
+import motej.android.request.ReportModeRequest;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -19,6 +26,11 @@ public class MainActivity extends Activity {
 	private int REQUEST_ENABLE_BT;
 	private ArrayAdapter<String> deviceArrayAdapter;
 	private ListView adapterList;
+	private BluetoothAdapter mBluetoothAdapter = BluetoothAdapter
+			.getDefaultAdapter();
+	private BluetoothSocket inSocket = null;
+	private BluetoothSocket outSocket = null;
+	
 	// Create a BroadcastReceiver for ACTION_FOUND
 	private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
 		public void onReceive(Context context, Intent intent) {
@@ -32,9 +44,86 @@ public class MainActivity extends Activity {
 				// ListView
 				deviceArrayAdapter.add(device.getName() + "\n"
 						+ device.getAddress());
+
+				if (device.getName().startsWith("Nintendo")) {
+					Log.e("HESTEMANN", "HERE GOES!");
+					mBluetoothAdapter.cancelDiscovery();
+					
+					new InputConnect(device, 0x13).start();
+					new OutputConnect(device, 0x11).start();
+					
+					long start = System.currentTimeMillis();
+					boolean connectionFailed = true;
+					while(inSocket == null || outSocket == null){
+						if(System.currentTimeMillis()- start > 5000){
+							break;
+						}
+						connectionFailed = false;
+					}
+					
+					if(connectionFailed){
+						Log.e("error","Connection failed");
+						return;
+					}
+					
+					Mote mote = new Mote(inSocket, outSocket);
+
+					AccelerometerListener<Mote> listener = new AccelerometerListener<Mote>() {
+						
+						public void accelerometerChanged(AccelerometerEvent<Mote> evt) {
+							Log.i("Accelerometer", evt.getX() + " : " + evt.getY() + " : " + evt.getZ());
+						}
+					
+					};
+					
+					mote.addAccelerometerListener(listener);   
+					
+					mote.setReportMode(ReportModeRequest.DATA_REPORT_0x31);
+				}
 			}
-		}
+		}   
 	};
+	
+	private class OutputConnect extends L2CAPConnectThread {
+
+		OutputConnect(BluetoothDevice remoteDevice, int port) {
+			super(remoteDevice, port);
+			// TODO Auto-generated constructor stub
+		}
+
+		@Override
+		void manageConnectedSocket(BluetoothSocket socket) {
+			outSocket = socket;
+			
+		}
+
+		@Override
+		void connectionFailure(IOException cause) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+	}
+	private class InputConnect extends L2CAPConnectThread {
+
+		InputConnect(BluetoothDevice remoteDevice, int port) {
+			super(remoteDevice, port);
+			// TODO Auto-generated constructor stub
+		}
+
+		@Override
+		void manageConnectedSocket(BluetoothSocket socket) {
+			inSocket = socket;
+			
+		}
+
+		@Override
+		void connectionFailure(IOException cause) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -46,8 +135,6 @@ public class MainActivity extends Activity {
 				android.R.layout.simple_list_item_1);
 		adapterList.setAdapter(deviceArrayAdapter);
 
-		BluetoothAdapter mBluetoothAdapter = BluetoothAdapter
-				.getDefaultAdapter();
 		if (mBluetoothAdapter == null) {
 			Log.d("BLUETOOTH", "NO BLUETOOTH");
 		} else if (!mBluetoothAdapter.isEnabled()) {
@@ -62,6 +149,13 @@ public class MainActivity extends Activity {
 												// during onDestroy
 
 		mBluetoothAdapter.startDiscovery();
+
+	}
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		unregisterReceiver(mReceiver);
 	}
 
 	@Override
@@ -75,4 +169,5 @@ public class MainActivity extends Activity {
 		deviceArrayAdapter.add("hest");
 		return true;
 	}
+
 }
