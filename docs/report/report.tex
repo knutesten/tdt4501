@@ -20,19 +20,14 @@
 \chapter{Introduction}
 %The Introduction is your thesis in a nutshell. Again, the organization can vary, but a standard introduction includes the following sections:
 
+\section{Purpose}
+The purpose of the project is to explore the possibility of creating bio-feedback systems through the use of smartphones and COTS products, mainly game controllers. The purpose of the bio-feedback system will be to improve the stability and balance of the user by informing him through peripherals connected to the phone.
+
 \section{Motivation}
 %Brief description of the research domain and the problem that one wants to address. It should tell the reader why working on this project is worth doing.
 
 
-\section{Context}
-%Very brief description of the context in which the project is done. This is important if you are conducting your work in the context of a wider project.
-The study is a part of the much larger FARSEEING project \citep{FARSEEING}. The aim of the FARSEEING project is to provide empirically based results concerning usefulness and usability that can be generalized into design guides for the developers of future fall-related technology for elderly.
-
-The secondary goal is to provide the developers of the fall detection algorithms within the FARSEEING project with formative feedback on the practical applicability of their algorithms.
-
-The FARSEEING project wishes to make use of the fall detection algorithms in three kinds of service models. This study focuses on the second service model: \emph{2. fall risk technology that can warn the elderly person that he/she has a behavior that creates a high risk of fall.}
-
-\section{Research questions}
+\section{Research goals}
 %What are the questions you are answering with your project? Normally, you specify a main question and related sub-questions. Remember that at the end you have to demonstrate you have answered to the stated questions. It is not uncommon that the questions are changed during the project, but it is important to be as explicit as possible and as early as possible with research questions since they help you to focus.
 
 \section{Research method}
@@ -40,6 +35,7 @@ The FARSEEING project wishes to make use of the fall detection algorithms in thr
 
 \section{Results}
 %a brief description of the results that you are delivering.
+
 
 \section{Outline of the report}
 %reading guide briefly describing what each chapter of the thesis is about.
@@ -49,6 +45,18 @@ The FARSEEING project wishes to make use of the fall detection algorithms in thr
 
 \chapter{State of the art}
 %This chapter provides an overview of the literature. It positions your work with respect to work already done by others. 
+
+\section{PS3 Move}
+The PS3 Move motion controller is one of the more power off the shelf game controllers; it features motion tracking through a three axis accelerometer, and a three axis angular rate sensor. It also provides location tracking by using the built in magnetometer. %CITATION BITHCES
+An PS3 Move API does exist, and it seems to work very well on a desktop computer.
+
+The API states that it is for Android as well, this is a truth with modifications. It will not run out of the box on an Android device, in addition restructuring and heavy modification of the Android device is required.  The Android OS runs on top of a modified Linux kernel, this kernel does not contain the necessary libraries and drivers in order for the API and Motion controller connectivity to function properly. %Does this need citation?
+The next obstacle would be to compile the API into a shared library using the Android SDK, and use the shared library in the Android Java code. 
+
+Everything is possible with enough time, but given the time constraint and amount of time required to get this running it was decided that this was not a path worth pursuing for this project. With some much work required it would be simpler to run Ubuntu off an Android device if this becomes available in the future. %ref til ubuntu android sider.
+
+\section{Wii Remote with Motion Plus}
+
 \end{document}
 
 
