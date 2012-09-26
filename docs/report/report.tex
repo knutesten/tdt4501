@@ -77,10 +77,16 @@ Motej is an open source (licensed under ASL 2.0) library for the Wii remote writ
 %Development
 Since no library with Android support currently exist it was decided to use the Motej library as a core for further development.
 
-
 The Motej uses the BlueCove libarary as an multi-platform interface to the Bluetooth stack. Unfortunately, BlueCove does not support the Android OS. Android comes with its own Bluetooth API, the Android Bluetooth API. This library supports most Bluetooth devices through the RFCOMM Bluetooth protocol, however it does not currently support the L2CAP Bluetooth protocol which is used by the Wii remote. Though the Android SDK does not include any support for the L2CAP Bluetooth protocol, communication is possible through the native development kit (NDK). %THIS NEEDS MORE WORK, WORK DEAN WOOOOOORK!
 
 Motej does not support the MotionPlus extension and this support has to be added. Fortunately there are open source C++, C\# libraries with support for the MotionPlus extension, so this functionality was not hard to add.
+
+\subsection{Bluetooth}
+%General information about bluetooth, and some text about L2CAP and why Android sucks.
+Bluetooth is a widely used wireless communication technology for shorter distances. Due to its low power consumption and low cost is has become one of the leading standards in its field and is supported by most modern operating systems, either through integrated hardware or through portable Bluetooth adapter. Most, if not all, modern phones come with a built-in Bluetooth card/radio. 
+
+The Wii Remote uses Bluetooth to communicate wirelessly with other devices, using the logical link control and adaptation protocol (L2CAP). Though all Android have built-in Bluetooth cards, the current Android SDK does not offer low level support for the Bluetooth stack, including L2CAP. This constraint can be bypassed on some devices by using reflection to access the socket constructor. 
+
 \end{document}
 
 
