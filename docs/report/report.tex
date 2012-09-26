@@ -70,30 +70,33 @@ In June 2009 %CITATION NEEDED
 Nintendo released the Wii MotionPlus expansion device which contains a dual-axis tuning fork and a single-axis gyroscope. %CITATION NEEDED
 The expansion device improves the motion tracking of the Wii Remote greatly, but makes it larger. Nintendo has now started selling the Wii Remote Plus. It is the same size as the Wii Remote, but has the Wii MotionPlus already built in. Both of the controller types have the ability to provide vibration and basic audio feedback.
 
+%%WRITE SOMETHING ABOUT THE NUNCHUCK?
+
 \subsection{Wii Remote API}
 %Skrive om at det er veldig utbredt men ting stoppet 2009, det er veldig mange av dem men ingen er til Android men mange er skrevet i java osv. Hvilken utfordinger kan vi se. IKKE SKRIV OM CASET I DETTE AVSNITET. Altså ikke skriv om hva vi faktisk har gjort for å få det til å funke, men heller hva vi allerede så vil være problemet. Dette med bluetooth, ikke wiimote plus support osv.
 
+At time of writing no Wii Remote library has been created for the Android OS. Though there are plenty of Wii remote libraries out there none of them are intended to be used on android devices. This section will cover the most developed liberalities that are implemented in Java.
 
-Currently no Wii remote library has been created for Android. Though there are plenty of Wii remote libraries out there, this report will only cover the most developed projects written in Java.
+WiiRemoteJ is one of the most complete libraries for the Wii remote. It is a pure Java library with support for a large amount of Wii extensions such as the Wii Guitar, and Wii Balance Board. It does however lack support for the MotionPlus extension. The library has not been update since July 2008. The author has taken down the homepage where the library was originally located, but it can be found on third party websites. %CITATION, LINK TO THE LATEST UPDATE OR SOMETHING
 
-WiiRemoteJ is one of the most complete libraries for the Wii remote. It is a pure Java library with support of all major features of the Wii remote, it does however lack support for the MotionPlus extension. The project has been discontinued for over a year now. 
+WiiUseJ is a lightweight Java API. It was built on top of the Wiiuse API and only supports the Wii Remote and the Nunchuck. Like the previous library it lacks support for the MotionPlus extension. The project has been discontinued since January 2009. %Citation, why did you write that it has support for multiple extensions?
 
-WiiUseJ is a lightweight Java API. It was built on top of the Wiiuse API and supports most of the major features of the Wii remote, though it lacks support for the MotionPlus extension. The project has been discontinued since 2009.
-
-Motej is an open source (licensed under ASL 2.0) library for the Wii remote written in Java. Motej supports of the major Wii remote extensions, but not the MotionPlus extension. The project is currently at version 0.9 and has been discontinued since 2009.
+Motej is an open source (licensed under ASL 2.0) library for the Wii remote written in Java. Motej supports only the Wii Remote and IR Camera in it's basic form, but the extras library adds support for the balance board, classic controller, and nunchuk. The project is currently at version 0.9, but was discontinued in 2009. %Same here, it says nothing about support for balance board, guitar, or the nunchuk. You need to be more specific. I added it
 
 %Development
 Since no library with Android support currently exist it was decided to use the Motej library as a core for further development.
 
-The Motej uses the BlueCove libarary as an multi-platform interface to the Bluetooth stack. Unfortunately, BlueCove does not support the Android OS. Android comes with its own Bluetooth API, the Android Bluetooth API. This library supports most Bluetooth devices through the RFCOMM Bluetooth protocol, however it does not currently support the L2CAP Bluetooth protocol which is used by the Wii remote. Though the Android SDK does not include any support for the L2CAP Bluetooth protocol, communication is possible through the native development kit (NDK). %THIS NEEDS MORE WORK, WORK DEAN WOOOOOORK!
+The Motej uses the BlueCove library as an multi-platform interface to the Bluetooth stack. Unfortunately, BlueCove does not support the Android OS. Android comes with its own Bluetooth API, the Android Bluetooth API. This library supports most Bluetooth devices through the RFCOMM Bluetooth protocol, however it does not currently support the L2CAP Bluetooth protocol which is used by the Wii remote. Though the Android SDK does not include any support for the L2CAP Bluetooth protocol, communication is possible through the native development kit (NDK). %THIS NEEDS MORE WORK, WORK DEAN WOOOOOORK!
 
 Motej does not support the MotionPlus extension and this support has to be added. Fortunately there are open source C++, C\# libraries with support for the MotionPlus extension, so this functionality was not hard to add.
 
+%IKKE LEST GJENNOM ENDA, DEAN DETTE ER TIL DEG SELV
+
 \subsection{Bluetooth}
 %General information about bluetooth, and some text about L2CAP and why Android sucks.
-Bluetooth is a widely used wireless communication technology for shorter distances. Due to its low power consumption and low cost is has become one of the leading standards in its field and is supported by most modern operating systems, either through integrated hardware or through portable Bluetooth adapter. Most, if not all, modern phones come with a built-in Bluetooth card/radio. 
+Bluetooth is a widely used wireless communication technology for shorter distances. Due to its low power consumption and low cost is has become one of the leading standards in its field and is supported by most modern operating systems, either through integrated hardware or through portable Bluetooth adapter. Most, if not all, modern phones come with a built-in Bluetooth card/radio. %CITATION BITCHES! 
 
-The Wii Remote uses Bluetooth to communicate wirelessly with other devices, using the logical link control and adaptation protocol (L2CAP). Though all Android have built-in Bluetooth cards, the current Android SDK does not offer low level support for the Bluetooth stack, including L2CAP. This constraint can be bypassed on some devices by using reflection to access the socket constructor. 
+The Wii Remote uses Bluetooth to communicate wirelessly with other devices, using the logical link control and adaptation protocol (L2CAP). Though all Android have built-in Bluetooth cards, the current Android SDK does not offer low level support for the Bluetooth stack, including L2CAP. This constraint can be bypassed on some devices by using reflection to access the socket constructor. %CITATION
 
 \bibliographystyle{plain}
 \bibliography{references}
