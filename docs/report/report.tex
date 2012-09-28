@@ -31,14 +31,15 @@ Between 30\% and 60\% of the elder population will experience at least one fall 
 
 
 
-\section{Research goals}
+\section{Research questions}
 %What are the questions you are answering with your project? Normally, you specify a main question and related sub-questions. Remember that at the end you have to demonstrate you have answered to the stated questions. It is not uncommon that the questions are changed during the project, but it is important to be as explicit as possible and as early as possible with research questions since they help you to focus.
+RQ1: Can motion sensing game controllers be used to gather additonal and more accurate data for fall related applications on the smartphone? What is the optimal location for the controller to be located?
+
+RQ2: Is it feasible to have game controllers connected to the smartphone? How is the battery life, how close does the phone have to be at all times?
 
 \section{Research method}
 %How the research is conducted. In the previous section you say what you are doing. Here you specify how. The choice of a research method is strictly connected to the type of questions you want to answer.
 
-\section{Results}
-%a brief description of the results that you are delivering.
 
 
 \chapter{State of the Art}
@@ -47,6 +48,13 @@ Between 30\% and 60\% of the elder population will experience at least one fall 
 Several attempts have been made to create fall detection systems using smart phone technology \cite{fall detection articles}, all of these studies show promissing results. The current trend shows that smart phones are becomming more affordable \cite{find some data about sales and decreasing prices} and with the correct software these phones can notify healthcare personel about falls, giving the elderly an extra safety.
 
 Another approach is to try perventing the falls from happening all together by notifying the user that he or she is moving in an unstable manner. Multiple studies show that using biofeedback systems to inform the user about unstable walk helps pervent falls \cite{the articles that svanæs gave us}. Also mobile versions of such systems have been researched with promissing results \cite{article about mobile pervension of falls}.
+
+
+\section{Android OS}
+Should we write something about the Android OS?
+
+\section{Java}
+Is it neccessary to write something aobut Java?
 
 \section{PS3 Move}
 %DETTE KAN IKKE FJERNES FØR BÅDE KNUT OG DEAN HAR GÅTT GJENNOM DENNE SEKSJONEN OG REFERANSER HAR BLITT LAGT TIL!
@@ -81,15 +89,9 @@ WiiRemoteJ is one of the most complete libraries for the Wii remote. It is a pur
 \subsubsection{WiiuseJ}
 WiiUseJ is a lightweight Java API. It was built on top of the Wiiuse API and only supports the Wii Remote and the Nunchuck. Like the previous library it lacks support for the MotionPlus extension. The project has been discontinued since January 2009. \cite{Wiiusej}
 
-\subsection{Motej}
+\subsubsection{Motej}
 Motej is an open source (licensed under ASL 2.0) library for the Wii remote written in Java. Motej supports only the Wii Remote and IR Camera in it's basic form, but the extras library adds support for the balance board, classic controller, and nunchuk. The project is currently at version 0.9, but was discontinued in 2009. \cite{Motej}
 
-%Development
-Since no library with Android support currently exist it was decided to use the Motej library as a core for further development.
-
-The Motej uses the BlueCove library as an multi-platform interface to the Bluetooth stack. Unfortunately, BlueCove does not support the Android OS. Android comes with its own Bluetooth API, the Android Bluetooth API. This library supports most Bluetooth devices through the RFCOMM Bluetooth protocol, however it does not currently support the L2CAP Bluetooth protocol which is used by the Wii remote. Though the Android SDK does not include any support for the L2CAP Bluetooth protocol, communication is possible through the native development kit (NDK). %THIS NEEDS MORE WORK, WORK DEAN WOOOOOORK!
-
-Motej does not support the MotionPlus extension and this support has to be added. Fortunately there are open source C++, C\# libraries with support for the MotionPlus extension, so this functionality was not hard to add.
 
 %IKKE LEST GJENNOM ENDA, DEAN DETTE ER TIL DEG SELV
 
@@ -98,6 +100,22 @@ Motej does not support the MotionPlus extension and this support has to be added
 Bluetooth is a widely used wireless communication technology for shorter distances. Due to its low power consumption and low cost is has become one of the leading standards in its field and is supported by most modern operating systems, either through integrated hardware or through portable Bluetooth adapter. Most, if not all, modern phones come with a built-in Bluetooth card/radio. %CITATION BITCHES! 
 
 The Wii Remote uses Bluetooth to communicate wirelessly with other devices, using the logical link control and adaptation protocol (L2CAP). Though all Android have built-in Bluetooth cards, the current Android SDK does not offer low level support for the Bluetooth stack, including L2CAP. This constraint can be bypassed on some devices by using reflection to access the socket constructor. %CITATION
+
+
+\chapter{The Case}
+%Development
+Since no library with Android support currently exist it was decided to use the Motej library as a core for further development.
+
+\section{Introduction}
+At the time of writing no research has been done on using motion game controllers as peripherals in a smart-phone based bio-feedback system. In order to answer the research questions posed in this report it will be necessary to create a simple but working prototype of the aforementioned system. The equipment used to realize the system will be a rooted HTC Desire HD \cite{Desire_HD_specs} running CyanogenMod 7 \cite{cyanogenMod} and Wii Remotes with the Motion Plus extension. The application will be created using the Android SDK, Java and the Motej library.
+
+\section{Limitations}
+It was discovered that HTC's bluetooth stack does not support the L2Cap Bluetooth protocol which is used by the Wii Remote \cite{l2cap_htc}; The Android OS on the HTC Desire HD was altered to run with CyanogenMod 7 instead of the default HTC Sense.
+
+Motej uses the BlueCove library as a multi-platform interface to the Bluetooth stack. Unfortunately, BlueCove does not support the Android OS. Android comes with its own Bluetooth API, the Android Bluetooth API. This library supports most Bluetooth devices through the RFCOMM Bluetooth protocol, however it does not currently support the L2CAP Bluetooth protocol which is used by the Wii remote. Though the Android SDK does not include any support for the L2CAP Bluetooth protocol, communication is possible through the native development kit (NDK). %THIS NEEDS MORE WORK, WORK DEAN WOOOOOORK!
+
+Motej does not support the MotionPlus extension and this support has to be added. Fortunately there are open source C++, C\# libraries with support for the MotionPlus extension, so this functionality was not hard to add.
+
 
 \bibliographystyle{plain}
 \bibliography{references}
