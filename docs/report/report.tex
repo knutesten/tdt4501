@@ -44,9 +44,14 @@ Between 30\% and 60\% of the elder population will experience at least one fall 
 \chapter{State of the Art}
 %This chapter provides an overview of the literature. It positions your work with respect to work already done by others. 
 
-Several attempts have been made to create fall detection systems using smart phone technology \cite{iFall, semiSupervisedFallDetection}, all of these studies show promissing results. The current trend shows that smart phones are becomming more affordable \cite{find_some_data_here} and with the correct software these phones can notify healthcare personel about falls, giving the elderly an extra safety.
+Several attempts have been made to create fall detection systems using smart phone technology \cite{iFall, semiSupervisedFallDetection, mobilePhoneBasedFallDetection, detectionOfFalls}, all of these studies show promissing results. The current trend shows that smart phones are becomming more affordable \cite{find_some_data_here} and with the correct software these phones can notify healthcare personel about falls, giving the elderly an extra safety.
 
-Another approach is to try perventing the falls from happening all together by notifying the user that he or she is moving in an unstable manner. Multiple studies show that using biofeedback systems to inform the user about unstable walk helps pervent falls \cite{hest}. Also mobile versions of such systems have been researched with promissing results \cite{fallPervention}.
+Another approach is to try preventing the falls from happening all together by notifying the user that he or she is moving in an unstable manner. Multiple studies show that using biofeedback systems to inform the user about unstable walk helps prevent falls \cite{multiModualBiofeedback, vibrotactileBiofeedback, vibrotactileTiltFeedback}. % KANSKJE SKRIVE NOE OM AT SENSORENE ER DYRE ELLER TUNGVINTE Å BRUKE I HJEMMET?
+Also mobile versions of such systems have been researched with promising results \cite{fallPrevention}.
+
+A limitation for many of the previously discussed solutions is that they only make use of the embedded accelerometers in the smart phone. Increasing the number of sensors and their positioning can make the fall detection application more accurate \cite{fallDetectionWithExtraSensors}.
+
+In this study the goal is to examine if using cheap external sensors can give more accurate and additional sensor data to help make fall detection/prevention applications more effective. The sensors examined will be the Wii Remote \cite{wiiRemote} and the Sony Move controller \cite{sonyMove}. These are cheap mass produced game controllers with embedded sensors and Bluetooth support. Using Bluetooth wireless technology the sensors can be connected to the smartphone and stream supplementary acceleromter and gyroscope data.
 
 \section{PS3 Move}
 %DETTE KAN IKKE FJERNES FØR BÅDE KNUT OG DEAN HAR GÅTT GJENNOM DENNE SEKSJONEN OG REFERANSER HAR BLITT LAGT TIL!
@@ -57,7 +62,7 @@ The PS Move motion controller contains advanced motion sensing, making it an ide
 
 \subsection{PS Move API}
 
-The PS Move API\cite{PSMoveAPI} is written in C, but contains bindings for various languages, including Java and C\# which are both languages used in smartphone application development. The API explicitly mentions that it runs on Android devices. This is a truth with modifications. It will not run out of the box on an Android device, in addition restructuring and heavy modification of the Android device is required.  The Android OS runs on top of a modified Linux kernel, this kernel does not contain the necessary libraries and drivers in order for the API and Motion controller connectivity to function properly. %Does this need citation?
+The PS Move API \cite{PSMoveAPI} is written in C, but contains bindings for various languages, including Java and C\# which are both languages used in smartphone application development. The API explicitly mentions that it runs on Android devices. This is a truth with modifications. It will not run out of the box on an Android device, in addition restructuring and heavy modification of the Android device is required.  The Android OS runs on top of a modified Linux kernel, this kernel does not contain the necessary libraries and drivers in order for the API and Motion controller connectivity to function properly. %Does this need citation?
 The next step would be to compile the C API into a shared library using the Android NDK, and use the shared library Java bindings in the Android Java code.
 
 Everything is possible with enough time, but given the time constraint and amount of time required to get this running it was decided that this was not a path worth pursuing for this project. With some much work required it would be simpler to run Ubuntu off an Android device if this becomes available in the future. %ref til ubuntu android sider.
