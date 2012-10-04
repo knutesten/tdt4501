@@ -28,7 +28,7 @@ import android.util.Log;
  * <p>
  * @author <a href="mailto:vfritzsch@users.sourceforge.net">Volker Fritzsch</a>
  */
-class IncomingThread extends Thread {
+class IncomingThread extends Thread{
 	
 	private static final long THREAD_SLEEP = 1l;
 
@@ -43,18 +43,17 @@ class IncomingThread extends Thread {
 	private IrPoint[] interleavedIrCameraData;
 
 	private int[] interleavedAccelerometerData;
-
-	protected IncomingThread(Mote source, BluetoothSocket socket)
-			throws IOException, InterruptedException {
+	
+	private static final int PORT = 0x13;
+	
+	private boolean connecting;
+	
+	
+	public IncomingThread(Mote source, BluetoothDevice remoteDevice) throws InterruptedException{
+		connecting = true;
+		new ConnectThread(remoteDevice, PORT).start();
 		this.source = source;
-		
-		
-		if(socket != null){
-			incoming = socket.getInputStream();
-		}
-		
 		Thread.sleep(THREAD_SLEEP);
-		active = true;
 	}
 
 	
@@ -240,6 +239,9 @@ class IncomingThread extends Thread {
 	}
 
 	public void run() {
+		// Wait for the connection to complete
+		while(connecting);
+		
 		byte[] buf = new byte[23];
 		while (active) {
 			try {
@@ -358,4 +360,32 @@ class IncomingThread extends Thread {
 	public void setExtension(Extension extension) {
 		this.extension = extension;
 	}
+
+	private class ConnectThread extends L2CAPConnectThread {
+
+		ConnectThread(BluetoothDevice remoteDevice, int port) {
+			super(remoteDevice, port);
+			// TODO Auto-generated constructor stub
+		}
+
+		@Override
+		void manageConnectedSocket(BluetoothSocket socket) {
+			try {
+				incoming = socket.getInputStream();
+				active = true;
+				connecting = false;
+			} catch (IOException e) {
+				Log.e("motej.android", e.getMessage() +": " + e.getStackTrace());
+			}
+		}
+
+		@Override
+		void connectionFailure(IOException cause) {
+			Log.e("motej.android", "Connection Failure: " + cause.getMessage());
+			active = false;
+			connecting = false;
+		}
+		
+	}
 }
+

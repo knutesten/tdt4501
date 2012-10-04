@@ -1,6 +1,5 @@
 package no.ntnu.falldetection;
 
-import java.io.IOException;
 
 import motej.android.Mote;
 import motej.android.event.AccelerometerEvent;
@@ -9,7 +8,6 @@ import motej.android.request.ReportModeRequest;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -28,8 +26,6 @@ public class MainActivity extends Activity {
 	private ListView adapterList;
 	private BluetoothAdapter mBluetoothAdapter = BluetoothAdapter
 			.getDefaultAdapter();
-	private BluetoothSocket inSocket = null;
-	private BluetoothSocket outSocket = null;
 	
 	// Create a BroadcastReceiver for ACTION_FOUND
 	private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
@@ -49,25 +45,8 @@ public class MainActivity extends Activity {
 					Log.e("HESTEMANN", "HERE GOES!");
 					mBluetoothAdapter.cancelDiscovery();
 					
-					new InputConnect(device, 0x13).start();
-					new OutputConnect(device, 0x11).start();
-					
-					long start = System.currentTimeMillis();
-					boolean connectionFailed = true;
-					while(inSocket == null || outSocket == null){
-						if(System.currentTimeMillis()- start > 5000){
-							break;
-						}
-						connectionFailed = false;
-					}
-					
-					if(connectionFailed){
-						Log.e("error","Connection failed");
-						return;
-					}
-					
-					Mote mote = new Mote(inSocket, outSocket);
-
+					Mote mote = new Mote(device);
+  
 					AccelerometerListener<Mote> listener = new AccelerometerListener<Mote>() {
 						
 						public void accelerometerChanged(AccelerometerEvent<Mote> evt) {
@@ -83,47 +62,6 @@ public class MainActivity extends Activity {
 			}
 		}   
 	};
-	
-	private class OutputConnect extends L2CAPConnectThread {
-
-		OutputConnect(BluetoothDevice remoteDevice, int port) {
-			super(remoteDevice, port);
-			// TODO Auto-generated constructor stub
-		}
-
-		@Override
-		void manageConnectedSocket(BluetoothSocket socket) {
-			outSocket = socket;
-			
-		}
-
-		@Override
-		void connectionFailure(IOException cause) {
-			// TODO Auto-generated method stub
-			
-		}
-		
-	}
-	private class InputConnect extends L2CAPConnectThread {
-
-		InputConnect(BluetoothDevice remoteDevice, int port) {
-			super(remoteDevice, port);
-			// TODO Auto-generated constructor stub
-		}
-
-		@Override
-		void manageConnectedSocket(BluetoothSocket socket) {
-			inSocket = socket;
-			
-		}
-
-		@Override
-		void connectionFailure(IOException cause) {
-			// TODO Auto-generated method stub
-			
-		}
-		
-	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {

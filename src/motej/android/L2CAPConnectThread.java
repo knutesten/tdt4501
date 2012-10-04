@@ -1,4 +1,4 @@
-package no.ntnu.falldetection;
+package motej.android;
 
 import java.io.IOException;
 import java.util.concurrent.locks.ReentrantReadWriteLock;

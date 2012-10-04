@@ -26,103 +26,135 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.util.Log;
 
-/**   
+/**
  * 
  * <p>
+ * 
  * @author <a href="mailto:vfritzsch@users.sourceforge.net">Volker Fritzsch</a>
  */
 class OutgoingThread extends Thread {
 
-		private static final long THREAD_SLEEP = 10l;
-		
-		private volatile boolean active;
+	private static final long THREAD_SLEEP = 10l;
 
-		private OutputStream outgoing; 
+	private volatile boolean active;
 
-		private volatile ConcurrentLinkedQueue<MoteRequest> requestQueue;
-		
-		private byte ledByte;
-		
-		private long rumbleMillis = Long.MIN_VALUE;
+	private OutputStream outgoing;
 
-		private Mote source;
+	private volatile ConcurrentLinkedQueue<MoteRequest> requestQueue;
 
-		protected OutgoingThread(Mote source, BluetoothSocket socket) throws IOException, InterruptedException {
+	private byte ledByte;
 
-			this.source = source;
-			
-			
-			outgoing = socket.getOutputStream();
+	private long rumbleMillis = Long.MIN_VALUE;
 
-			requestQueue = new ConcurrentLinkedQueue<MoteRequest>();
-			active = true;
-			Thread.sleep(THREAD_SLEEP);
-		}
+	private Mote source;
 
-		 
-		public void disconnect() {
-			active = false;
-		}
+	private boolean connecting;
 
-		public void run() {
-			while (active || !requestQueue.isEmpty()) {
-				try {
-					if (rumbleMillis > 0) {
-						rumbleMillis -= THREAD_SLEEP;
-					}
-					if (rumbleMillis == 0) {
-						rumbleMillis = Long.MIN_VALUE;
-						outgoing.write(RumbleRequest.getStopRumbleBytes(ledByte));
-						Thread.sleep(THREAD_SLEEP);
-						continue;
-					}
-					if (!requestQueue.isEmpty()) {
-						MoteRequest request = requestQueue.poll();
-						if (request instanceof PlayerLedRequest) {
-							ledByte = ((PlayerLedRequest) request).getLedByte();
-						}
-						if (request instanceof RumbleRequest) {
-							((RumbleRequest)request).setLedByte(ledByte);
-							rumbleMillis = ((RumbleRequest) request).getMillis();
-						}
-						
-//						if (log.isTraceEnabled()) {
-//							byte[] buf = request.getBytes();
-//							StringBuffer sb = new StringBuffer();
-//							log.trace("sending:");
-//							for (int i = 0; i < buf.length; i++) {
-//								String hex = Integer.toHexString(buf[i] & 0xff);
-//								sb.append(hex.length() == 1 ? "0x0" : "0x").append(hex).append(" ");
-//								if ((i + 1) % 8 == 0) {
-//									log.trace(sb.toString());
-//									sb.delete(0, sb.length());
-//								}
-//							}
-//							if (sb.length() > 0) {
-//								log.trace(sb.toString());
-//							}
-//						}
-						
-						outgoing.write(request.getBytes());
-					}
-					Thread.sleep(THREAD_SLEEP);
-				} catch (InterruptedException ex) {
-					ex.printStackTrace();
-				} catch (IOException ex) {
-					Log.e("motej.android", "connection closed?" + ex.getMessage());
-					active = false;
-					source.fireMoteDisconnectedEvent();
-				}
-			}
+	private static final int PORT = 0x11;
+
+	protected OutgoingThread(Mote source, BluetoothDevice remoteDevice)
+			throws InterruptedException {
+		connecting = true;
+		new ConnectThread(remoteDevice, PORT).start();
+
+		this.source = source;
+
+		requestQueue = new ConcurrentLinkedQueue<MoteRequest>();
+		Thread.sleep(THREAD_SLEEP);
+	}
+
+	public void disconnect() {
+		active = false;
+	}
+
+	public void run() {
+		while (connecting)
+			;
+
+		while (active || !requestQueue.isEmpty()) {
 			try {
-				outgoing.close();
+				if (rumbleMillis > 0) {
+					rumbleMillis -= THREAD_SLEEP;
+				}
+				if (rumbleMillis == 0) {
+					rumbleMillis = Long.MIN_VALUE;
+					outgoing.write(RumbleRequest.getStopRumbleBytes(ledByte));
+					Thread.sleep(THREAD_SLEEP);
+					continue;
+				}
+				if (!requestQueue.isEmpty()) {
+					MoteRequest request = requestQueue.poll();
+					if (request instanceof PlayerLedRequest) {
+						ledByte = ((PlayerLedRequest) request).getLedByte();
+					}
+					if (request instanceof RumbleRequest) {
+						((RumbleRequest) request).setLedByte(ledByte);
+						rumbleMillis = ((RumbleRequest) request).getMillis();
+					}
+
+					// if (log.isTraceEnabled()) {
+					// byte[] buf = request.getBytes();
+					// StringBuffer sb = new StringBuffer();
+					// log.trace("sending:");
+					// for (int i = 0; i < buf.length; i++) {
+					// String hex = Integer.toHexString(buf[i] & 0xff);
+					// sb.append(hex.length() == 1 ? "0x0" :
+					// "0x").append(hex).append(" ");
+					// if ((i + 1) % 8 == 0) {
+					// log.trace(sb.toString());
+					// sb.delete(0, sb.length());
+					// }
+					// }
+					// if (sb.length() > 0) {
+					// log.trace(sb.toString());
+					// }
+					// }
+
+					outgoing.write(request.getBytes());
+				}
+				Thread.sleep(THREAD_SLEEP);
+			} catch (InterruptedException ex) {
+				ex.printStackTrace();
 			} catch (IOException ex) {
-				Log.e("motej.android", ex.getMessage()+": " + ex.getStackTrace());  
+				Log.e("motej.android", "connection closed?" + ex.getMessage());
+				active = false;
+				source.fireMoteDisconnectedEvent();
+			}
+		}
+		try {
+			outgoing.close();
+		} catch (IOException ex) {
+			Log.e("motej.android", ex.getMessage() + ": " + ex.getStackTrace());
+		}
+	}
+
+	public void sendRequest(MoteRequest request) {
+		requestQueue.add(request);
+	}
+
+	private class ConnectThread extends L2CAPConnectThread {
+
+		ConnectThread(BluetoothDevice remoteDevice, int port) {
+			super(remoteDevice, port);
+		}
+
+		@Override
+		void manageConnectedSocket(BluetoothSocket socket) {
+			try {
+				outgoing = socket.getOutputStream();
+				active = true;
+				connecting = false;
+			} catch (IOException e) {
+				Log.e("motej.android", e.getMessage() +": " + e.getStackTrace());
 			}
 		}
 
-		public void sendRequest(MoteRequest request) {
-			requestQueue.add(request);
+		@Override
+		void connectionFailure(IOException cause) {
+			Log.e("motej.android", "Connection Failure: " + cause.getMessage());
+			active = false;
+			connecting = false;
 		}
 
 	}
+}

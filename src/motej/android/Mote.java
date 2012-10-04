@@ -65,9 +65,9 @@ public class Mote {
 
 	private BluetoothDevice device;
 
-	public Mote(BluetoothSocket inSocket, BluetoothSocket outSocket) {
+	public Mote(BluetoothDevice device) {
 		try {
-			this.device = null;
+			this.device = device;
 			// I'm interested if one of the Thread is disconnected
 			addMoteDisconnectedListener(new MoteDisconnectedListener<Mote>() {
 				public void moteDisconnected(MoteDisconnectedEvent<Mote> evt) {
@@ -77,8 +77,8 @@ public class Mote {
 				} 
 			});
 			
-			outgoing = new OutgoingThread(this, outSocket);
-			incoming = new IncomingThread(this, inSocket);
+			outgoing = new OutgoingThread(this, device);
+			incoming = new IncomingThread(this, device);
 
 			incoming.start();
 			outgoing.start();
