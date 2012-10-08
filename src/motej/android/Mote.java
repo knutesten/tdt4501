@@ -304,8 +304,7 @@ public class Mote {
 			} else {
 
 				currentExtension = extensionProvider.getExtension(payload);
-					Log.i("motej.android", "Found extension: " + currentExtension == null ? "null"
-							: currentExtension.toString());
+					Log.i("motej.android", "Found extension: " + currentExtension);
 				if (currentExtension != null) {
 					currentExtension.setMote(this);
 					currentExtension.initialize();

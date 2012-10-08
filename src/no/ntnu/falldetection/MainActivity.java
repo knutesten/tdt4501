@@ -24,8 +24,8 @@ public class MainActivity extends Activity {
 	private int REQUEST_ENABLE_BT;
 	private ArrayAdapter<String> deviceArrayAdapter;
 	private ListView adapterList;
-	private BluetoothAdapter mBluetoothAdapter = BluetoothAdapter
-			.getDefaultAdapter();
+	private BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+	private ExternalStorage store;
 	
 	// Create a BroadcastReceiver for ACTION_FOUND
 	private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
@@ -51,6 +51,7 @@ public class MainActivity extends Activity {
 						
 						public void accelerometerChanged(AccelerometerEvent<Mote> evt) {
 							Log.i("Accelerometer", evt.getX() + " : " + evt.getY() + " : " + evt.getZ());
+							store.writeToFile(evt.getX() + " : " + evt.getY() + " : " + evt.getZ());
 						}
 					
 					};
@@ -87,6 +88,9 @@ public class MainActivity extends Activity {
 												// during onDestroy
 
 		mBluetoothAdapter.startDiscovery();
+		
+		//Create application directory on SD card
+		store = new ExternalStorage();
 
 	}
 
@@ -104,8 +108,20 @@ public class MainActivity extends Activity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		deviceArrayAdapter.add("hest");
+		switch(item.getItemId()) {
+		case R.id.menu_settings:
+			deviceArrayAdapter.add("hest");
+			return true;
+		case R.id.menu_exit:
+			finish();
+			System.exit(0);
+		}
+		
+		
 		return true;
 	}
+	 
+	
+	//This method is called when the system is shutting down
 
 }
