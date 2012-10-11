@@ -31,8 +31,6 @@ Falls are a major health hazard among the elderly population (age > 65) \cite{fa
 Between 30\% and 60\% of the elder population will experience at least one fall per year, and 10\% - 20\% of these will result in an injury, hospitalization or death \cite{fall_statistics}. For the independent elder population it is even more crucial that a fall can be avoided and the proper authorities can be alerted if a fall does occur. In the case of a serious fall a slow response time might increase the likelihood of permanent damage or death\cite{personHomeDeath, dangerousFallHome}. 
 
 
-
-
 \section{Research questions}
 %What are the questions you are answering with your project? Normally, you specify a main question and related sub-questions. Remember that at the end you have to demonstrate you have answered to the stated questions. It is not uncommon that the questions are changed during the project, but it is important to be as explicit as possible and as early as possible with research questions since they help you to focus.
 RQ1: Can motion sensing game controllers be used to gather additonal and more accurate data for fall related applications on the smartphone? What is the optimal location for the controller to be located?
@@ -114,15 +112,15 @@ At the time of writing no research has been done on using motion game controller
 
 \section{Limitations}
 %Se på dette avsnittet knut. Tror hele må skriver på nytt hvor avsnittene under er merget og forklart bedre
-The majority of Android devices have built-in Bluetooth cards, but the current Android SDK does not offer low level support for the Bluetooth stack, including L2CAP. This constraint can be bypassed on some devices by using reflection to access the socket constructor\cite{l2cap_htc}. Due to L2CAP not being official supported certain vendors of Android devices have removed the L2CAP protocols completely, meaning that it would be impossible to use their Android OS to connect to the Wii Remote. Therefore the Android OS on the HTC Desire HD was altered to run with CyanogenMod 7 instead of the default HTC Sense.
+The majority of Android devices have built-in Bluetooth cards, but the current Android SDK does not offer low level support for the Bluetooth stack, including L2CAP. This constraint can be bypassed on some devices by using reflection to access the socket constructor\cite{l2cap_htc}. Access could also be gained through using the Android NDK (Native Develeoper Kit) but this is outside of our scope. Due to L2CAP not being official supported certain vendors of Android devices have removed the L2CAP protocols completely, meaning that it would be impossible to use their Android OS to connect to the Wii Remote. Therefore the Android OS on the HTC Desire HD was altered to run with CyanogenMod 7 instead of the default HTC Sense.
 
-Motej uses the BlueCove library as a multi-platform interface to the Bluetooth stack. Unfortunately, BlueCove does not support the Android OS. Android comes with its own Bluetooth API, the Android Bluetooth API. 
-
-This library supports most Bluetooth devices through the RFCOMM Bluetooth protocol, however it does not currently support the L2CAP Bluetooth protocol which is used by the Wii remote.  %THIS NEEDS MORE WORK, WORK DEAN WOOOOOORK!
-
-Motej does not support the MotionPlus extension and this support has to be added. Fortunately there are open source C++, C\# libraries with support for the MotionPlus extension, and some of these might be of use.
+Motej uses the BlueCove library as a multi-platform interface to the Bluetooth stack. Unfortunately, BlueCove does not support the Android OS. Android comes with its own Bluetooth API, the Android Bluetooth API. The library will have to be re-written to work on the Android OS and support for the MotionPlus will have to be implemented. WiiMoteLib\cite{wiiMoteLib} is a C# library which has support for the MotionPlus, by looking at the solutions in this library it should reduce the time required to implement MotionPlus support for the Motej library.
 
 \section{Motej on Android}
+
+\section{Motion Plus Support}
+
+
 
 \bibliographystyle{plain}
 \bibliography{references}
