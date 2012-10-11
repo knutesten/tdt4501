@@ -277,6 +277,17 @@ public class Mote {
 	}
 
 	protected void fireReadDataEvent(byte[] address, byte[] payload, int error) {
+		String debug = "Address: 0x";
+		for(byte a : address){
+			debug += String.format("%02X", a);
+		}
+		debug += " Payload: 0x";
+		for(byte p : payload)
+			debug += String.format("%02X", p);
+
+		Log.d("HYPERDEBUG", debug);
+		byte[] buff = payload;
+		
 		if (calibrationDataReport == null && error == 0 && address[0] == 0x00
 				&& address[1] == 0x20) {
 			// calibration data (most probably)
@@ -286,9 +297,14 @@ public class Mote {
 					payload[4] & 0xff, payload[5] & 0xff, payload[6] & 0xff);
 			calibrationDataReport = report;
 		}
-
-		if (currentExtension == null && error == 0 && address[0] == 0x00
-				&& (address[1] & 0xff) == 0xfe && payload.length == 2) {
+		
+		int motionplus = 0;
+		if(error == 0 && address[0]== 0 && (address[1] & 0xff) == 0xfa){
+			motionplus = ((int)buff[0] << 40) | ((int)buff[1] << 32) | ((int)buff[2]) << 24 | ((int)buff[3]) << 16 | ((int)buff[4]) << 8 | buff[5];
+		}
+		
+		if (currentExtension == null && ((error == 0 && address[0] == 0x00
+				&& (address[1] & 0xff) == 0xfe && payload.length == 2) || (motionplus & 0xffffffff)==0xa6200005)) {
 			// extension ID (most probably)
 			String id0 = Integer.toHexString(payload[0] & 0xff);
 			String id1 = Integer.toHexString(payload[1] & 0xff);
@@ -304,8 +320,7 @@ public class Mote {
 			} else {
 
 				currentExtension = extensionProvider.getExtension(payload);
-					Log.i("motej.android", "Found extension: " + currentExtension == null ? "null"
-							: currentExtension.toString());
+					Log.i("motej.android", "Found extension: " + currentExtension);
 				if (currentExtension != null) {
 					currentExtension.setMote(this);
 					currentExtension.initialize();
@@ -325,7 +340,6 @@ public class Mote {
 
 	protected void fireStatusInformationChangedEvent(
 			StatusInformationReport report) {
-
 		// decide if we should query the extension port
 		boolean extensionChanged;
 		if (statusInformationReport == null) {

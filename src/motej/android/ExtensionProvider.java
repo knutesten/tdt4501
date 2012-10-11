@@ -72,6 +72,7 @@ public class ExtensionProvider {
 			}
 		}
 		Log.d("motej.android", "Lookup initialized.");
+		
 	}
 
 	public Extension getExtension(byte[] id) {

@@ -38,7 +38,7 @@ class OutgoingThread extends Thread {
 
 	private volatile boolean active;
 
-	private OutputStream outgoing;
+	private OutputStream outgoing = null;
 
 	private volatile ConcurrentLinkedQueue<MoteRequest> requestQueue;
 
@@ -48,13 +48,11 @@ class OutgoingThread extends Thread {
 
 	private Mote source;
 
-	private boolean connecting;
-
 	private static final int PORT = 0x11;
 
 	protected OutgoingThread(Mote source, BluetoothDevice remoteDevice)
 			throws InterruptedException {
-		connecting = true;
+		active = true;
 		new ConnectThread(remoteDevice, PORT).start();
 
 		this.source = source;
@@ -68,7 +66,7 @@ class OutgoingThread extends Thread {
 	}
 
 	public void run() {
-		while (connecting)
+		while (outgoing==null && active)
 			;
 
 		while (active || !requestQueue.isEmpty()) {
@@ -122,7 +120,9 @@ class OutgoingThread extends Thread {
 			}
 		}
 		try {
-			outgoing.close();
+			if(outgoing != null){
+				outgoing.close();
+			}
 		} catch (IOException ex) {
 			Log.e("motej.android", ex.getMessage() + ": " + ex.getStackTrace());
 		}
@@ -142,8 +142,6 @@ class OutgoingThread extends Thread {
 		void manageConnectedSocket(BluetoothSocket socket) {
 			try {
 				outgoing = socket.getOutputStream();
-				active = true;
-				connecting = false;
 			} catch (IOException e) {
 				Log.e("motej.android", e.getMessage() +": " + e.getStackTrace());
 			}
@@ -153,7 +151,6 @@ class OutgoingThread extends Thread {
 		void connectionFailure(IOException cause) {
 			Log.e("motej.android", "Connection Failure: " + cause.getMessage());
 			active = false;
-			connecting = false;
 		}
 
 	}

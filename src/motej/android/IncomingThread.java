@@ -46,11 +46,10 @@ class IncomingThread extends Thread{
 	
 	private static final int PORT = 0x13;
 	
-	private boolean connecting;
 	
 	
 	public IncomingThread(Mote source, BluetoothDevice remoteDevice) throws InterruptedException{
-		connecting = true;
+		active = true;
 		new ConnectThread(remoteDevice, PORT).start();
 		this.source = source;
 		Thread.sleep(THREAD_SLEEP);
@@ -238,14 +237,23 @@ class IncomingThread extends Thread{
 		source.fireStatusInformationChangedEvent(info);
 	}
 
+	
+	private int count = 0;
 	public void run() {
 		// Wait for the connection to complete
-		while(connecting);
+		while(incoming== null && active);
 		
 		byte[] buf = new byte[23];
 		while (active) {
 			try {
+				if(count%100==0){
+					Log.d("bais", "before");
+				}
 				incoming.read(buf);
+				if(++count %100 == 0){
+					Log.d("shit is happening", buf[1] + "");
+				}
+				
 //				int test = incoming.read();
 //				Log.i("TEST", test+ "");
 //				if (log.isTraceEnabled()) {
@@ -350,8 +358,13 @@ class IncomingThread extends Thread{
 				source.fireMoteDisconnectedEvent();
 			}
 		}
+		
+		Log.d("motej.android", "Connection closing.");
+		
 		try {
-			incoming.close();
+			if(incoming != null){
+				incoming.close();
+			}
 		} catch (IOException ex) {
 			Log.e("motej.android", ex.getMessage() + ": " + ex.getStackTrace());
 		}
@@ -365,15 +378,12 @@ class IncomingThread extends Thread{
 
 		ConnectThread(BluetoothDevice remoteDevice, int port) {
 			super(remoteDevice, port);
-			// TODO Auto-generated constructor stub
 		}
 
 		@Override
 		void manageConnectedSocket(BluetoothSocket socket) {
 			try {
 				incoming = socket.getInputStream();
-				active = true;
-				connecting = false;
 			} catch (IOException e) {
 				Log.e("motej.android", e.getMessage() +": " + e.getStackTrace());
 			}
@@ -383,7 +393,6 @@ class IncomingThread extends Thread{
 		void connectionFailure(IOException cause) {
 			Log.e("motej.android", "Connection Failure: " + cause.getMessage());
 			active = false;
-			connecting = false;
 		}
 		
 	}

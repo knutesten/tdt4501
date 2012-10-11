@@ -2,6 +2,8 @@ package no.ntnu.falldetection;
 
 
 import motej.android.Mote;
+import motej.android.event.ExtensionEvent;
+import motej.android.event.ExtensionListener;
 import motej.android.event.AccelerometerEvent;
 import motej.android.event.AccelerometerListener;
 import motej.android.request.ReportModeRequest;
@@ -26,6 +28,7 @@ public class MainActivity extends Activity {
 	private ListView adapterList;
 	private BluetoothAdapter mBluetoothAdapter = BluetoothAdapter
 			.getDefaultAdapter();
+	private Mote mote;
 	
 	// Create a BroadcastReceiver for ACTION_FOUND
 	private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
@@ -45,24 +48,42 @@ public class MainActivity extends Activity {
 					Log.e("HESTEMANN", "HERE GOES!");
 					mBluetoothAdapter.cancelDiscovery();
 					
-					Mote mote = new Mote(device);
+					mote = new Mote(device);
   
 					AccelerometerListener<Mote> listener = new AccelerometerListener<Mote>() {
 						
 						public void accelerometerChanged(AccelerometerEvent<Mote> evt) {
-							Log.i("Accelerometer", evt.getX() + " : " + evt.getY() + " : " + evt.getZ());
+//							Log.i("Accelerometer", evt.getX() + " : " + evt.getY() + " : " + evt.getZ());
 						}
 					
 					};
 					
+					ExtensionListener listener2 = new ExtensionListener(){
+						
+							
+
+						@Override
+						public void extensionConnected(ExtensionEvent evt) {
+							Log.d("Extension connected", evt.getExtension().toString());
+							mote.setReportMode(ReportModeRequest.DATA_REPORT_0x37);
+						}
+
+						@Override
+						public void extensionDisconnected(ExtensionEvent evt) {
+							// TODO Auto-generated method stub
+							
+						}
+					};
+					
+					mote.addExtensionListener(listener2);
 					mote.addAccelerometerListener(listener);   
 					
-					mote.setReportMode(ReportModeRequest.DATA_REPORT_0x31);
+//					mote.setReportMode(ReportModeRequest.DATA_REPORT_0x37);
 				}
 			}
 		}   
 	};
-
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -80,16 +101,16 @@ public class MainActivity extends Activity {
 					BluetoothAdapter.ACTION_REQUEST_ENABLE);
 			startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
 		}
+		
 
 		// Register the BroadcastReceiver
 		IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
 		registerReceiver(mReceiver, filter); // Don't forget to unregister
 												// during onDestroy
-
 		mBluetoothAdapter.startDiscovery();
-
 	}
 
+	
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
@@ -104,8 +125,19 @@ public class MainActivity extends Activity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		deviceArrayAdapter.add("hest");
-		return true;
+//		deviceArrayAdapter.add("hest");
+		switch(item.getItemId()){
+			case R.id.menu_settings:
+				if(mote != null){
+					mote.readRegisters(new byte[]{ (byte)0xa6, 0x00, (byte)0xfa }, new byte[]{ 0x00, 0x06 } );
+				}
+				return true;
+			case R.id.test:
+				mote.setReportMode(ReportModeRequest.DATA_REPORT_0x37);
+				return true;
+			default:
+				return super.onOptionsItemSelected(item);
+		}		
 	}
 
 }
