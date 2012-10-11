@@ -22,13 +22,14 @@
 %The Introduction is your thesis in a nutshell. Again, the organization can vary, but a standard introduction includes the following sections:
 
 \section{Purpose}
-The purpose of the project is to explore the possibilities of creating bio-feedback systems through the use of a smartphone and COTS products, mainly game controllers. The purpose of the bio-feedback system will be to improve the stability and balance of the user through peripherals connected to the phone.
+The purpose of the project is to explore the possibilities of creating bio-feedback systems through the use of a smartphone and COTS products, mainly game controllers. The purpose of the bio-feedback system will be to improve the stability and balance of the user through peripherals connected to the phone. Audio and vibration will be used to provide feedback to the user about his stability. In the case of a fall the system will send out alerts to inform personnel of the incident.
 
 \section{Motivation}
 %Brief description of the research domain and the problem that one wants to address. It should tell the reader why working on this project is worth doing.
 Falls are a major health hazard among the elderly population (age > 65) \cite{falls_health_hazard}, in addition to being an obstacle for physical activity and independent living. Through physical activity the elderly may improve their quality of life and prevent future disabilities\cite{physical_activity}. A third of all elders that experience a fall develop a fear of falling \cite{fear_of_falling}. Fear of falling causes general anxiety and avoidance of physical activity. Long term consequences result in social isolation, physical deterioration and reduced quality of life.\cite{physical_avoidance} %Skrive noe om hvor mye det koster staten å passe på de eldre?
 
-Between 30\% and 60\% of the elder population will experience at least one fall per year, and 10\% - 20\% of these will result in an injury, hospitalization or death \cite{fall_statistics}. 
+Between 30\% and 60\% of the elder population will experience at least one fall per year, and 10\% - 20\% of these will result in an injury, hospitalization or death \cite{fall_statistics}. For the independent elder population it is even more crucial that a fall can be avoided and the proper authorities can be alerted if a fall does occur. In the case of a serious fall a slow response time might increase the likelihood of permanent damage or death\cite{personHomeDeath, dangerousFallHome}. 
+
 
 
 
@@ -38,6 +39,8 @@ RQ1: Can motion sensing game controllers be used to gather additonal and more ac
 
 RQ2: Is it feasible to have game controllers connected to the smartphone? How is the battery life, how close does the phone have to be at all times?
 
+RQ3: How many bluetooth devices can be connected to the phone?
+
 \section{Research method}
 %How the research is conducted. In the previous section you say what you are doing. Here you specify how. The choice of a research method is strictly connected to the type of questions you want to answer.
 
@@ -46,7 +49,7 @@ RQ2: Is it feasible to have game controllers connected to the smartphone? How is
 \chapter{State of the Art}
 %This chapter provides an overview of the literature. It positions your work with respect to work already done by others. 
 
-Several attempts have been made to create fall detection systems using smart phone technology \cite{iFall, semiSupervisedFallDetection, mobilePhoneBasedFallDetection, detectionOfFalls}, all of these studies show promissing results. The current trend shows that smart phones are becoming more affordable \cite{find_some_data_here} and with the correct software these phones can notify healthcare personel about falls, giving the elderly an extra safety.
+Several attempts have been made to create fall detection systems using smart phone technology \cite{iFall, semiSupervisedFallDetection, mobilePhoneBasedFallDetection, detectionOfFalls}, all of these studies show  results. The current trend shows that smart phones are becoming more affordable \cite{find_some_data_here} and with the correct software these phones can notify healthcare personnel about falls, giving the elderly an extra safety.
 
 Another approach is to try preventing the falls from happening all together by notifying the user that he or she is moving in an unstable manner. Multiple studies show that using biofeedback systems to inform the user about unstable walk helps prevent falls \cite{multiModualBiofeedback, vibrotactileBiofeedback, vibrotactileTiltFeedback}. % KANSKJE SKRIVE NOE OM AT SENSORENE ER DYRE ELLER TUNGVINTE Å BRUKE I HJEMMET?
 Also mobile versions of such systems have been researched with promising results \cite{fallPrevention}.
@@ -63,25 +66,22 @@ Should we write something about the Android OS?
 Is it neccessary to write something aobut Java?
 
 \section{PS3 Move}
-%DETTE KAN IKKE FJERNES FØR BÅDE KNUT OG DEAN HAR GÅTT GJENNOM DENNE SEKSJONEN OG REFERANSER HAR BLITT LAGT TIL!
 
 \subsection{Motion Controller Hardware}
-The PS Move motion controller contains advanced motion sensing, making it an ideal peripheral for a bio-feedback system. It features motion tracking through a three axis accelerometer, a three axis angular rate sensor and provides location tracking through the built in magnetometer. The built in vibration could be used to provide feedback to the user. %CITATION NEEDED
-
+The PS Move motion controller contains advanced motion sensing, making it an ideal peripheral for a bio-feedback system. It features motion tracking through a three axis accelerometer, a three axis angular rate sensor and provides location tracking through the built in magnetometer. The built in vibration could be used to provide feedback to the user \cite{psMoveTech}.
 
 \subsection{PS Move API}
 
 The PS Move API \cite{PSMoveAPI} is written in C, but contains bindings for various languages, including Java and C\# which are both languages used in smartphone application development. The API explicitly mentions that it runs on Android devices. This is a truth with modifications. It will not run out of the box on an Android device, in addition restructuring and heavy modification of the Android device is required.  The Android OS runs on top of a modified Linux kernel, this kernel does not contain the necessary libraries and drivers in order for the API and Motion controller connectivity to function properly. %Does this need citation?
 The next step would be to compile the C API into a shared library using the Android NDK, and use the shared library Java bindings in the Android Java code.
 
-Everything is possible with enough time, but given the time constraint and amount of time required to get this running it was decided that this was not a path worth pursuing for this project. With some much work required it would be simpler to run Ubuntu off an Android device if this becomes available in the future. %ref til ubuntu android sider.
+Everything is possible with enough time, but given the time constraint and amount of time required to get this running it was decided that this was not a path worth pursuing for this project. With some much work required it would be simpler to run Ubuntu off an Android device if this becomes available in the future. \cite{ubuntuAndroid}
 
 \section{Wii Remote with Motion Plus}
 
 \subsection{Wii Remote and Motion Plus Hardware}
-The original Wii Remote features motion tracking for vertical movement, left-right horizontal movement, and horizontal rotation. %CITATION
-In June 2009 %CITATION NEEDED
-Nintendo released the Wii MotionPlus expansion device which contains a dual-axis tuning fork and a single-axis gyroscope. %CITATION NEEDED
+The original Wii Remote features motion tracking for vertical movement, left-right horizontal movement, and horizontal rotation through the use of an ADXL330 accelerometer.\cite{wiiAccelerometer}.
+In June 2009 Nintendo released the Wii MotionPlus expansion device which contains a dual-axis tuning fork and a single-axis gyroscope\cite{wiiMotionPlus}.
 The expansion device improves the motion tracking of the Wii Remote greatly, but makes it larger. Nintendo has now started selling the Wii Remote Plus. It is the same size as the Wii Remote, but has the Wii MotionPlus already built in. Both of the controller types have the ability to provide vibration and basic audio feedback.
 
 %%WRITE SOMETHING ABOUT THE NUNCHUCK?
@@ -98,17 +98,10 @@ WiiUseJ is a lightweight Java API. It was built on top of the Wiiuse API and onl
 \subsubsection{Motej}
 Motej is an open source (licensed under ASL 2.0) library for the Wii remote written in Java. Motej supports only the Wii Remote and IR Camera in it's basic form, but the extras library adds support for the balance board, classic controller, and nunchuk. The project is currently at version 0.9, but was discontinued in 2009. \cite{Motej}
 
-
-%Knut fiks seksjonen om l2cap og Android. Dette ligge både på bluetooth og limitations nå
-
 \subsection{Bluetooth}
 %General information about bluetooth, and some text about L2CAP and why Android sucks.
 Bluetooth is a widely used wireless communication technology for shorter distances. Due to its low power consumption and low cost is has become one of the leading standards in its field and is supported by most modern operating systems, either through integrated hardware or through portable Bluetooth adapter. Most, if not all, modern phones come with a built-in Bluetooth card/radio. %CITATION BITCHES! 
-
 The Wii Remote uses Bluetooth to communicate wirelessly with other devices, using the logical link control and adaptation protocol (L2CAP). 
-
-%Flytte dette ned?
-Though all Android have built-in Bluetooth cards, the current Android SDK does not offer low level support for the Bluetooth stack, including L2CAP. This constraint can be bypassed on some devices by using reflection to access the socket constructor. %CITATION
 
 
 \chapter{The Case}
@@ -118,13 +111,18 @@ Since no library with Android support currently exist it was decided to use the 
 \section{Introduction}
 At the time of writing no research has been done on using motion game controllers as peripherals in a smart-phone based bio-feedback system. In order to answer the research questions posed in this report it will be necessary to create a simple but working prototype of the aforementioned system. The equipment used to realize the system will be a rooted HTC Desire HD \cite{Desire_HD_specs} running CyanogenMod 7 \cite{cyanogenMod} and Wii Remotes with the Motion Plus extension. The application will be created using the Android SDK, Java and the Motej library.
 
+
 \section{Limitations}
-It was discovered that HTC's bluetooth stack does not support the L2CAP Bluetooth protocol which is required in order to create a connection with the Wii Remote \cite{l2cap_htc}. Therefore the Android OS on the HTC Desire HD was altered to run with CyanogenMod 7 instead of the default HTC Sense.
+%Se på dette avsnittet knut. Tror hele må skriver på nytt hvor avsnittene under er merget og forklart bedre
+The majority of Android devices have built-in Bluetooth cards, but the current Android SDK does not offer low level support for the Bluetooth stack, including L2CAP. This constraint can be bypassed on some devices by using reflection to access the socket constructor\cite{l2cap_htc}. Due to L2CAP not being official supported certain vendors of Android devices have removed the L2CAP protocols completely, meaning that it would be impossible to use their Android OS to connect to the Wii Remote. Therefore the Android OS on the HTC Desire HD was altered to run with CyanogenMod 7 instead of the default HTC Sense.
 
-Motej uses the BlueCove library as a multi-platform interface to the Bluetooth stack. Unfortunately, BlueCove does not support the Android OS. Android comes with its own Bluetooth API, the Android Bluetooth API. This library supports most Bluetooth devices through the RFCOMM Bluetooth protocol, however it does not currently support the L2CAP Bluetooth protocol which is used by the Wii remote. Though the Android SDK does not include any support for the L2CAP Bluetooth protocol, communication is possible through the native development kit (NDK). %THIS NEEDS MORE WORK, WORK DEAN WOOOOOORK!
+Motej uses the BlueCove library as a multi-platform interface to the Bluetooth stack. Unfortunately, BlueCove does not support the Android OS. Android comes with its own Bluetooth API, the Android Bluetooth API. 
 
-Motej does not support the MotionPlus extension and this support has to be added. Fortunately there are open source C++, C\# libraries with support for the MotionPlus extension, so this functionality was not hard to add.
+This library supports most Bluetooth devices through the RFCOMM Bluetooth protocol, however it does not currently support the L2CAP Bluetooth protocol which is used by the Wii remote.  %THIS NEEDS MORE WORK, WORK DEAN WOOOOOORK!
 
+Motej does not support the MotionPlus extension and this support has to be added. Fortunately there are open source C++, C\# libraries with support for the MotionPlus extension, and some of these might be of use.
+
+\section{Motej on Android}
 
 \bibliographystyle{plain}
 \bibliography{references}
