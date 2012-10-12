@@ -21,7 +21,7 @@ public class MotionPlus extends AbstractExtension implements DataListener {
 	/**
 	 * Initializes the Motion plus extension
 	 */
-	@Override
+
 	public void initialize() {
 
 //		 Initialize
@@ -31,7 +31,7 @@ public class MotionPlus extends AbstractExtension implements DataListener {
 		mote.writeRegisters(new byte[] { (byte)0xA6, 0x00, (byte)0xFE}, new byte[]{ 0x04});
 	}
 
-	@Override
+
 	public void parseExtensionData(byte[] extensionData) {
 //		decrypt(extensionData);
 		fireGyroEvent(extensionData);
@@ -57,12 +57,12 @@ public class MotionPlus extends AbstractExtension implements DataListener {
 		Log.d("gyro", yaw + " " + roll + " " + pitch + " " + yawFast + " " + rollFast + " " + pitchFast);
 	}
 
-	@Override
+
 	public void setMote(Mote mote) {
 		this.mote = mote;
 	}
 
-	@Override
+
 	public void dataRead(DataEvent evt) {
 		Log.d("calibration", "event received");
 		if (calibrationData == null && evt.getError() == 0

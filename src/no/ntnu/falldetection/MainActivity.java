@@ -62,13 +62,11 @@ public class MainActivity extends Activity {
 						
 							
 
-						@Override
 						public void extensionConnected(ExtensionEvent evt) {
 							Log.d("Extension connected", evt.getExtension().toString());
 							mote.setReportMode(ReportModeRequest.DATA_REPORT_0x37);
 						}
 
-						@Override
 						public void extensionDisconnected(ExtensionEvent evt) {
 							// TODO Auto-generated method stub
 							
