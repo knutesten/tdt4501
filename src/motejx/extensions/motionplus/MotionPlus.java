@@ -24,7 +24,7 @@ public class MotionPlus extends AbstractExtension implements DataListener {
 	/**
 	 * Initializes the Motion plus extension
 	 */
-	@Override
+
 	public void initialize() {
 		// Add as listener for calibration data
 		mote.addDataListener(this);
@@ -42,7 +42,7 @@ public class MotionPlus extends AbstractExtension implements DataListener {
 				0x00, (byte) 0x32 });
 	}
 
-	@Override
+
 	public void parseExtensionData(byte[] extensionData) {
 		// decrypt(extensionData);
 		fireGyroEvent(extensionData);
@@ -105,12 +105,12 @@ public class MotionPlus extends AbstractExtension implements DataListener {
 		listenerList.add(GyroListener.class, gyroListener);
 	}
 
-	@Override
+
 	public void setMote(Mote mote) {
 		this.mote = mote;
 	}
 
-	@Override
+
 	public void dataRead(DataEvent evt) {
 		if (calibrationData == null && evt.getError() == 0
 				&& evt.getAddress()[0] == 0x00

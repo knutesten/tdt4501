@@ -2,14 +2,11 @@ package no.ntnu.falldetection;
 
 
 import motej.android.Mote;
-import motej.android.event.AccelerometerEvent;
-import motej.android.event.AccelerometerListener;
 import motej.android.event.ExtensionEvent;
 import motej.android.event.ExtensionListener;
+import motej.android.event.AccelerometerEvent;
+import motej.android.event.AccelerometerListener;
 import motej.android.request.ReportModeRequest;
-import motejx.extensions.motionplus.GyroEvent;
-import motejx.extensions.motionplus.GyroListener;
-import motejx.extensions.motionplus.MotionPlus;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -57,40 +54,24 @@ public class MainActivity extends Activity {
 						
 						public void accelerometerChanged(AccelerometerEvent<Mote> evt) {
 //							Log.i("Accelerometer", evt.getX() + " : " + evt.getY() + " : " + evt.getZ());
-							
 						}
 					
-					};
-					
-					final GyroListener listener3 = new GyroListener(){
-
-						@Override
-						public void gyroChanged(GyroEvent evt) {
-							Log.i("gyro", evt.getYaw() + " " + evt.getRoll() + " " + evt.getPitch());
-						}
-						
 					};
 					
 					ExtensionListener listener2 = new ExtensionListener(){
 						
-						@Override
-						public void extensionConnected(ExtensionEvent evt) {
-							((MotionPlus)mote.getExtension()).addGyroListener(listener3);
 							
-							try{
-								Thread.sleep(100);
-							}catch(Exception e){
-								
-							}
+
+						public void extensionConnected(ExtensionEvent evt) {
+							Log.d("Extension connected", evt.getExtension().toString());
 							mote.setReportMode(ReportModeRequest.DATA_REPORT_0x37);
 						}
 
-						@Override
 						public void extensionDisconnected(ExtensionEvent evt) {
 							// TODO Auto-generated method stub
+							
 						}
 					};
-					
 					
 					mote.addExtensionListener(listener2);
 					mote.addAccelerometerListener(listener);   
