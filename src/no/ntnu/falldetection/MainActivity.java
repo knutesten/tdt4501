@@ -60,8 +60,6 @@ public class MainActivity extends Activity {
 					
 					ExtensionListener listener2 = new ExtensionListener(){
 						
-							
-
 						@Override
 						public void extensionConnected(ExtensionEvent evt) {
 							Log.d("Extension connected", evt.getExtension().toString());
@@ -71,7 +69,6 @@ public class MainActivity extends Activity {
 						@Override
 						public void extensionDisconnected(ExtensionEvent evt) {
 							// TODO Auto-generated method stub
-							
 						}
 					};
 					
