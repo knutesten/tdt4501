@@ -246,13 +246,7 @@ class IncomingThread extends Thread{
 		byte[] buf = new byte[23];
 		while (active) {
 			try {
-				if(count%100==0){
-					Log.d("bais", "before");
-				}
 				incoming.read(buf);
-				if(++count %100 == 0){
-					Log.d("shit is happening", buf[1] + "");
-				}
 				
 //				int test = incoming.read();
 //				Log.i("TEST", test+ "");
