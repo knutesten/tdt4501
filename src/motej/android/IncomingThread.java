@@ -120,6 +120,11 @@ class IncomingThread extends Thread{
 		if (extension == null) {
 			return;
 		}
+		
+//		String debug = "";
+//		for(byte b : bytes){
+//			debug += String.format("%02X", b);
+//		}
 		byte[] extensionData = new byte[length];
 		System.arraycopy(bytes, offset, extensionData, 0, length);
 		extension.parseExtensionData(extensionData);

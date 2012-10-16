@@ -2,11 +2,14 @@ package no.ntnu.falldetection;
 
 
 import motej.android.Mote;
+import motej.android.event.CoreButtonEvent;
+import motej.android.event.CoreButtonListener;
 import motej.android.event.ExtensionEvent;
 import motej.android.event.ExtensionListener;
 import motej.android.event.AccelerometerEvent;
 import motej.android.event.AccelerometerListener;
 import motej.android.request.ReportModeRequest;
+import motejx.extensions.motionplus.MotionPlus;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -62,7 +65,6 @@ public class MainActivity extends Activity {
 						
 						@Override
 						public void extensionConnected(ExtensionEvent evt) {
-							Log.d("Extension connected", evt.getExtension().toString());
 							mote.setReportMode(ReportModeRequest.DATA_REPORT_0x37);
 						}
 
@@ -72,6 +74,17 @@ public class MainActivity extends Activity {
 						}
 					};
 					
+					CoreButtonListener listener3 = new CoreButtonListener() {
+						
+						@Override
+						public void buttonPressed(CoreButtonEvent evt) {
+							if(evt.isButtonBPressed()){
+								Log.e("test", "bwø");
+								((MotionPlus)mote.getExtension()).calibrate();
+							}
+						}
+					};
+					mote.addCoreButtonListener(listener3);
 					mote.addExtensionListener(listener2);
 					mote.addAccelerometerListener(listener);   
 					

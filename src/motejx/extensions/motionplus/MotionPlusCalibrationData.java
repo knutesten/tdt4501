@@ -1,33 +1,33 @@
 package motejx.extensions.motionplus;
 
 public class MotionPlusCalibrationData {
-	private int yaw0;
+	private float yaw0 = 0;
 	
-	private int Roll0;
+	private float Roll0 = 0;
 	
-	private int Pitch0;
+	private float Pitch0 = 0;
 
-	public int getPitch0() {
+	public float getPitch0() {
 		return Pitch0;
 	}
 
-	public void setPitch0(int pitch0) {
+	public void setPitch0(float pitch0) {
 		Pitch0 = pitch0;
 	}
 
-	public int getRoll0() {
+	public float getRoll0() {
 		return Roll0;
 	}
 
-	public void setRoll0(int roll0) {
+	public void setRoll0(float roll0) {
 		Roll0 = roll0;
 	}
 
-	public int getYaw0() {
+	public float getYaw0() {
 		return yaw0;
 	}
 
-	public void setYaw0(int yaw0) {
+	public void setYaw0(float yaw0) {
 		this.yaw0 = yaw0;
 	}
 	

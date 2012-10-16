@@ -10,7 +10,7 @@ public class MotionPlus extends AbstractExtension implements DataListener {
 	private Mote mote;
 
 	private MotionPlusCalibrationData calibrationData;
-	private boolean calibrate;
+	private MotionPlusCalibrate calibration = new MotionPlusCalibrate();
 
 	// MotionPlus speed scaling
 	private final double LOWSPEED_SCALING = 20.0; // RawValues / 20 =
@@ -22,12 +22,7 @@ public class MotionPlus extends AbstractExtension implements DataListener {
 	 * Initializes the Motion plus extension
 	 */
 	@Override
-	public void initialize() {
-		calibrationData = new MotionPlusCalibrationData();
-		calibrationData.setYaw0(-100);
-		calibrationData.setRoll0(8250);
-		calibrationData.setPitch0(384);
-		
+	public void initialize() {		
 		// Add as listener for calibration data
 		mote.addDataListener(this);
 
@@ -54,51 +49,17 @@ public class MotionPlus extends AbstractExtension implements DataListener {
 		boolean yawFast = ((extensionData[3] & 0x02) >> 1) == 0;
 		boolean rollFast = ((extensionData[4] & 0x02) >> 1) == 0;
 		boolean pitchFast = ((extensionData[3] & 0x01) >> 0) == 0;
-
-		float yaw = (extensionData[0] | (extensionData[3] & 0xfc) << 6);
-		float roll = (extensionData[1] | (extensionData[4] & 0xfc) << 6);
-		float pitch = (extensionData[2] | (extensionData[5] & 0xfc) << 6);
-
-		String debug =String.format("%04x", (int)yaw) + " " + String.format("%04x", (int)roll) + " "+ String.format("%04x", (int)pitch);
-		Log.d("gyro", debug);
-		// if(calibrate){
-		// if (mCalibMotionPlus == true)
-		// {
-		// if (mCalibMotionPlusNumValues > 0)
-		// {
-		// // save gyration values for further calibration
-		// mCalibMotionPlusList.Add(mWiimoteState.MotionPlusState.GyroState);
-		// mCalibMotionPlusNumValues--;
-		// }
-		// else
-		// {
-		// // calculate calibration data
-		// mWiimoteState.MotionPlusState.CalibrationInfo.GyroCalibration.Yaw0 =
-		// 0;
-		// mWiimoteState.MotionPlusState.CalibrationInfo.GyroCalibration.Roll0 =
-		// 0;
-		// mWiimoteState.MotionPlusState.CalibrationInfo.GyroCalibration.Pitch0
-		// = 0;
-		// foreach (GyroState gyrostate in mCalibMotionPlusList)
-		// {
-		// mWiimoteState.MotionPlusState.CalibrationInfo.GyroCalibration.Yaw0 +=
-		// (uint)(gyrostate.RawValues.Yaw);
-		// mWiimoteState.MotionPlusState.CalibrationInfo.GyroCalibration.Roll0
-		// += (uint)(gyrostate.RawValues.Roll);
-		// mWiimoteState.MotionPlusState.CalibrationInfo.GyroCalibration.Pitch0
-		// += (uint)(gyrostate.RawValues.Pitch);
-		// }
-		// mWiimoteState.MotionPlusState.CalibrationInfo.GyroCalibration.Yaw0 /=
-		// (uint)mCalibMotionPlusList.Count;
-		// mWiimoteState.MotionPlusState.CalibrationInfo.GyroCalibration.Roll0
-		// /= (uint)mCalibMotionPlusList.Count;
-		// mWiimoteState.MotionPlusState.CalibrationInfo.GyroCalibration.Pitch0
-		// /= (uint)mCalibMotionPlusList.Count;
-		//
-		// // stop calibration
-		// mCalibMotionPlus = false;
-		// }
-		// }
+		
+		float yaw = (extensionData[0] & 0xff | (extensionData[3] & 0xfc) << 6);
+		float roll = (extensionData[1] & 0xff | (extensionData[4] & 0xfc) << 6);
+		float pitch = (extensionData[2] & 0xff | (extensionData[5] & 0xfc) << 6);
+		
+		if(!calibration.isFinished()){
+			calibration.addCalibrationData(yaw, roll, pitch);
+			if(calibration.isFinished()){
+				calibrationData = calibration.getCalibratedData();
+			}
+		}
 
 		yaw -= calibrationData.getYaw0();
 		roll -= calibrationData.getRoll0();
@@ -121,7 +82,7 @@ public class MotionPlus extends AbstractExtension implements DataListener {
 		} else {
 			pitch /= LOWSPEED_SCALING;
 		}
-//		Log.d("gyro", yaw + "\t" + roll + "\t" + pitch);
+		Log.d("gyro", yaw + "\t" + roll + "\t" + pitch);
 	}
 
 	@Override
@@ -135,18 +96,17 @@ public class MotionPlus extends AbstractExtension implements DataListener {
 				&& evt.getAddress()[0] == 0x00
 				&& (evt.getAddress()[1] & 0xff) == 0x20
 				&& evt.getPayload().length == 16) {
-			Log.e("test", "testitestus");
 			byte[] payload = evt.getPayload();
 
 			calibrationData = new MotionPlusCalibrationData();
 
 			// gyro calibration - seems to be OK but not very accurate
-//			calibrationData
-//					.setYaw0((int) ((payload[0] << 6) | (payload[1] >> 2)));
-//			calibrationData
-//					.setRoll0((int) ((payload[2] << 6) | (payload[3] >> 2)));
-//			calibrationData
-//					.setPitch0((int) ((payload[4] << 6) | (payload[5] >> 2)));
+			calibrationData
+					.setYaw0((int) ((payload[0] & 0xff << 6) | (payload[1] & 0xff >> 2)));
+			calibrationData
+					.setRoll0((int) ((payload[2] & 0xff << 6) | (payload[3] & 0xff >> 2)));
+			calibrationData
+					.setPitch0((int) ((payload[4] & 0xff << 6) | (payload[5] & 0xff >> 2)));
 
 			// this doesn't seem right...
 			// YawG = (int)((buff[16] << 6) | buff[17] >> 2);
@@ -154,6 +114,10 @@ public class MotionPlus extends AbstractExtension implements DataListener {
 			// PitchG = (int)((buff[20] << 6) | buff[21] >> 2);
 		}
 
+	}
+	
+	public void calibrate(){
+		calibration.startCalibrating();
 	}
 
 	@Override
