@@ -28,8 +28,22 @@ The purpose of the project is to explore the possibilities of creating bio-feedb
 %Brief description of the research domain and the problem that one wants to address. It should tell the reader why working on this project is worth doing.
 Falls are a major health hazard among the elderly population (age > 65) \cite{fallsHealthHazard}, in addition to being an obstacle for physical activity and independent living. Through physical activity the elderly may improve their quality of life and prevent future disabilities\cite{physicalActivity}. A third of all elders that experience a fall develop a fear of falling \cite{fearOfFalling}. Fear of falling causes general anxiety and avoidance of physical activity. Long term consequences result in social isolation, physical deterioration and reduced quality of life.\cite{physicalAvoidance} %Skrive noe om hvor mye det koster staten å passe på de eldre?
 
-Between 30\% and 60\% of the elder population will experience at least one fall per year, and 10\% - 20\% of these will result in an injury, hospitalization or death \cite{fallStatistics}. For the independent elder population it is even more crucial that a fall can be avoided and the proper authorities can be alerted if a fall does occur. In the case of a serious fall a slow response time might increase the likelihood of permanent damage or death\cite{personHomeDeath, dangerousFallHome}. 
+Between 30\% and 60\% of the elder population will experience at least one fall per year, and 10\% - 20\% of these will result in an injury, hospitalization or death \cite{fallStatistics}. For the independent elder population it is even more crucial that a fall can be avoided and the proper authorities can be alerted if a fall does occur. In the case of a serious fall a slow response time might increase the likelihood of permanent damage or death\cite{personHomeDeath, dangerousFallHome}.
 
+
+\chapter{State of the Art}
+%This chapter provides an overview of the literature. It positions your work with respect to work already done by others. 
+
+Several attempts have been made to create fall detection systems using smart phone technology \cite{iFall, semiSupervisedFallDetection, mobilePhoneBasedFallDetection, detectionOfFalls}, all of these studies show positive results. The current trend shows that smart phones are becoming more affordable \cite{find_some_data_here} and with the correct software these phones can notify healthcare personnel about falls, giving the elderly an extra safety.
+
+Another approach is to try preventing the falls from happening all together by notifying the user that he or she is moving in an unstable manner. Multiple studies show that using biofeedback systems to inform the user about unstable walk helps prevent falls \cite{multiModualBiofeedback, vibrotactileBiofeedback, vibrotactileTiltFeedback}. % KANSKJE SKRIVE NOE OM AT SENSORENE ER DYRE ELLER TUNGVINTE Å BRUKE I HJEMMET?
+Also mobile versions of such systems have been researched with promising results \cite{fallPrevention}.
+
+A limitation for many of the previously discussed solutions is that they only make use of the embedded accelerometers in the smart phone. Increasing the number of sensors and their positioning can make the fall detection application more accurate \cite{fallDetectionWithExtraSensors}.
+
+In this study the goal is to examine if using cheap external sensors can give more accurate and additional sensor data to help make fall detection/prevention applications more effective. The sensors examined will be the Wii Remote and the Sony Move controller. These are cheap mass produced game controllers with embedded sensors and Bluetooth support. Using Bluetooth wireless technology the sensors can be connected to the smartphone and stream supplementary acceleromter and gyroscope data.
+
+The Google Play Store has 3 applications that allow you to connect a WiiRemote to your Android Device. All of these applications focus only on the buttons, and ignore sensor data \cite{wiimoteController, simpleWiiController}. The applications seem unstable and are far from user friendly, but they are the only of its kind out there.
 
 \section{Research questions}
 %What are the questions you are answering with your project? Normally, you specify a main question and related sub-questions. Remember that at the end you have to demonstrate you have answered to the stated questions. It is not uncommon that the questions are changed during the project, but it is important to be as explicit as possible and as early as possible with research questions since they help you to focus.
@@ -42,19 +56,6 @@ RQ3: How many bluetooth devices can be connected to the phone?
 \section{Research method}
 %How the research is conducted. In the previous section you say what you are doing. Here you specify how. The choice of a research method is strictly connected to the type of questions you want to answer.
 
-
-
-\chapter{State of the Art}
-%This chapter provides an overview of the literature. It positions your work with respect to work already done by others. 
-
-Several attempts have been made to create fall detection systems using smart phone technology \cite{iFall, semiSupervisedFallDetection, mobilePhoneBasedFallDetection, detectionOfFalls}, all of these studies show  results. The current trend shows that smart phones are becoming more affordable \cite{find_some_data_here} and with the correct software these phones can notify healthcare personnel about falls, giving the elderly an extra safety.
-
-Another approach is to try preventing the falls from happening all together by notifying the user that he or she is moving in an unstable manner. Multiple studies show that using biofeedback systems to inform the user about unstable walk helps prevent falls \cite{multiModualBiofeedback, vibrotactileBiofeedback, vibrotactileTiltFeedback}. % KANSKJE SKRIVE NOE OM AT SENSORENE ER DYRE ELLER TUNGVINTE Å BRUKE I HJEMMET?
-Also mobile versions of such systems have been researched with promising results \cite{fallPrevention}.
-
-A limitation for many of the previously discussed solutions is that they only make use of the embedded accelerometers in the smart phone. Increasing the number of sensors and their positioning can make the fall detection application more accurate \cite{fallDetectionWithExtraSensors}.
-
-In this study the goal is to examine if using cheap external sensors can give more accurate and additional sensor data to help make fall detection/prevention applications more effective. The sensors examined will be the Wii Remote and the Sony Move controller. These are cheap mass produced game controllers with embedded sensors and Bluetooth support. Using Bluetooth wireless technology the sensors can be connected to the smartphone and stream supplementary acceleromter and gyroscope data.
 
 
 \section{Android OS}
@@ -118,7 +119,10 @@ Motej uses the BlueCove library as a multi-platform interface to the Bluetooth s
 
 \section{Motej on Android}
 
+
 \section{Motion Plus Support}
+
+
 
 
 
