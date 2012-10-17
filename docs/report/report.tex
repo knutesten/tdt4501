@@ -1,14 +1,77 @@
 \documentclass[11pt,twoside,a4paper]{report}
 \usepackage[utf8]{inputenc}
 \usepackage{hyperref}
+\usepackage{graphicx}
+\graphicspath{{./images/}}
 
 
 \begin{document}
-%Top matter begin
-\title{Falldetection}
-\author{Knut Esten Melandsø Nekså and Dean Lozo}
-\date{\today}
-\maketitle
+\begin{titlepage}
+
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}} % Defines a new command for the horizontal lines, change thickness here
+
+\center % Center everything on the page
+ 
+%----------------------------------------------------------------------------------------
+%	HEADING SECTIONS
+%----------------------------------------------------------------------------------------
+
+\textsc{\LARGE Norwegian Univeristy of Science and Technology}\\[1.5cm] % Name of your university/college
+%\textsc{\Large Major Heading}\\[0.5cm] % Major heading such as course name
+%\textsc{\large Minor Heading}\\[0.5cm] % Minor heading such as course title
+
+%----------------------------------------------------------------------------------------
+%	TITLE SECTION
+%----------------------------------------------------------------------------------------
+
+\HRule \\[0.4cm]
+{ \huge \bfseries Falldetection Prototype}\\[0.4cm] % Title of your document
+\HRule \\[1.5cm]
+ 
+%----------------------------------------------------------------------------------------
+%	AUTHOR SECTION
+%----------------------------------------------------------------------------------------
+
+\begin{minipage}{0.4\textwidth}
+\begin{flushleft} \large
+\emph{Authors:}\\
+Dean \textsc{Lozo}\\ % Your name
+Knut \textsc{E. M. Nekså}\\ % Your name
+\end{flushleft}
+\end{minipage}
+~
+\begin{minipage}{0.4\textwidth}
+\begin{flushright} \large
+\emph{Supervisor:} \\
+Dag \textsc{Svanæs} % Supervisor's Name
+\end{flushright}
+\end{minipage}\\[3cm]
+
+% If you don't want a supervisor, uncomment the two lines below and remove the section above
+%\Large \emph{Author:}\\
+%John \textsc{Smith}\\[3cm] % Your name
+
+
+
+%----------------------------------------------------------------------------------------
+%	LOGO SECTION
+%----------------------------------------------------------------------------------------
+
+\includegraphics{ntnuEnglish.png}\\[1.5cm] % Include a department/university logo - this will require the graphicx package
+
+%----------------------------------------------------------------------------------------
+%	DATE SECTION
+%----------------------------------------------------------------------------------------
+
+{\large \today}\\[3cm] % Date, change the \today to a set date if you want to be precise
+
+%----------------------------------------------------------------------------------------
+
+\vfill % Fill the rest of the page with whitespace
+
+\end{titlepage}
+
+%\maketitle
 
 % Top matter end
 
@@ -62,7 +125,8 @@ There is very little to no research done on connecting smartphones and gaming pe
 
 The case study will be split into two parts. The first part will be a qualitative technical study. An application will be created for the Android phone which will function as a hub for the bio-feedback system. This study will focus on any limitations, or particular challenges that the application might have from a technical standpoint.
 
-The second part will be a quantitative study, where the viability of the system will be tested. It will be important to confirm that the system can perform the intended tasks and be reliable for several hours at a time.
+The second part will be a quantitative study, where the viability of the system will be tested. Accuracy, battery life, range, stability are all factors that will determine if the system is reliable enough to be used out in the field, or as a technical foundation for a more user friendly bio-feedback system.
+
 
 
 \section{Android OS}
