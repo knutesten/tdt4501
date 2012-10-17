@@ -33,13 +33,76 @@
   stringstyle=\color{mauve},         % string literal style
 }
 
+\usepackage{graphicx}
+\graphicspath{{./images/}}
 
 \begin{document}
-%Top matter begin
-\title{Falldetection}
-\author{Knut Esten Melandsø Nekså and Dean Lozo}
-\date{\today}
-\maketitle
+\begin{titlepage}
+
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}} % Defines a new command for the horizontal lines, change thickness here
+
+\center % Center everything on the page
+ 
+%----------------------------------------------------------------------------------------
+%	HEADING SECTIONS
+%----------------------------------------------------------------------------------------
+
+\textsc{\LARGE Norwegian Univeristy of Science and Technology}\\[1.5cm] % Name of your university/college
+%\textsc{\Large Major Heading}\\[0.5cm] % Major heading such as course name
+%\textsc{\large Minor Heading}\\[0.5cm] % Minor heading such as course title
+
+%----------------------------------------------------------------------------------------
+%	TITLE SECTION
+%----------------------------------------------------------------------------------------
+
+\HRule \\[0.4cm]
+{ \huge \bfseries Falldetection Prototype}\\[0.4cm] % Title of your document
+\HRule \\[1.5cm]
+ 
+%----------------------------------------------------------------------------------------
+%	AUTHOR SECTION
+%----------------------------------------------------------------------------------------
+
+\begin{minipage}{0.4\textwidth}
+\begin{flushleft} \large
+\emph{Authors:}\\
+Dean \textsc{Lozo}\\ % Your name
+Knut \textsc{E. M. Nekså}\\ % Your name
+\end{flushleft}
+\end{minipage}
+~
+\begin{minipage}{0.4\textwidth}
+\begin{flushright} \large
+\emph{Supervisor:} \\
+Dag \textsc{Svanæs} % Supervisor's Name
+\end{flushright}
+\end{minipage}\\[3cm]
+
+% If you don't want a supervisor, uncomment the two lines below and remove the section above
+%\Large \emph{Author:}\\
+%John \textsc{Smith}\\[3cm] % Your name
+
+
+
+%----------------------------------------------------------------------------------------
+%	LOGO SECTION
+%----------------------------------------------------------------------------------------
+
+\includegraphics{ntnuEnglish.png}\\[1.5cm] % Include a department/university logo - this will require the graphicx package
+
+%----------------------------------------------------------------------------------------
+%	DATE SECTION
+%----------------------------------------------------------------------------------------
+
+{\large \today}\\[3cm] % Date, change the \today to a set date if you want to be precise
+
+%----------------------------------------------------------------------------------------
+
+\vfill % Fill the rest of the page with whitespace
+
+\end{titlepage}
+
+%\maketitle
 
 % Top matter end
 
@@ -78,14 +141,22 @@ The Google Play Store has 3 applications that allow you to connect a WiiRemote t
 
 \section{Research questions}
 %What are the questions you are answering with your project? Normally, you specify a main question and related sub-questions. Remember that at the end you have to demonstrate you have answered to the stated questions. It is not uncommon that the questions are changed during the project, but it is important to be as explicit as possible and as early as possible with research questions since they help you to focus.
-RQ1: Can motion sensing game controllers be used to gather additonal and more accurate data for fall related applications on the smartphone? What is the optimal location for the controller to be located?
+RQ1: Can a mobile bio-feedback system be created using smartphones and gaming peripherals.
 
-RQ2: Is it feasible to have game controllers connected to the smartphone? How is the battery life, how close does the phone have to be at all times?
+RQ1.1: Can motion sensing game controllers be used to gather additonal and more accurate data for fall related applications on the smartphone? What is the optimal location for the controller to be located?
 
-RQ3: How many bluetooth devices can be connected to the phone?
+RQ1.2: Is it feasible to have game controllers connected to the smartphone? How is the battery life, how close does the phone have to be at all times?
+
+RQ1.3: How many bluetooth devices can be connected to the phone?
+
 
 \section{Research method}
 %How the research is conducted. In the previous section you say what you are doing. Here you specify how. The choice of a research method is strictly connected to the type of questions you want to answer.
+There is very little to no research done on connecting smartphones and gaming peripherals together. Therefore a case study will be preformed. A case study was chosen because it was the only choice. We can not answer any of our research questions without having an application or system to test it out on. Currently no such system exists, so one must be created.
+
+The case study will be split into two parts. The first part will be a qualitative technical study. An application will be created for the Android phone which will function as a hub for the bio-feedback system. This study will focus on any limitations, or particular challenges that the application might have from a technical standpoint.
+
+The second part will be a quantitative study, where the viability of the system will be tested. Accuracy, battery life, range, stability are all factors that will determine if the system is reliable enough to be used out in the field, or as a technical foundation for a more user friendly bio-feedback system.
 
 
 
@@ -141,6 +212,7 @@ Since no library with Android support currently exist it was decided to use the 
 \section{Introduction}
 At the time of writing no research has been done on using motion game controllers as peripherals in a smart-phone based bio-feedback system. In order to answer the research questions posed in this report it will be necessary to create a simple but working prototype of the aforementioned system. The equipment used to realize the system will be a rooted HTC Desire HD \cite{desireHdSpecs} running CyanogenMod 7 \cite{cyanogenMod} and Wii Remotes with the Motion Plus extension. The application will be created using the Android SDK, Java and the Motej library.
 
+%Write about why we chose motej?
 
 \section{Limitations}
 %Se på dette avsnittet knut. Tror hele må skriver på nytt hvor avsnittene under er merget og forklart bedre
