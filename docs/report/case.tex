@@ -1,0 +1,68 @@
+\chapter{The Case}
+%Development
+Since no library with Android support currently exist it was decided to use the Motej library as a core for further development.
+
+\section{Introduction}
+At the time of writing no research has been done on using motion game controllers as peripherals in a smart-phone based bio-feedback system. In order to answer the research questions posed in this report it will be necessary to create a simple but working prototype of the aforementioned system. The equipment used to realize the system will be a rooted HTC Desire HD \cite{desireHdSpecs} running CyanogenMod 7 \cite{cyanogenMod} and Wii Remotes with the Motion Plus extension. The application will be created using the Android SDK, Java and the Motej library.
+
+%Write about why we chose motej?
+
+\section{Limitations}
+%Se på dette avsnittet knut. Tror hele må skriver på nytt hvor avsnittene under er merget og forklart bedre
+The majority of Android devices have built-in Bluetooth cards, but the current Android SDK does not offer low level support for the Bluetooth stack, including L2CAP. This constraint can be bypassed on some devices by using reflection to access the socket constructor\cite{l2capHtc}. Access could also be gained through using the Android NDK (Native Develeoper Kit) but this is outside of our scope. Due to L2CAP not being official supported, certain vendors of Android devices have removed the L2CAP protocols completely, meaning that it would be impossible to use their Android OS to connect to the Wii Remote. Therefore the Android OS on the HTC Desire HD was altered to run with CyanogenMod 7 instead of the default HTC Sense.
+
+Motej uses the BlueCove library as a multi-platform interface to the Bluetooth stack. Unfortunately, BlueCove does not support the Android OS. Android comes with its own Bluetooth API, the Android Bluetooth API. This means that the library will have to be re-written to work on the Android OS and support for the MotionPlus will have to be implemented. WiiMoteLib\cite{wiiMoteLib} is a C\# library which has support for the MotionPlus, by looking at the solutions in this library it should reduce the time required to implement MotionPlus support for the Motej library.
+
+\section{Motej on Android}
+
+For Motej to work on Android the BlueCove library has to be replaced with the Android Bluetooth API. This presents a major problem. Wii  remotes uses the low level Bluetooth protocol L2CAP to connect to different platforms. As of Android version 4.1, Jelly Bean, \cite{jellyBean} there is no official support for L2CAP. Android only has full support for the higher level protocol \emph{radio frequency communication} (RFCOMM). RFCOMM is built on top of the L2CAP protocol and provides serial port emulation. 
+
+Though the L2CAP is not directly supported through the Android Bluetooth API it is possible to create an L2CAP socket using a technique called reflection.
+
+\begin{lstlisting}
+Class<BluetoothSocket> cls = BluetoothSocket.class;
+Constructor<BluetoothSocket> constructor = cls.getDeclaredConstructor(
+		int.class, int.class, boolean.class, boolean.class,
+		BluetoothDevice.class, int.class, ParcelUuid.class);
+
+int type = 3, fd = -1, port = 0x13;
+boolean auth = false, encrypt = false;
+// Get some device
+BluetoothDevice device = getBluetoothDevice();
+ParcelUuid uuid = null;
+
+/* type    - Type of socket (3 for L2CAP)
+ * fd      - File descriptor (-1 for new socket)
+ * auth    - Require authenticaton
+ * encrypt - Require encrypted connection
+ * port    - Remote port
+ * uuid	   - SDP UUID
+ */
+// This will crate an L2CAP socket on port 0x13
+BluetoothSocket socket = constructor.newInstance(type, fd, auth,
+		encrypt, device, port, uuid);
+\end{lstlisting}
+
+This method has limitations. Because there is no official support for L2CAP in Android, many vendors roms will throw errors when trying to Bluetooth devices this way. Major vendors such as HTC and Samusng does, as of now, not support L2CAP connections.
+
+\section{Motion Plus Support}
+Motej has support for most of the common extensions for the Wii remote. Unfortunately Motion Plus is not one of the supported extensions. Motion Plus was implemented using the already existing extension structure of the Motej library.
+
+Information on how to parse the incoming bytes from the Wii remote was found on the WiiBrew wiki \cite{wiiBrew}. 
+
+%include image of byte meaning here.
+
+\begin{lstlisting}
+boolean yawFast = ((extensionData[3] & 0x02) >> 1) == 0;
+boolean rollFast = ((extensionData[4] & 0x02) >> 1) == 0;
+boolean pitchFast = ((extensionData[3] & 0x01) >> 0) == 0;
+
+float yaw = 
+	(extensionData[0] & 0xff | (extensionData[3] & 0xfc) << 6);
+float roll = 
+	(extensionData[1] & 0xff | (extensionData[4] & 0xfc) << 6);
+float pitch = 
+	(extensionData[2] & 0xff | (extensionData[5] & 0xfc) << 6);
+\end{lstlisting}
+
+An additional class was added for manual calibration of the gyroscope. There is calibration data stored in the Wii remote memory, but WiiBrew states that how to use these data for calibration is still unknown. Some suggestions on how to use the data exist, however the calibrated values are not very accurate compared to the manual calibration method. During manual calibration it is required that the Wii remote is kept still. The calibration takes less than 1 second.
