@@ -23,30 +23,30 @@ package motej.android.event;
  */
 public class AccelerometerEvent<T> {
 
-	private int x;
+	private float x;
 	
-	private int y;
+	private float y;
 	
-	private int z;
+	private float z;
 	
 	private T source;
 	
-	public AccelerometerEvent(T source, int x, int y, int z) {
+	public AccelerometerEvent(T source, float x, float y, float z) {
 		this.source = source;
 		this.x = x;
 		this.y = y;
 		this.z = z;
 	}
 
-	public int getX() {
+	public float getX() {
 		return x;
 	}
 
-	public int getY() {
+	public float getY() {
 		return y;
 	}
 
-	public int getZ() {
+	public float getZ() {
 		return z;
 	}
 

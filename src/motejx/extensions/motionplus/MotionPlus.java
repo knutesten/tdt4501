@@ -45,6 +45,9 @@ public class MotionPlus extends AbstractExtension implements DataListener {
 	}
 
 	private void fireGyroEvent(byte[] extensionData) {
+		if(calibrationData == null){
+			return;
+		}
 
 		boolean yawFast = ((extensionData[3] & 0x02) >> 1) == 0;
 		boolean rollFast = ((extensionData[4] & 0x02) >> 1) == 0;

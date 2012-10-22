@@ -229,7 +229,9 @@ public class Mote {
 	}
 
 	@SuppressWarnings("unchecked")
-	protected void fireAccelerometerEvent(int x, int y, int z) {
+	protected void fireAccelerometerEvent(float x, float y, float z) {
+		
+		
 		AccelerometerListener<Mote>[] listeners = listenerList
 				.getListeners(AccelerometerListener.class);
 		AccelerometerEvent<Mote> evt = new AccelerometerEvent<Mote>(this, x, y,

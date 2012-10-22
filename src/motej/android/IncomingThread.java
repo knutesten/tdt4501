@@ -61,9 +61,19 @@ class IncomingThread extends Thread{
 	}
 
 	protected void parseAccelerometerData(byte[] bytes) {
-		int x = bytes[4] & 0xff;
-		int y = bytes[5] & 0xff;
-		int z = bytes[6] & 0xff;
+		float x = bytes[4] & 0xff;
+		float y = bytes[5] & 0xff;
+		float z = bytes[6] & 0xff;
+		
+		CalibrationDataReport c = source.getCalibrationDataReport();
+		if(c == null){
+			return;
+		}
+		
+		x = (float)((x+c.getZeroX())/c.getGravityX());
+		y = (float)((y+c.getZeroY())/c.getGravityY());
+		z = (float)((z+c.getZeroZ())/c.getGravityZ());
+				
 		source.fireAccelerometerEvent(x, y, z);
 	}
 
