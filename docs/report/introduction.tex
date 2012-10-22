@@ -2,7 +2,7 @@
 %The Introduction is your thesis in a nutshell. Again, the organization can vary, but a standard introduction includes the following sections:
 
 \section{Purpose}
-The purpose of the project is to explore the possibilities of creating bio-feedback systems through the use of a smartphone and COTS products, mainly game controllers. The purpose of the bio-feedback system will be to improve the stability and balance of the user through peripherals connected to the phone. Audio and vibration will be used to provide feedback to the user about his stability. In the case of a fall the system will send out alerts to inform personnel of the incident.
+The purpose of the project is to explore the possibility of creating a mobile bio-feedback system through the use of a smartphone and cheap mass produced peripherals. The smartphone will act as a hub, while sensor based peripherals attached to the user will gather information. The information will be processed by the smartphone, and appropriate feedback will be provided to the user; Feedback will be provided by using vibration and audio. By acknowledging the feedback the user can improve his or her gait, and reduce the likelihood of a fall.
 
 \section{Motivation}
 %Brief description of the research domain and the problem that one wants to address. It should tell the reader why working on this project is worth doing.
@@ -10,6 +10,45 @@ Falls are a major health hazard among the elderly population (age > 65) \cite{fa
 
 Between 30\% and 60\% of the elder population will experience at least one fall per year, and 10\% - 20\% of these will result in an injury, hospitalization or death \cite{fallStatistics}. For the independent elder population it is even more crucial that a fall can be avoided and the proper authorities can be alerted if a fall does occur. In the case of a serious fall a slow response time might increase the likelihood of permanent damage or death\cite{personHomeDeath, dangerousFallHome}.
 
+Technological progress has made it easy and affordable to incorporate sensors into devices in order to provide a better or more entertaining user experience. Accelerometers, gyroscopes and GPS are an expected feature in today's smartphones. Newer phones include even more advanced sensory such as Barometers, and Proximity Sensors.
+
+Motion based games and game controllers have been a trend in the gaming industry for the last 8 years. It started with the Nintendo Wii, but Microsoft Kinect and Playstation Move followed quickly with their own motion detection technology. The competition to offer the best product on the market has made motion sensing more powerful, while mass production has made it cheaper.
+
+\section{Research goals}
+%What are the questions you are answering with your project? Normally, you specify a main question and related sub-questions. Remember that at the end you have to demonstrate you have answered to the stated questions. It is not uncommon that the questions are changed during the project, but it is important to be as explicit as possible and as early as possible with research questions since they help you to focus.
+The primary research goal is to develop a mobile bio-feedback system through mass produced off the shelf products. A smartphone will function as the central hub for the system. Game controllers with motion detecting capabilities will be attached to the user in key locations and transmit sensor data to the smartphone. The phone will process the data, compute it. The user will control and interact with the system through the smartphone. The system will provide the user with feedback through audio and vibration. In addition to the phone audio a bluetooth speaker can be connected, and the game controllers provide vibration and audio as well. 
+
+%PRETTY PICTURE THAT SHOW HOW THINGS WORK TOGHETER IN THE SYSTEM
+\begin{figure}[h!]
+  \centering
+    \includegraphics[width=0.80\textwidth]{hub.png}
+    \caption{\footnotesize A conceptual image of the hardware involved in a mobile bio-feedback system. Arrows represent the information flow, and the thickness represent the intensity.}
+\end{figure}
+
+In order to reach the primary goal mentioned above, a set of sub-goals must be completed. The sub goals will help strengthen the viability of the system in an uncontrolled changing environment.
+
+\begin{itemize}
+
+\item Develop a library for Android that can receive a bit stream with sensor data from a gaming peripheral via bluetooth. A Wii Remote with Motion Plus will be the first to be tested and implemented.
+
+\item Develop a basic application that can be distributed on several Android devices. A qualitative test will be preformed in order to confirm that the application is function properly on the device.
+
+\item Perform tests to measure the durability and of the system. Battery life, range and stability are factors that will affect the viability of the system.
+
+\item Conduct a set of small scale tests to see if the system has any potential as a bio-feedback system.
+
+\end{itemize}
+
+
+\section{Research method}
+%How the research is conducted. In the previous section you say what you are doing. Here you specify how. The choice of a research method is strictly connected to the type of questions you want to answer.
+PARADIGMS EVERYWHERE!
+
+There is very little to no research done on connecting smartphones and gaming peripherals together, and a working system that combines the two does not currently exist. A case study will conducted in order to perform thorough research on any technical possibilities and limitations as a result of the hardware and software choices for the system. The case study seemed as a natural choice when having to create the system from scratch in the span of 3 and a half months.
+
+The case study will be split into two parts. The first part will focus on achieving research goal (a) and (b) through a qualitative study. It will focus on the technical aspect of the goals. Technical possibilities and limitations encountered during implementation will be discussed and reported. The application will be presented in detail where architecture, functionality, and appearance of the prototype will be discussed.
+
+The second part will focus on reaching research goal (c) and (d) through a more quantitative study. A set of tests will be outlined and conducted in order to test the durability of the system. The tests will be limited to a small amount of devices due to resource and time constraints, but several tests will be run in order to acquire reliable data.
 
 \section{State of the Art}
 %This chapter provides an overview of the literature. It positions your work with respect to work already done by others. 
@@ -25,21 +64,3 @@ In this study the goal is to examine if using cheap external sensors can give mo
 
 The Google Play Store has 3 applications that allow you to connect a WiiRemote to your Android Device. All of these applications focus only on the buttons, and ignore sensor data \cite{wiimoteController, simpleWiiController}. The applications seem unstable and are far from user friendly, but they are the only of its kind out there.
 
-\section{Research questions}
-%What are the questions you are answering with your project? Normally, you specify a main question and related sub-questions. Remember that at the end you have to demonstrate you have answered to the stated questions. It is not uncommon that the questions are changed during the project, but it is important to be as explicit as possible and as early as possible with research questions since they help you to focus.
-RQ1: Can a mobile bio-feedback system be created using smartphones and gaming peripherals.
-
-RQ1.1: Can motion sensing game controllers be used to gather additonal and more accurate data for fall related applications on the smartphone? What is the optimal location for the controller to be located?
-
-RQ1.2: Is it feasible to have game controllers connected to the smartphone? How is the battery life, how close does the phone have to be at all times?
-
-RQ1.3: How many bluetooth devices can be connected to the phone?
-
-
-\section{Research method}
-%How the research is conducted. In the previous section you say what you are doing. Here you specify how. The choice of a research method is strictly connected to the type of questions you want to answer.
-There is very little to no research done on connecting smartphones and gaming peripherals together. Therefore a case study will be preformed. A case study was chosen because it was the only choice. We can not answer any of our research questions without having an application or system to test it out on. Currently no such system exists, so one must be created.
-
-The case study will be split into two parts. The first part will be a qualitative technical study. An application will be created for the Android phone which will function as a hub for the bio-feedback system. This study will focus on any limitations, or particular challenges that the application might have from a technical standpoint.
-
-The second part will be a quantitative study, where the viability of the system will be tested. Accuracy, battery life, range, stability are all factors that will determine if the system is reliable enough to be used out in the field, or as a technical foundation for a more user friendly bio-feedback system.
