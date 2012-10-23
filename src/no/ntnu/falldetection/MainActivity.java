@@ -2,13 +2,13 @@ package no.ntnu.falldetection;
 
 
 import motej.android.Mote;
-import motej.android.event.CoreButtonEvent;
-import motej.android.event.CoreButtonListener;
-import motej.android.event.ExtensionEvent;
-import motej.android.event.ExtensionListener;
 import motej.android.event.AccelerometerEvent;
 import motej.android.event.AccelerometerListener;
+import motej.android.event.ExtensionEvent;
+import motej.android.event.ExtensionListener;
 import motej.android.request.ReportModeRequest;
+import motejx.extensions.motionplus.GyroEvent;
+import motejx.extensions.motionplus.GyroListener;
 import motejx.extensions.motionplus.MotionPlus;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
@@ -57,14 +57,31 @@ public class MainActivity extends Activity {
 						
 						public void accelerometerChanged(AccelerometerEvent<Mote> evt) {
 //							Log.i("Accelerometer", evt.getX() + " : " + evt.getY() + " : " + evt.getZ());
+							
 						}
 					
+					};
+					
+					final GyroListener listener3 = new GyroListener(){
+
+						@Override
+						public void gyroChanged(GyroEvent evt) {
+							Log.i("gyro", evt.getYaw() + " " + evt.getRoll() + " " + evt.getPitch());
+						}
+						
 					};
 					
 					ExtensionListener listener2 = new ExtensionListener(){
 						
 						@Override
 						public void extensionConnected(ExtensionEvent evt) {
+							((MotionPlus)mote.getExtension()).addGyroListener(listener3);
+							
+							try{
+								Thread.sleep(100);
+							}catch(Exception e){
+								
+							}
 							mote.setReportMode(ReportModeRequest.DATA_REPORT_0x37);
 						}
 
@@ -74,17 +91,7 @@ public class MainActivity extends Activity {
 						}
 					};
 					
-					CoreButtonListener listener3 = new CoreButtonListener() {
-						
-						@Override
-						public void buttonPressed(CoreButtonEvent evt) {
-							if(evt.isButtonBPressed()){
-								Log.e("test", "bwø");
-								((MotionPlus)mote.getExtension()).calibrate();
-							}
-						}
-					};
-					mote.addCoreButtonListener(listener3);
+					
 					mote.addExtensionListener(listener2);
 					mote.addAccelerometerListener(listener);   
 					

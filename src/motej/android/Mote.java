@@ -289,14 +289,21 @@ public class Mote {
 
 		Log.d("HYPERDEBUG", debug);
 		byte[] buff = payload;
-		
+
 		if (calibrationDataReport == null && error == 0 && address[0] == 0x00
 				&& address[1] == 0x20) {
 			// calibration data (most probably)
 			Log.d("motej.android", "Received Calibration Data Report.");
-			CalibrationDataReport report = new CalibrationDataReport(
-					payload[0] & 0xff, payload[1] & 0xff, payload[2] & 0xff,
-					payload[4] & 0xff, payload[5] & 0xff, payload[6] & 0xff);
+			
+			int x0 =((buff[0] & 0xff) << 2) | (buff[3]      & 0x03);
+            int y0 =((buff[1] & 0xff) << 2) | ((buff[3] & 0xff)>> 2 & 0x03);
+            int z0 = ((buff[2] & 0xff)  << 2) | ((buff[3] & 0xff) >> 4 & 0x03);
+
+            int xg = ((buff[4] & 0xff)  << 2) | (buff[3]      & 0x03);
+            int yg = ((buff[5] & 0xff) << 2) | ((buff[3] & 0xff)  >> 2 & 0x03);
+            int zg = ((buff[6] & 0xff)  << 2) | ((buff[3] & 0xff)  >> 4 & 0x03);
+            
+			CalibrationDataReport report = new CalibrationDataReport(x0, y0, z0, xg, yg, zg);
 			calibrationDataReport = report;
 		}
 		

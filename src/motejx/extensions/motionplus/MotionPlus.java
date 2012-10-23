@@ -1,34 +1,38 @@
 package motejx.extensions.motionplus;
 
-import android.util.Log;
 import motej.android.AbstractExtension;
 import motej.android.Mote;
 import motej.android.event.DataEvent;
 import motej.android.event.DataListener;
+import motej.android.request.ReportModeRequest;
+import test.EventListenerList;
 
 public class MotionPlus extends AbstractExtension implements DataListener {
 	private Mote mote;
 
 	private MotionPlusCalibrationData calibrationData;
 	private MotionPlusCalibrate calibration = new MotionPlusCalibrate();
+	
+	private EventListenerList listenerList = new EventListenerList();
 
 	// MotionPlus speed scaling
 	private final double LOWSPEED_SCALING = 20.0; // RawValues / 20 =
-																// x degree
+													// x degree
 	private final double HIGHSPEED_SCALING = 4.0; // RawValues / 4 =
-																// x degree
+													// x degree
 
 	/**
 	 * Initializes the Motion plus extension
 	 */
 	@Override
-	public void initialize() {		
+	public void initialize() {
 		// Add as listener for calibration data
 		mote.addDataListener(this);
 
 		// Initialize
 		mote.writeRegisters(new byte[] { (byte) 0xa6, 0x00, (byte) 0xf0 },
 				new byte[] { 0x55 });
+
 		// Start motion plus without pass through extensions
 		mote.writeRegisters(new byte[] { (byte) 0xA6, 0x00, (byte) 0xFE },
 				new byte[] { 0x04 });
@@ -40,26 +44,31 @@ public class MotionPlus extends AbstractExtension implements DataListener {
 
 	@Override
 	public void parseExtensionData(byte[] extensionData) {
-//		 decrypt(extensionData);
+		// decrypt(extensionData);
 		fireGyroEvent(extensionData);
 	}
 
 	private void fireGyroEvent(byte[] extensionData) {
-		if(calibrationData == null){
+		if (calibrationData == null) {
+			return;
+		}
+
+		GyroListener[] listeners = listenerList.getListeners(GyroListener.class);
+		if (listeners.length == 0) {
 			return;
 		}
 
 		boolean yawFast = ((extensionData[3] & 0x02) >> 1) == 0;
 		boolean rollFast = ((extensionData[4] & 0x02) >> 1) == 0;
 		boolean pitchFast = ((extensionData[3] & 0x01) >> 0) == 0;
-		
-		float yaw = (extensionData[0] & 0xff | (extensionData[3] & 0xfc) << 6);
-		float roll = (extensionData[1] & 0xff | (extensionData[4] & 0xfc) << 6);
-		float pitch = (extensionData[2] & 0xff | (extensionData[5] & 0xfc) << 6);
-		
-		if(!calibration.isFinished()){
+
+		float yaw = ((extensionData[0] & 0xff) | ((extensionData[3] & 0xfc) << 6));
+		float roll = ((extensionData[1] & 0xff) | ((extensionData[4] & 0xfc) << 6));
+		float pitch = ((extensionData[2] & 0xff) | ((extensionData[5] & 0xfc) << 6));
+
+		if (!calibration.isFinished()) {
 			calibration.addCalibrationData(yaw, roll, pitch);
-			if(calibration.isFinished()){
+			if (calibration.isFinished()) {
 				calibrationData = calibration.getCalibratedData();
 			}
 		}
@@ -69,7 +78,7 @@ public class MotionPlus extends AbstractExtension implements DataListener {
 		pitch -= calibrationData.getPitch0();
 
 		if (yawFast) {
-			yaw /= HIGHSPEED_SCALING; 
+			yaw /= HIGHSPEED_SCALING;
 		} else {
 			yaw /= LOWSPEED_SCALING;
 		}
@@ -77,7 +86,7 @@ public class MotionPlus extends AbstractExtension implements DataListener {
 		if (rollFast) {
 			roll /= HIGHSPEED_SCALING;
 		} else {
-			roll /=LOWSPEED_SCALING;
+			roll /= LOWSPEED_SCALING;
 		}
 
 		if (pitchFast) {
@@ -85,7 +94,15 @@ public class MotionPlus extends AbstractExtension implements DataListener {
 		} else {
 			pitch /= LOWSPEED_SCALING;
 		}
-		Log.d("gyro", yaw + "\t" + roll + "\t" + pitch);
+
+		GyroEvent evt = new GyroEvent(this, yaw, roll, pitch);
+		for (GyroListener l : listeners) {
+			l.gyroChanged(evt);
+		}
+	}
+	
+	public void addGyroListener(GyroListener gyroListener){
+		listenerList.add(GyroListener.class, gyroListener);
 	}
 
 	@Override
@@ -105,21 +122,22 @@ public class MotionPlus extends AbstractExtension implements DataListener {
 
 			// gyro calibration - seems to be OK but not very accurate
 			calibrationData
-					.setYaw0((int) ((payload[0] & 0xff << 6) | (payload[1] & 0xff >> 2)));
+					.setYaw0((int) (((payload[0] & 0xff) << 6) | ((payload[1] & 0xff) >> 2)));
 			calibrationData
-					.setRoll0((int) ((payload[2] & 0xff << 6) | (payload[3] & 0xff >> 2)));
+					.setRoll0((int) (((payload[2] & 0xff) << 6) | ((payload[3] & 0xff) >> 2)));
 			calibrationData
-					.setPitch0((int) ((payload[4] & 0xff << 6) | (payload[5] & 0xff >> 2)));
+					.setPitch0((int) (((payload[4] & 0xff) << 6) | ((payload[5] & 0xff) >> 2)));
 
 			// this doesn't seem right...
 			// YawG = (int)((buff[16] << 6) | buff[17] >> 2);
 			// RollG = (int)((buff[18] << 6) | buff[19] >> 2);
 			// PitchG = (int)((buff[20] << 6) | buff[21] >> 2);
+			
 		}
 
 	}
-	
-	public void calibrate(){
+
+	public void calibrate() {
 		calibration.startCalibrating();
 	}
 
