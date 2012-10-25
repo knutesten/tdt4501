@@ -2,11 +2,14 @@ package no.ntnu.falldetection;
 
 
 import motej.android.Mote;
-import motej.android.event.ExtensionEvent;
-import motej.android.event.ExtensionListener;
 import motej.android.event.AccelerometerEvent;
 import motej.android.event.AccelerometerListener;
+import motej.android.event.ExtensionEvent;
+import motej.android.event.ExtensionListener;
 import motej.android.request.ReportModeRequest;
+import motejx.extensions.motionplus.GyroEvent;
+import motejx.extensions.motionplus.GyroListener;
+import motejx.extensions.motionplus.MotionPlus;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -29,6 +32,15 @@ public class MainActivity extends Activity {
 	private BluetoothAdapter mBluetoothAdapter = BluetoothAdapter
 			.getDefaultAdapter();
 	private Mote mote;
+	
+	private GyroEvent newGyroEvent = null;
+	private AccelerometerEvent<Mote> newAccelEvent = null;
+	
+	
+	//Variables for the Madgwick Algorithm
+	private MadgwickAHRS alg = new MadgwickAHRS(1f/100f, 0.5f);
+	private float[] quat;
+	
 	
 	// Create a BroadcastReceiver for ACTION_FOUND
 	private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
@@ -53,34 +65,80 @@ public class MainActivity extends Activity {
 					AccelerometerListener<Mote> listener = new AccelerometerListener<Mote>() {
 						
 						public void accelerometerChanged(AccelerometerEvent<Mote> evt) {
-//							Log.i("Accelerometer", evt.getX() + " : " + evt.getY() + " : " + evt.getZ());
+							//Log.i("accel", evt.getX() + " : " + evt.getY() + " : " + evt.getZ());
+							shit(null, evt);
 						}
 					
+					};
+					
+					final GyroListener listener3 = new GyroListener(){
+
+						
+						public void gyroChanged(GyroEvent evt) {
+							Log.i("gyro", evt.getYaw() + " " + evt.getRoll() + " " + evt.getPitch());
+							shit(evt, null);
+						}
+						
 					};
 					
 					ExtensionListener listener2 = new ExtensionListener(){
 						
-							
 
 						public void extensionConnected(ExtensionEvent evt) {
-							Log.d("Extension connected", evt.getExtension().toString());
+							((MotionPlus)mote.getExtension()).addGyroListener(listener3);
+							
+							try{
+								Thread.sleep(1000);
+							}catch(Exception e){
+								
+							}
 							mote.setReportMode(ReportModeRequest.DATA_REPORT_0x37);
 						}
 
+
 						public void extensionDisconnected(ExtensionEvent evt) {
 							// TODO Auto-generated method stub
-							
 						}
 					};
+					
 					
 					mote.addExtensionListener(listener2);
 					mote.addAccelerometerListener(listener);   
 					
 //					mote.setReportMode(ReportModeRequest.DATA_REPORT_0x37);
+					
+					
+					
 				}
 			}
 		}   
 	};
+	
+	public void shit(GyroEvent ge, AccelerometerEvent<Mote> ae){
+		if(ge != null){
+			newGyroEvent = ge;
+		}
+		if(ae != null){
+			newAccelEvent =ae;
+		}
+		
+		if(newGyroEvent != null && newAccelEvent != null){
+		
+			//something
+			alg.update(degToRad(newGyroEvent.getPitch()), degToRad(newGyroEvent.getYaw()), degToRad(newGyroEvent.getRoll()), newAccelEvent.getX(), newAccelEvent.getY(), newAccelEvent.getZ());
+			
+			quat = alg.getQuaternion();
+			
+			double pitchAngle = (Math.atan2(2 * (quat[0] * quat[1] * quat[2] * quat[3]), 1 - 2 *  (quat[1] * quat[1] + quat[2] * quat[2]))) * (180/Math.PI);
+			double rollAngle = Math.asin(2 * (quat[0] * quat[2] - quat[3] * quat[1])) * (180 / Math.PI);
+			double yawAngle = Math.atan2(2 * (quat[0] * quat[3] + quat[1] * quat[2]), 1 - 2 * (quat[2] * quat[2] + quat[3] * quat[3])) * (180 / Math.PI);
+			
+			Log.i("alg", "pa: " + pitchAngle + " ya: " + yawAngle + " ra: " + rollAngle);
+			
+			newGyroEvent = null;
+			newAccelEvent = null;
+		}
+	}
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -131,11 +189,17 @@ public class MainActivity extends Activity {
 				}
 				return true;
 			case R.id.test:
-				mote.setReportMode(ReportModeRequest.DATA_REPORT_0x37);
+//				mote.setReportMode(ReportModeRequest.DATA_REPORT_0x37);
+				((MotionPlus)mote.getExtension()).calibrate();
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
 		}		
+	}
+	
+	//Hjelpemetode
+	private float degToRad(float degrees){
+		return (float) (Math.PI/180) * degrees;
 	}
 
 }

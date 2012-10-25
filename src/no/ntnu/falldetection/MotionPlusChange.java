@@ -27,15 +27,15 @@ public class MotionPlusChange {
 //	alg.update(degToRad(wiiPitch), degToRad(wiiRoll), degToRad(wiiYaw), accelX, accelY, accelZ);
 	
 
-	quat = alg.getQuaternion();
-	
-	pitch = Math.Atan2(2 * (quat[1] * quat[2] * quat[3] * quat[4]), 1 - 2 *  (quat[1] * quiat[1] + quat[2] * quat[2]));
-	roll = Math.Asin(2 * (quat[0] * quat[2] - quat[3] * quat[1]));
-	yaw = Math.Atan2(2 * (quat[0] * quat[3] + quat[1] * quat[2]), 1 - 2 * (quat[2] * quat[2] + quat[3] * quat[3]));
-	
-	angle = pitch * (180 / Math.PI);
-	
+//	quat = alg.getQuaternion();
+//	
+//	pitch = Math.Atan2(2 * (quat[1] * quat[2] * quat[3] * quat[4]), 1 - 2 *  (quat[1] * quiat[1] + quat[2] * quat[2]));
+//	roll = Math.Asin(2 * (quat[0] * quat[2] - quat[3] * quat[1]));
+//	yaw = Math.Atan2(2 * (quat[0] * quat[3] + quat[1] * quat[2]), 1 - 2 * (quat[2] * quat[2] + quat[3] * quat[3]));
+//	
+//	angle = pitch * (180 / Math.PI);
+//	
 	private float degToRad(float degrees){
-	return (float) (Math.PI/189) * degrees;
+	return (float) (Math.PI/180) * degrees;
 	}
 }
