@@ -16,12 +16,12 @@ Motion based games and game controllers have been a trend in the gaming industry
 
 \section{Research goals}
 %What are the questions you are answering with your project? Normally, you specify a main question and related sub-questions. Remember that at the end you have to demonstrate you have answered to the stated questions. It is not uncommon that the questions are changed during the project, but it is important to be as explicit as possible and as early as possible with research questions since they help you to focus.
-The primary research goal is to develop a mobile bio-feedback system through mass produced off the shelf products. A smartphone will function as the central hub for the system. Game controllers with motion detecting capabilities will be attached to the user in key locations and transmit sensor data to the smartphone. The phone will process the data, compute it. The user will control and interact with the system through the smartphone. The system will provide the user with feedback through audio and vibration. In addition to the phone audio a bluetooth speaker can be connected, and the game controllers provide vibration and audio as well. 
+The primary research goal is to develop a mobile bio-feedback system through mass produced off the shelf products. A smartphone will function as the central hub for the system. Game controllers with motion detecting capabilities will be attached to the user in key locations and transmit sensor data to the smartphone. The phone will process the data, compute it. The user will control and interact with the system through the smartphone. The system will provide the user with feedback through audio and vibration. In addition to the audio on the phone, a bluetooth speaker can be connected, and the game controllers provide vibration and audio as well.
 
 %PRETTY PICTURE THAT SHOW HOW THINGS WORK TOGHETER IN THE SYSTEM
 \begin{figure}[h!]
   \centering
-    \includegraphics[width=0.80\textwidth]{hub.png}
+    \includegraphics[width=.80\textwidth]{hub.png}
     \caption{\footnotesize A conceptual image of the hardware involved in a mobile bio-feedback system. Arrows represent the information flow, and the thickness represent the intensity.}
 \end{figure}
 
@@ -42,7 +42,7 @@ In order to reach the primary goal mentioned above, a set of sub-goals must be c
 
 \section{Research method}
 %How the research is conducted. In the previous section you say what you are doing. Here you specify how. The choice of a research method is strictly connected to the type of questions you want to answer.
-This section will provide a brief summary of the research methods that have been considered and relevant papers that present them. The final choice of research method will be presented at the end of the section, with an explanation as to why the method was chosen. Victor R. Basili\cite{paradigm} is the first paper to be looked. He identifies different experimental paradigm in Software engineering. The paper defines two main methods, the scientific method, and the mathematical method. The second paper is a guideline for conducting and reporting a case study in software engineering by Runeson and Höst \cite.
+This section will provide a brief summary of the research methods that have been considered and relevant papers that present them. The final choice of research method will be presented at the end of the section, with an explanation as to why the method was chosen. Victor R. Basili\cite{paradigm} is the first paper to be looked. He identifies different experimental paradigm in Software engineering. The paper defines two main methods, the scientific method, and the mathematical method. The second paper is a guideline for conducting and reporting a case study in software engineering by Runeson and Höst.
 
 
 \subsection{The Scientific Method}
@@ -56,6 +56,8 @@ Experiments must be guided, there has to exist a rational for collecting data. T
 
 \subsection{The Mathematical Method}
 The mathematical method involves proposing a formal theory or set of axioms, develop a theory, derive results and if possible compare with empirical observations. This approach is a deductive analytic model which does not require an experimental design in the statistical sense, but provides an analytic framework for developing models and understanding their boundaries based upon manipulation of the model itself. Treatment of programs as mathematical objects and their analysis of the mathematical object or its relationship to the pgroam satisfies this paradigm.
+
+% %WRITE A GUIDELINE ABOUT CASE STUDIES HERE
 
 
 There is very little to no research done on connecting smartphones and gaming peripherals together, and a working system that combines the two does not currently exist. Am explorative case study will conducted in order to perform thorough research on any technical possibilities and limitations as a result of the hardware and software choices for the system. The case study seemed as a natural choice when having to create the system from scratch in the span of 3 and a half months.
@@ -91,5 +93,5 @@ A limitation for many of the previously discussed solutions is that they only ma
 
 In this study the goal is to examine if using cheap external sensors can give more accurate and additional sensor data to help make fall detection/prevention applications more effective. The sensors examined will be the Wii Remote and the Sony Move controller. These are cheap mass produced game controllers with embedded sensors and Bluetooth support. Using Bluetooth wireless technology the sensors can be connected to the smartphone and stream supplementary acceleromter and gyroscope data.
 
-The Google Play Store has 3 applications that allow you to connect a WiiRemote to your Android Device. All of these applications focus only on the buttons, and ignore sensor data \cite{wiimoteController, simpleWiiController}. The applications seem unstable and are far from user friendly, but they are the only of its kind out there.
+The Google Play Store has 3 applications that allow a user to connect a WiiRemote to an Android Device. All of these applications focus only on the buttons, and ignore sensor data \cite{wiimoteController, simpleWiiController}. The applications seem unstable and are far from user friendly, but they are the only of its kind out there.
 
