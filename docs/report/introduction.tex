@@ -65,14 +65,29 @@ The case study will be split into two parts. The first part will focus on achiev
 The second part will focus on reaching research goal (c) and (d) through a more quantitative study. A set of tests will be outlined and conducted in order to test the durability of the system. The tests will be limited to a small amount of devices due to resource and time constraints, but several tests will be run in order to acquire reliable data.
 
 \section{State of the Art}
-%This chapter provides an overview of the literature. It positions your work with respect to work already done by others. 
+%This chapter provides an overview of the literature. It positions your work with respect to work already done by others
 
-Several attempts have been made to create fall detection systems using smart phone technology \cite{iFall, semiSupervisedFallDetection, mobilePhoneBasedFallDetection, detectionOfFalls}, all of these studies show positive results. The current trend shows that smart phones are becoming more affordable \cite{find_some_data_here} and with the correct software these phones can notify healthcare personnel about falls, giving the elderly an extra safety.
+Several studies have shown that the use of biofeedback systems can reduce trunk sway \cite{multiModualBiofeedback, vibrotactileBiofeedback, vibrotactileTiltFeedback}. These studies make use of sensors strapped to the test subjects to gather information about the position of the trunk. To collect relevant data the test subjects were asked to perform various balance tasks, like walking or standing on balance boards.
 
-Another approach is to try preventing the falls from happening all together by notifying the user that he or she is moving in an unstable manner. Multiple studies show that using biofeedback systems to inform the user about unstable walk helps prevent falls \cite{multiModualBiofeedback, vibrotactileBiofeedback, vibrotactileTiltFeedback}. % KANSKJE SKRIVE NOE OM AT SENSORENE ER DYRE ELLER TUNGVINTE Å BRUKE I HJEMMET?
-Also mobile versions of such systems have been researched with promising results \cite{fallPrevention}.
+\begin{figure}[h!]
+  \centering
+    \includegraphics[width=0.80\textwidth]{sensors.png}
+    \caption{\footnotesize Sensors fastened to an elderely person to detect mediolateral sway \cite{vibrotactileTiltFeedback}.}
+\end{figure}
 
-A limitation for many of the previously discussed solutions is that they only make use of the embedded accelerometers in the smart phone. Increasing the number of sensors and their positioning can make the fall detection application more accurate \cite{fallDetectionWithExtraSensors}.
+Sensory information is sent to a computer calculating the position of the trunk, using this information the computer can give the patient feedback when trunk displacement is detected. The mentioned studies have all used vibration to give feedback about the trunk position, but light and sound was also utilized \cite{multiModualBiofeedback}. 
+
+\begin{figure}[h!]
+  \centering
+    \includegraphics[width=0.80\textwidth]{biofeedback.png}
+    \caption{\footnotesize Figure shows implementation of different types of biofeedback \cite{multiModualBiofeedback}. }
+\end{figure}
+
+These studies all conclude that giving vibrotactile and other types of biofeedback reduces the angular trunk displacement of patients. One of the studies showed that in some cased such systems influenced the balance of older adults \cite{mutliModualbiofeedback}, while others showed improved control of mediolateral sway during gait and dynamic gait index, which are fall risk indicators in elders \cite{vibrotactileTiltFeedback}.
+
+Making biofeedback systems available for home users creates a new set of challanges. The sensors would have to be smaller and there would be need of some computer to interpret the information gathered by the sensors. Smartphones are one example of portable computing units with small sensors that can be used for such purposes. Several attempts have been made to create fall detection systems using smart phone technology \cite{iFall, semiSupervisedFallDetection, mobilePhoneBasedFallDetection, detectionOfFalls}, all of these studies show positive results. The current trend shows that smartphones are becoming more affordable \cite{find_some_data_here} and with the correct software these phones can notify healthcare personnel about falls, giving the elderly an extra safety. Mobile systems for fall prevention has also been tried, with promissing results \cite{fallPrevention}.
+
+A limitation for many of the previously discussed solutions is that they only make use of the embedded accelerometers in the smart phone. Increasing the number of sensors and their positioning can make the fall detection application more accurate \cite{fallDetectionWithExtraSensors}. 
 
 In this study the goal is to examine if using cheap external sensors can give more accurate and additional sensor data to help make fall detection/prevention applications more effective. The sensors examined will be the Wii Remote and the Sony Move controller. These are cheap mass produced game controllers with embedded sensors and Bluetooth support. Using Bluetooth wireless technology the sensors can be connected to the smartphone and stream supplementary acceleromter and gyroscope data.
 
