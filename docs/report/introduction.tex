@@ -50,7 +50,7 @@ The scientific method is based on observing the world, proposing a model or a th
 
 The engineering method observes existing solutions, proposes better solutions, builds the better solutions, analyzes and measure the new solution, and repeats the process until no further improvements can be made. This approach is an evolutionary improvement oriented approach which assumes one already has models of the product, software process, people and environment and focuses on modifying it in order to improve object of study. An example might be a study of tools used in the development process, and demonstrating how other tools can assist them better in their way of work then the ones they are currently using.A crucial part for this method is the need for careful analysis and measurement.
 
-The empirical method a model is proposed, statistical/qualitative methods are developed, and applied to case studies. It results are analyzed and measured, and then used to validate the model. The procedure should be repeated as to confirm findings if resources and time allow it. This paradigm is a revolutionary improvement oriented approach which begins by proposing a model that is not necessarily based upon an existing one, and atempts to study the effects of the process or product suggested by the new model. Measurment and analysis is crucial to the success of this method. Simply proposing a model or a new tool is not enough. A way to validate that the proposed model or tool is superior to the current solution must be created.
+The empirical method a model is proposed, statistical/qualitative methods are developed, and applied to case studies. It results are analysed and measured, and then used to validate the model. The procedure should be repeated as to confirm findings if resources and time allow it. This paradigm is a revolutionary improvement oriented approach which begins by proposing a model that is not necessarily based upon an existing one, and atempts to study the effects of the process or product suggested by the new model. Measurment and analysis is crucial to the success of this method. Simply proposing a model or a new tool is not enough. A way to validate that the proposed model or tool is superior to the current solution must be created.
 
 Experiments must be guided, there has to exist a rational for collecting data. The experiment must be designed to collect information suitable for building a model of the system being studied. An underlying framework must exist that will be used to interpret the collected data.
 
@@ -60,7 +60,7 @@ The mathematical method involves proposing a formal theory or set of axioms, dev
 % %WRITE A GUIDELINE ABOUT CASE STUDIES HERE
 
 
-There is very little to no research done on connecting smartphones and gaming peripherals together, and a working system that combines the two does not currently exist. Am explorative case study will conducted in order to perform thorough research on any technical possibilities and limitations as a result of the hardware and software choices for the system. The case study seemed as a natural choice when having to create the system from scratch in the span of 3 and a half months.
+There is very little to no research done on connecting smartphones and gaming peripherals together, and a working system that combines the two does not currently exist. An explorative case study will conducted in order to perform thorough research on any technical possibilities and limitations as a result of the hardware and software choices for the system. The case study seemed as a natural choice when having to create the system from scratch in the span of 3 and a half months.
 
 The case study will be split into two parts. The first part will focus on achieving research goal (a) and (b) through a qualitative study. It will focus on the technical aspect of the goals. Technical possibilities and limitations encountered during implementation will be discussed and reported. The application will be presented in detail where architecture, functionality, and appearance of the prototype will be discussed.
 
@@ -69,7 +69,7 @@ The second part will focus on reaching research goal (c) and (d) through a more 
 \section{State of the Art}
 %This chapter provides an overview of the literature. It positions your work with respect to work already done by others
 
-Several studies have shown that the use of biofeedback systems can reduce trunk sway \cite{multiModualBiofeedback, vibrotactileBiofeedback, vibrotactileTiltFeedback}. These studies make use of sensors strapped to the test subjects to gather information about the position of the trunk. To collect relevant data the test subjects were asked to perform various balance tasks, like walking or standing on balance boards.
+Several studies have shown that the use of biofeedback systems can reduce trunk sway \cite{multiModualBiofeedback, vibrotactileBiofeedback, vibrotactileTiltFeedback}. These studies make use of sensors strapped to test subjects in order to gather information about the position of the trunk. The sensor gathered data on the test subjects initial position that was transferred to a computer. The test subjects were then asked to challenge their balance by either walking, or standing on a balance board so that data could be collected.
 
 \begin{figure}[h!]
   \centering
@@ -77,17 +77,30 @@ Several studies have shown that the use of biofeedback systems can reduce trunk 
     \caption{\footnotesize Sensors fastened to an elderely person to detect mediolateral sway \cite{vibrotactileTiltFeedback}.}
 \end{figure}
 
-Sensory information is sent to a computer calculating the position of the trunk, using this information the computer can give the patient feedback when trunk displacement is detected. The mentioned studies have all used vibration to give feedback about the trunk position, but light and sound was also utilized \cite{multiModualBiofeedback}. 
+The collected data was sent to the computer in order to calculate the and compare the position of the trunk with the initial position. If trunk displacement was detected the subject was provided with feedback. The mentioned studies have all used vibration to give feedback about the trunk position, but light and sound was also utilized \cite{multiModualBiofeedback}. 
 
 \begin{figure}[h!]
   \centering
     \includegraphics[width=0.80\textwidth]{biofeedback.png}
-    \caption{\footnotesize Figure shows implementation of different types of biofeedback \cite{multiModualBiofeedback}. }
+    \caption{\footnotesize Figure shows implementation of different types of biofeedback \cite{multiModualBiofeedback}.}
 \end{figure}
 
-These studies all conclude that giving vibrotactile and other types of biofeedback reduces the angular trunk displacement of patients. One of the studies showed that in some cased such systems influenced the balance of older adults \cite{mutliModualbiofeedback}, while others showed improved control of mediolateral sway during gait and dynamic gait index, which are fall risk indicators in elders \cite{vibrotactileTiltFeedback}.
+These studies all conclude that giving vibrotactile and other types of biofeedback reduces the angular trunk displacement of patients. One of the studies showed that in some cases such systems influenced the balance of older adults \cite{mutliModualbiofeedback}, while others showed improved control of mediolateral sway during gait and dynamic gait index, which are fall risk indicators in elders \cite{vibrotactileTiltFeedback}.
 
-Making biofeedback systems available for home users creates a new set of challanges. The sensors would have to be smaller and there would be need of some computer to interpret the information gathered by the sensors. Smartphones are one example of portable computing units with small sensors that can be used for such purposes. Several attempts have been made to create fall detection systems using smart phone technology \cite{iFall, semiSupervisedFallDetection, mobilePhoneBasedFallDetection, detectionOfFalls}, all of these studies show positive results. The current trend shows that smartphones are becoming more affordable \cite{find_some_data_here} and with the correct software these phones can notify healthcare personnel about falls, giving the elderly an extra safety. Mobile systems for fall prevention has also been tried, with promissing results \cite{fallPrevention}.
+Making biofeedback systems available for home users creates a new set of challenges. The sensors would have to be smaller and there would be the need for a computer to interpret the information gathered by the sensors. Smartphones are one example of portable computing units with small sensors that can be used for such purposes. Several attempts have been made to create fall detection systems using smart phone technology \cite{iFall, semiSupervisedFallDetection, mobilePhoneBasedFallDetection, detectionOfFalls}, all of these studies show positive results.
+
+\subsection{iFall}
+The iFall \cite{iFall} project is a lightweight Android application designed to run in the background. It monitors the data from the phones accelerometer if the accelerometer data matches a pre-defined pattern it will assume a fall has occurred. The If a fall is detected the user has a certain amount of time to get up again, this is to prevent false alarms when small falls occur or the phone is dropped. If the user does not get up, a prompt window is presented that the user has to respond to, if no response is registered and alarm will be triggered. 
+
+\begin{figure}[h!]
+  \centering
+    \includegraphics[width=0.80\textwidth]{patternGraph.png}
+    \caption{\footnotesize An example of a classic fall. The accelerometer crossing the lower and upper amplitude  threshold followed by a long lie, recongnized this pattern as a fall.}
+\end{figure}
+
+One of the greater challenges was to alter and adapt the treshold depending on where the user carried the phone. Carrying the phone on the arm while running, or in a purse would generate more movement then on a belt clip or pocket. The application would identify patterns in the accelerometer data to decide where the user was most likley carrying his phone and set the appropriate thresholds. The project concludes that their software is viable and affordable, but the challenge is for the users to accept it and testing it out in the field to improve its usability.
+
+The current trend shows that smartphones are becoming more affordable \cite{find_some_data_here} and with the correct software these phones can notify healthcare personnel about falls, giving the elderly an extra safety. Mobile systems for fall prevention has also been tried, with promissing results \cite{fallPrevention}.
 
 A limitation for many of the previously discussed solutions is that they only make use of the embedded accelerometers in the smart phone. Increasing the number of sensors and their positioning can make the fall detection application more accurate \cite{fallDetectionWithExtraSensors}. 
 
