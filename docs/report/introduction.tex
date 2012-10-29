@@ -73,7 +73,7 @@ Several studies have shown that the use of biofeedback systems can reduce trunk 
 
 \begin{figure}[h!]
   \centering
-    \includegraphics[width=0.80\textwidth]{sensors.png}
+    \includegraphics[width=0.40\textwidth]{sensors.png}
     \caption{\footnotesize Sensors fastened to an elderely person to detect mediolateral sway \cite{vibrotactileTiltFeedback}.}
 \end{figure}
 
@@ -85,12 +85,12 @@ The collected data was sent to the computer in order to calculate the and compar
     \caption{\footnotesize Figure shows implementation of different types of biofeedback \cite{multiModualBiofeedback}.}
 \end{figure}
 
-These studies all conclude that giving vibrotactile and other types of biofeedback reduces the angular trunk displacement of patients. One of the studies showed that in some cases such systems influenced the balance of older adults \cite{mutliModualbiofeedback}, while others showed improved control of mediolateral sway during gait and dynamic gait index, which are fall risk indicators in elders \cite{vibrotactileTiltFeedback}.
+These studies all conclude that giving vibrotactile and other types of biofeedback reduces the angular trunk displacement of patients. One of the studies showed that in some cases such systems influenced the balance of older adults \cite{multiModualBiofeedback}, while others showed improved control of mediolateral sway during gait and dynamic gait index, which are fall risk indicators in elders \cite{vibrotactileTiltFeedback}.
 
 Making biofeedback systems available for home users creates a new set of challenges. The sensors would have to be smaller and there would be the need for a computer to interpret the information gathered by the sensors. Smartphones are one example of portable computing units with small sensors that can be used for such purposes. Several attempts have been made to create fall detection systems using smart phone technology \cite{iFall, semiSupervisedFallDetection, mobilePhoneBasedFallDetection, detectionOfFalls}, all of these studies show positive results.
 
 \subsection{iFall}
-The iFall \cite{iFall} project is a lightweight Android application designed to run in the background. It monitors the data from the phones accelerometer if the accelerometer data matches a pre-defined pattern it will assume a fall has occurred. The If a fall is detected the user has a certain amount of time to get up again, this is to prevent false alarms when small falls occur or the phone is dropped. If the user does not get up, a prompt window is presented that the user has to respond to, if no response is registered and alarm will be triggered. 
+The iFall \cite{iFall} project is a lightweight Android application designed to run in the background. It monitors the data from the phones accelerometer if the accelerometer data matches a pre-defined pattern it will assume a fall has occurred. When a fall is detected the user has a certain amount of time to get up again, this is to prevent false alarms when small falls occur or the phone is dropped. If the user does not get up, a prompt window is presented that the user has to respond to, if no response is registered an alarm will be triggered. 
 
 \begin{figure}[h!]
   \centering
@@ -98,7 +98,10 @@ The iFall \cite{iFall} project is a lightweight Android application designed to 
     \caption{\footnotesize An example of a classic fall. The accelerometer crossing the lower and upper amplitude  threshold followed by a long lie, recongnized this pattern as a fall.}
 \end{figure}
 
-One of the greater challenges was to alter and adapt the treshold depending on where the user carried the phone. Carrying the phone on the arm while running, or in a purse would generate more movement then on a belt clip or pocket. The application would identify patterns in the accelerometer data to decide where the user was most likley carrying his phone and set the appropriate thresholds. The project concludes that their software is viable and affordable, but the challenge is for the users to accept it and testing it out in the field to improve its usability.
+One of the challenges the project faced was to alter and adapt the threshold depending on where the user carried the phone. Carrying the phone on the arm while running, or in a purse would generate more movement then on a belt clip or pocket. The application would identify patterns in the accelerometer data to decide where the user was most likley carrying his phone and set the appropriate thresholds. The project concludes that their software is viable and affordable, but the challenge is for the users to accept it and testing it out in the field to improve its usability.
+
+
+
 
 The current trend shows that smartphones are becoming more affordable \cite{find_some_data_here} and with the correct software these phones can notify healthcare personnel about falls, giving the elderly an extra safety. Mobile systems for fall prevention has also been tried, with promissing results \cite{fallPrevention}.
 
