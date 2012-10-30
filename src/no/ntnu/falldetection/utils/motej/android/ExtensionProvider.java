@@ -40,12 +40,13 @@ public class ExtensionProvider {
 				Log.d("motej.android", "Initializing lookup.");
 				lookup = new HashMap<String, Class<? extends Extension>>();
 				InputStream in = ExtensionProvider.class
-						.getResourceAsStream("/motejx/extensions/extensions.properties");
+						.getResourceAsStream("/no/ntnu/falldetection/utils/motejx/extensions/extensions.properties");
 				Properties props = new Properties();
 
 				if (in == null) {
 					Log.i("motej.android",
 							"no extensions.properties found. as a result, no extensions will be available.");
+					
 					return;
 				}
 

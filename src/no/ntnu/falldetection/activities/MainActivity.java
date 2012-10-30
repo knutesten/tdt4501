@@ -171,6 +171,7 @@ public class MainActivity extends Activity {
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
+		mote.disconnect();
 		unregisterReceiver(mReceiver);
 	}
 
