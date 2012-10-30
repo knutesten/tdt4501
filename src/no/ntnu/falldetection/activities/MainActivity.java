@@ -1,7 +1,6 @@
 package no.ntnu.falldetection.activities;
 
 
-import no.ntnu.falldetection.R;
 import no.ntnu.falldetection.utils.MadgwickAHRS;
 import no.ntnu.falldetection.utils.motej.android.Mote;
 import no.ntnu.falldetection.utils.motej.android.event.AccelerometerEvent;
