@@ -25,7 +25,7 @@ public class MotionPlusChange {
 //	wiiRoll = calibratedRoll from mote
 //	wiiPitch = clibratedPitch from mote
 	
-//	alg.update(degToRad(wiiPitch), degToRad(wiiRoll), degToRad(wiiYaw), accelX, accelY, accelZ);
+//	
 	
 
 //	quat = alg.getQuaternion();

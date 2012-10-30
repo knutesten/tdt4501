@@ -3,6 +3,7 @@ package no.ntnu.falldetection.activities;
 
 import no.ntnu.falldetection.utils.ExternalStorage;
 import no.ntnu.falldetection.utils.MadgwickAHRS;
+import no.ntnu.falldetection.utils.ToDegrees;
 import no.ntnu.falldetection.utils.motej.android.Mote;
 import no.ntnu.falldetection.utils.motej.android.event.AccelerometerEvent;
 import no.ntnu.falldetection.utils.motej.android.event.AccelerometerListener;
@@ -37,6 +38,7 @@ public class MainActivity extends Activity {
 			.getDefaultAdapter();
 	private Mote mote;
 	private ExternalStorage es = new ExternalStorage();
+	private ToDegrees converter = new ToDegrees();
 
 	private long start;
 	
@@ -45,7 +47,7 @@ public class MainActivity extends Activity {
 	
 	
 	//Variables for the Madgwick Algorithm
-	private MadgwickAHRS alg = new MadgwickAHRS(1f/100f, 0.5f);
+	
 	private float[] quat;
 	
 	
@@ -141,14 +143,10 @@ public class MainActivity extends Activity {
 		
 		if(newGyroEvent != null && newAccelEvent != null){
 		
-			//something
-			alg.update(degToRad(newGyroEvent.getPitch()), degToRad(newGyroEvent.getYaw()), degToRad(newGyroEvent.getRoll()), newAccelEvent.getX(), newAccelEvent.getY(), newAccelEvent.getZ());
+			float pitch = converter.convertTo(newGyroEvent.getPitch(), newGyroEvent.getRoll(), newGyroEvent.getYaw(), newAccelEvent.getX(), newAccelEvent.getY(), newAccelEvent.getZ());	
 			
-			quat = alg.getQuaternion();
+			Log.i("alg", "pitch: " + pitch);
 			
-			double pitchAngle = (Math.atan2(2 * (quat[0] * quat[1] * quat[2] * quat[3]), 1 - 2 *  (quat[1] * quat[1] + quat[2] * quat[2]))) * (180/Math.PI);
-			double rollAngle = Math.asin(2 * (quat[0] * quat[2] - quat[3] * quat[1])) * (180 / Math.PI);
-			double yawAngle = Math.atan2(2 * (quat[0] * quat[3] + quat[1] * quat[2]), 1 - 2 * (quat[2] * quat[2] + quat[3] * quat[3])) * (180 / Math.PI);
 			
 //			Log.i("alg", "pa: " + pitchAngle + " ya: " + yawAngle + " ra: " + rollAngle);
 			
@@ -217,8 +215,6 @@ public class MainActivity extends Activity {
 	}
 	
 	//Hjelpemetode
-	private float degToRad(float degrees){
-		return (float) (Math.PI/180) * degrees;
-	}
+	
 
 }
