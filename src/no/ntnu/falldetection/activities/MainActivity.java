@@ -36,6 +36,7 @@ public class MainActivity extends Activity {
 	private BluetoothAdapter mBluetoothAdapter = BluetoothAdapter
 			.getDefaultAdapter();
 	private Mote mote;
+	private ExternalStorage es = new ExternalStorage();
 
 	private long start;
 	
@@ -110,11 +111,10 @@ public class MainActivity extends Activity {
 					start = System.currentTimeMillis();
 					MoteDisconnectedListener<Mote> listener4 = new MoteDisconnectedListener<Mote>(){
 
-						@Override
+						
 						public void moteDisconnected(MoteDisconnectedEvent<Mote> evt) {
 							long time = (System.currentTimeMillis()-start);
 							Log.w("time", ""+time);
-							ExternalStorage es = new ExternalStorage();
 							es.writeToFile("Time: " + time);
 						}
 						
@@ -187,6 +187,7 @@ public class MainActivity extends Activity {
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
+		es.close();
 		mote.disconnect();
 		unregisterReceiver(mReceiver);
 	}

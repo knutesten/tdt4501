@@ -22,7 +22,7 @@ public class ExternalStorage {
 	private File falldir;
 	
 	private SimpleDateFormat fileFormat = new SimpleDateFormat("MM-dd-HH-mm");
-	private SimpleDateFormat textFormat = new SimpleDateFormat("HH-mm-ss");
+	private SimpleDateFormat textFormat = new SimpleDateFormat("HH:mm:ss");
 	
 	private Calendar cal = Calendar.getInstance();
 	
@@ -52,8 +52,19 @@ public class ExternalStorage {
 			textPrefix = textFormat.format(cal.getTime());
 			bw.write(textPrefix + ": " + text);
 			bw.newLine();
+			bw.flush();
 		} catch (IOException e) {
 			Log.e("storage", "Unable to write to file");
+			e.printStackTrace();
+		}
+	}
+	
+	public void close(){
+		try {
+			bw.close();
+			fw.close();
+		} catch (IOException e) {
+			Log.e("storage","Failed to close writers");
 			e.printStackTrace();
 		}
 	}
