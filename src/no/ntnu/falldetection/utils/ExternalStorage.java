@@ -1,4 +1,4 @@
-package no.ntnu.falldetection;
+package no.ntnu.falldetection.utils;
 
 import java.io.BufferedWriter;
 import java.io.File;
