@@ -1,5 +1,6 @@
 \chapter{Technology and Software}
 
+
 \section{Android OS}
 Android is a Linux based operating system primarily designed for touchscreen devices such as smartphones and tablets. It is developed by Google and is supported by The Open Handset Alliance (OGHA). The source code was released as open source under the Apache License, and The Android Open Source Project is tasked with maintaining and further developing the operating system. The OGHA is a consortium focused on developing open standards for mobile devices, and members of the consortium are not allowed to produce phones that are not compatible with the Android OS. Applications for the Android OS are primarily written in a customized version of Java using the Software Development Kit, but it is possible to partly write applications in C and C++ using the Native Development Kit. 
 
@@ -28,21 +29,23 @@ The Application framework level is what applications on the Android device inter
     \caption{\footnotesize A visual representation of the Android architecture}
 \end{figure}
 
+\section{Existing Applications}
+The Google Play Store contains a handful of applications that enable an Android device to be connected to a WiiRemote through Bluetooth. The majority of these applications only provide basic features such as key presses, led lights, and rumbling \cite{wiimoteController, simpleWiiController}. There was one application that stood out and utilized the motion detection features of the Wii Remote and gave the sense of a complete application. Wii Motion Monitor \cite{wiiMotionMonitor} turns the Wii MotionPlus into a motion sensor, and is able to represent the orientation of the Wii Remote correctly. Yaw was off by about 45 degrees, but pitch and roll worked perfectly. This proves that the WiiRemote can be used for motion detection and an Android device can act as a hub.
 
-\section{Java}
-Is it neccessary to write something aobut Java?
+There was only one application\cite{sixaxisController} that enabled a user to connect a SixAxis Playstation 3 controller to an Android device. The application required root access, and some additional work had to be done before the controller was ready to be paired. A compatibility checker is available to see if an Android device is compatible with the software.
+
+The Google Play Store contains a handful applications that allow a user to connect a WiiRemote to an Android Device. All of these applications focus only on the buttons, and ignore sensor data \cite{wiimoteController, simpleWiiController}. The applications seem unstable and are far from user friendly, but they are the only of its kind out there.
 
 \section{PS3 Move}
 
 \subsection{Motion Controller Hardware}
-The PS Move motion controller contains advanced motion sensing, making it an ideal peripheral for a bio-feedback system. It features motion tracking through a three axis accelerometer, a three axis angular rate sensor and provides location tracking through the built in magnetometer. The built in vibration could be used to provide feedback to the user \cite{psMoveTech}.
+The PS Move motion controller contains advanced motion sensing, making it an ideal peripheral for a bio-feedback system. It features motion tracking through a three axis accelerometer, a three axis angular rate sensor and provides location tracking through the built in magnetometer. The built in vibration and orb light can be used to provide feedback to the user \cite{psMoveTech}.
 
 \subsection{PS Move API}
 
-The PS Move API \cite{PSMoveAPI} is written in C, but contains bindings for various languages, including Java and C\# which are both languages used in smartphone application development. The API explicitly mentions that it runs on Android devices. This is a truth with modifications. It will not run out of the box on an Android device, in addition restructuring and heavy modification of the Android device is required.  The Android OS runs on top of a modified Linux kernel, this kernel does not contain the necessary libraries and drivers in order for the API and Motion controller connectivity to function properly. %Does this need citation?
-The next step would be to compile the C API into a shared library using the Android NDK, and use the shared library Java bindings in the Android Java code.
+The PS Move API \cite{PSMoveAPI} is written in C, but contains bindings for various languages, including Java and C\# which are both languages used in smartphone application development. The API explicitly mentions that it runs on Android devices. This is a truth with modifications. It will not run out of the box on an Android device, in addition restructuring and heavy modification of the Android device is required.  The Android OS runs on top of a modified Linux kernel, this kernel does not contain the necessary libraries and drivers in order for the API and Motion controller connectivity to function properly.The next step would be to compile the C API into a shared library using the Android NDK, and use the shared library Java bindings in the Android Java code.
 
-Everything is possible with enough time, but given the time constraint and amount of time required to get this running it was decided that this was not a path worth pursuing for this project. With some much work required it would be simpler to run Ubuntu off an Android device if this becomes available in the future. \cite{ubuntuAndroid}
+With enough time and knowledge this could perhaps be done, but given the modification required on android devices, time constraints, and the uncertainty around it all it all, it was decided that it was not a path worth pursuing for this project. Perhaps when the API is more mature, and the Android kernel has more drivers it would be worth pursing. Because it requires so much work it would be simpler to run Ubuntu off an Android device if that becomes available in the future. \cite{ubuntuAndroid}
 
 \section{Wii Remote with Motion Plus}
 
@@ -51,10 +54,8 @@ The original Wii Remote features motion tracking for vertical movement, left-rig
 In June 2009 Nintendo released the Wii MotionPlus expansion device which contains a dual-axis tuning fork and a single-axis gyroscope\cite{wiiMotionPlus}.
 The expansion device improves the motion tracking of the Wii Remote greatly, but makes it larger. Nintendo has now started selling the Wii Remote Plus. It is the same size as the Wii Remote, but has the Wii MotionPlus already built in. Both of the controller types have the ability to provide vibration and basic audio feedback.
 
-%%WRITE SOMETHING ABOUT THE NUNCHUCK?
-
 \subsection{Wii Remote API}
-At time of writing no Wii Remote library has been created for the Android OS. Though there are plenty of Wii remote libraries out there none of them are intended to be used on android devices. This section will cover the most developed liberalities that are implemented in Java.
+At time of writing no Wii Remote library has been created for the Android OS. Though there are some Wii Remote libraries out there, none of them are intended to be used on Android devices. This section will cover the libraries that are implemented in Java.
 
 \subsubsection{WiiRemoteJ}
 WiiRemoteJ is one of the most complete libraries for the Wii remote. It is a pure Java library with support for a large amount of Wii extensions such as the Wii Guitar, and Wii Balance Board. It does however lack support for the MotionPlus extension. The library has not been update since July 2008. The author has taken down the homepage where the library was originally located, but it can be found on third party websites. \cite{WiiRemoteJ}
