@@ -1,12 +1,15 @@
 package no.ntnu.falldetection.activities;
 
 
+import no.ntnu.falldetection.utils.ExternalStorage;
 import no.ntnu.falldetection.utils.MadgwickAHRS;
 import no.ntnu.falldetection.utils.motej.android.Mote;
 import no.ntnu.falldetection.utils.motej.android.event.AccelerometerEvent;
 import no.ntnu.falldetection.utils.motej.android.event.AccelerometerListener;
 import no.ntnu.falldetection.utils.motej.android.event.ExtensionEvent;
 import no.ntnu.falldetection.utils.motej.android.event.ExtensionListener;
+import no.ntnu.falldetection.utils.motej.android.event.MoteDisconnectedEvent;
+import no.ntnu.falldetection.utils.motej.android.event.MoteDisconnectedListener;
 import no.ntnu.falldetection.utils.motej.android.request.ReportModeRequest;
 import no.ntnu.falldetection.utils.motejx.extensions.motionplus.GyroEvent;
 import no.ntnu.falldetection.utils.motejx.extensions.motionplus.GyroListener;
@@ -33,6 +36,8 @@ public class MainActivity extends Activity {
 	private BluetoothAdapter mBluetoothAdapter = BluetoothAdapter
 			.getDefaultAdapter();
 	private Mote mote;
+
+	private long start;
 	
 	private GyroEvent newGyroEvent = null;
 	private AccelerometerEvent<Mote> newAccelEvent = null;
@@ -76,7 +81,7 @@ public class MainActivity extends Activity {
 
 						
 						public void gyroChanged(GyroEvent evt) {
-							Log.i("gyro", evt.getYaw() + " " + evt.getRoll() + " " + evt.getPitch());
+//							Log.i("gyro", evt.getYaw() + " " + evt.getRoll() + " " + evt.getPitch());
 							shit(evt, null);
 						}
 						
@@ -99,16 +104,27 @@ public class MainActivity extends Activity {
 
 						public void extensionDisconnected(ExtensionEvent evt) {
 							// TODO Auto-generated method stub
+					}
+					};
+					
+					start = System.currentTimeMillis();
+					MoteDisconnectedListener<Mote> listener4 = new MoteDisconnectedListener<Mote>(){
+
+						@Override
+						public void moteDisconnected(MoteDisconnectedEvent<Mote> evt) {
+							long time = (System.currentTimeMillis()-start);
+							Log.w("time", ""+time);
+							ExternalStorage es = new ExternalStorage();
+							es.writeToFile("Time: " + time);
 						}
+						
 					};
 					
 					
 					mote.addExtensionListener(listener2);
-					mote.addAccelerometerListener(listener);   
-					
-//					mote.setReportMode(ReportModeRequest.DATA_REPORT_0x37);
-					
-					
+					mote.addAccelerometerListener(listener); 
+					mote.addMoteDisconnectedListener(listener4);
+				
 					
 				}
 			}
@@ -134,7 +150,7 @@ public class MainActivity extends Activity {
 			double rollAngle = Math.asin(2 * (quat[0] * quat[2] - quat[3] * quat[1])) * (180 / Math.PI);
 			double yawAngle = Math.atan2(2 * (quat[0] * quat[3] + quat[1] * quat[2]), 1 - 2 * (quat[2] * quat[2] + quat[3] * quat[3])) * (180 / Math.PI);
 			
-			Log.i("alg", "pa: " + pitchAngle + " ya: " + yawAngle + " ra: " + rollAngle);
+//			Log.i("alg", "pa: " + pitchAngle + " ya: " + yawAngle + " ra: " + rollAngle);
 			
 			newGyroEvent = null;
 			newAccelEvent = null;
