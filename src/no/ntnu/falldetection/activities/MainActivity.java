@@ -41,6 +41,7 @@ public class MainActivity extends Activity {
 	private ToDegrees converter = new ToDegrees();
 
 	private long start;
+	private long time;
 	
 	private GyroEvent newGyroEvent = null;
 	private AccelerometerEvent<Mote> newAccelEvent = null;
@@ -74,7 +75,7 @@ public class MainActivity extends Activity {
 					AccelerometerListener<Mote> listener = new AccelerometerListener<Mote>() {
 						
 						public void accelerometerChanged(AccelerometerEvent<Mote> evt) {
-							//Log.i("accel", evt.getX() + " : " + evt.getY() + " : " + evt.getZ());
+//							Log.i("accel", evt.getX() + " : " + evt.getY() + " : " + evt.getZ());
 							shit(null, evt);
 						}
 					
@@ -84,7 +85,7 @@ public class MainActivity extends Activity {
 
 						
 						public void gyroChanged(GyroEvent evt) {
-//							Log.i("gyro", evt.getYaw() + " " + evt.getRoll() + " " + evt.getPitch());
+							Log.i("gyro", evt.getYaw() + " " + evt.getRoll() + " " + evt.getPitch());
 							shit(evt, null);
 						}
 						
@@ -102,6 +103,7 @@ public class MainActivity extends Activity {
 								
 							}
 							mote.setReportMode(ReportModeRequest.DATA_REPORT_0x37);
+							mote.setPlayerLeds(new boolean[]{true, true, false, false});
 						}
 
 
@@ -115,7 +117,7 @@ public class MainActivity extends Activity {
 
 						
 						public void moteDisconnected(MoteDisconnectedEvent<Mote> evt) {
-							long time = (System.currentTimeMillis()-start);
+							time = (System.currentTimeMillis()-start);
 							Log.w("time", ""+time);
 							es.writeToFile("Time: " + time);
 						}
@@ -143,10 +145,10 @@ public class MainActivity extends Activity {
 		
 		if(newGyroEvent != null && newAccelEvent != null){
 		
-			float pitch = converter.convertTo(newGyroEvent.getPitch(), newGyroEvent.getRoll(), newGyroEvent.getYaw(), newAccelEvent.getX(), newAccelEvent.getY(), newAccelEvent.getZ());	
-			
-			Log.i("alg", "pitch: " + pitch);
-			
+//			float pitch = converter.convertTo(newGyroEvent.getPitch(), newGyroEvent.getRoll(), newGyroEvent.getYaw(), newAccelEvent.getX(), newAccelEvent.getY(), newAccelEvent.getZ());	
+//			
+//			Log.i("alg", "pitch: " + pitch);
+//			
 			
 //			Log.i("alg", "pa: " + pitchAngle + " ya: " + yawAngle + " ra: " + rollAngle);
 			
@@ -185,6 +187,7 @@ public class MainActivity extends Activity {
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
+		es.writeToFile("Time: " + time);
 		es.close();
 		mote.disconnect();
 		unregisterReceiver(mReceiver);
