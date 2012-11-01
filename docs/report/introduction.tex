@@ -12,7 +12,9 @@ Between 30\% and 60\% of the elder population will experience at least one fall 
 
 Technological progress has made it easy and affordable to incorporate sensors into devices in order to provide a better or more entertaining user experience. Accelerometers, gyroscopes and GPS are an expected feature in today's smartphones. Newer phones include even more advanced sensory such as Barometers, and Proximity Sensors.
 
-Motion based games and game controllers have been a trend in the gaming industry for the last 8 years. It started with the Nintendo Wii, but Microsoft Kinect and Playstation Move followed quickly with their own motion detection technology. The competition to offer the best product on the market has made motion sensing more powerful, while mass production has made it cheaper.
+%Write something about costs and sales of smartphones?
+
+Motion based games and game controllers have been a trend in the gaming industry for the last 8 years. It started with the Nintendo Wii, but Microsoft Kinect and Playstation Move followed quickly with their own motion detection technology. The competition to offer the best product on the market has made motion sensing more powerful, and mass production has made it affordable.
 
 \section{Research goals}
 %What are the questions you are answering with your project? Normally, you specify a main question and related sub-questions. Remember that at the end you have to demonstrate you have answered to the stated questions. It is not uncommon that the questions are changed during the project, but it is important to be as explicit as possible and as early as possible with research questions since they help you to focus.
@@ -39,6 +41,7 @@ In order to reach the primary goal mentioned above, a set of sub-goals must be c
 
 \end{itemize}
 
+%In this study the goal is to examine if using cheap external sensors can give more accurate and additional sensor data to help make fall detection/prevention applications more effective. The sensors examined will be the Wii Remote and the Sony Move controller. These are cheap mass produced game controllers with embedded sensors and Bluetooth support. Using Bluetooth wireless technology the sensors can be connected to the smartphone and stream supplementary acceleromter and gyroscope data.
 
 \section{Research method}
 %How the research is conducted. In the previous section you say what you are doing. Here you specify how. The choice of a research method is strictly connected to the type of questions you want to answer.
@@ -66,10 +69,9 @@ The case study will be split into two parts. The first part will focus on achiev
 
 The second part will focus on reaching research goal (c) and (d) through a more quantitative study. A set of tests will be outlined and conducted in order to test the durability of the system. The tests will be limited to a small amount of devices due to resource and time constraints, but several tests will be run in order to acquire reliable data.
 
-\section{State of the Art}
+\section{Litterature review}
 %This chapter provides an overview of the literature. It positions your work with respect to work already done by others
-
-Several studies have shown that the use of biofeedback systems can reduce trunk sway \cite{multiModualBiofeedback, vibrotactileBiofeedback, vibrotactileTiltFeedback}. These studies make use of sensors strapped to test subjects in order to gather information about the position of the trunk. The sensor gathered data on the test subjects initial position that was transferred to a computer. The test subjects were then asked to challenge their balance by either walking, or standing on a balance board so that data could be collected.
+Several studies have shown that the use of biofeedback systems can reduce trunk sway \cite{multiModualBiofeedback, vibrotactileBiofeedback, vibrotactileTiltFeedback}. These studies make use of sensors strapped to test subjects in order to gather information about the position of the trunk. The sensors gathered data on the test subjects initial position, which was then processed and stored on a computer. The test subjects were then asked to challenge their balance by either walking, or standing on a balance board so that data could be collected.
 
 \begin{figure}[h!]
   \centering
@@ -77,7 +79,7 @@ Several studies have shown that the use of biofeedback systems can reduce trunk 
     \caption{\footnotesize Sensors fastened to an elderely person to detect mediolateral sway \cite{vibrotactileTiltFeedback}.}
 \end{figure}
 
-The collected data was sent to the computer in order to calculate the and compare the position of the trunk with the initial position. If trunk displacement was detected the subject was provided with feedback. The mentioned studies have all used vibration to give feedback about the trunk position, but light and sound was also utilized \cite{multiModualBiofeedback}. 
+The collected data was sent to the computer in order to calculate the and compare the position of the trunk with the initial position. If trunk displacement was detected the subject was provided with feedback. The mentioned studies have primarily used vibration to give feedback about the trunk position, but light and sound was also utilized \cite{multiModualBiofeedback}.
 
 \begin{figure}[h!]
   \centering
@@ -87,7 +89,7 @@ The collected data was sent to the computer in order to calculate the and compar
 
 These studies all conclude that giving vibrotactile and other types of biofeedback reduces the angular trunk displacement of patients. One of the studies showed that in some cases such systems influenced the balance of older adults \cite{multiModualBiofeedback}, while others showed improved control of mediolateral sway during gait and dynamic gait index, which are fall risk indicators in elders \cite{vibrotactileTiltFeedback}.
 
-Making biofeedback systems available for home users creates a new set of challenges. The sensors would have to be smaller and there would be the need for a computer to interpret the information gathered by the sensors. Smartphones are one example of portable computing units with small sensors that can be used for such purposes. Several attempts have been made to create fall detection systems using smart phone technology \cite{iFall, semiSupervisedFallDetection, mobilePhoneBasedFallDetection, detectionOfFalls}, all of these studies show positive results.
+Making biofeedback systems available for home users creates a new set of challenges. The sensors would have to be smaller and there would be the need for a computer to interpret the information gathered by the sensors. Smartphones are one example of portable computing units with small sensors that can be used for such purposes. Several attempts have been made to create fall detection systems using smart phone technology \cite{iFall, semiSupervisedFallDetection, mobilePhoneBasedFallDetection, detectionOfFalls}, all of these studies show positive results. Sadly are no projects that focus on preventing falls through the use of smartphones and bio-feedback, all of them focus on being reacting to a fall, and not preventing it.
 
 \subsection{iFall}
 The iFall \cite{iFall} project is a lightweight Android application designed to run in the background. It monitors the data from the phones accelerometer if the accelerometer data matches a pre-defined pattern it will assume a fall has occurred. When a fall is detected the user has a certain amount of time to get up again, this is to prevent false alarms when small falls occur or the phone is dropped. If the user does not get up, a prompt window is presented that the user has to respond to, if no response is registered an alarm will be triggered. 
@@ -98,16 +100,16 @@ The iFall \cite{iFall} project is a lightweight Android application designed to 
     \caption{\footnotesize An example of a classic fall. The accelerometer crossing the lower and upper amplitude  threshold followed by a long lie, recongnized this pattern as a fall.}
 \end{figure}
 
-One of the challenges the project faced was to alter and adapt the threshold depending on where the user carried the phone. Carrying the phone on the arm while running, or in a purse would generate more movement then on a belt clip or pocket. The application would identify patterns in the accelerometer data to decide where the user was most likley carrying his phone and set the appropriate thresholds. The project concludes that their software is viable and affordable, but the challenge is for the users to accept it and testing it out in the field to improve its usability.
+One of the challenges the project faced was to alter and adapt the threshold depending on where the user carried the phone. Strapping it to the arm while running, or putting it inside a purse would generate more movement then on a belt clip or in a pocket. The application would identify patterns in the accelerometer data to decide where the user was most likley carrying his phone and set the appropriate thresholds. The project concludes that their software is viable and affordable, but the challenge is for the users to accept it and testing it out in the field to improve its usability.
 
+\subsection{Placement of device}
 
+The PerFallID\cite{fallPrevention} project and a Taiwanese Android\cite{mobilePhoneBasedFallDetection} project have similarities to the earlier iFall project, but do more research on how phone placement on the body affects the accuracy of their application. They perform a similar test by attaching the phone to Chest, Waist, and Thigh and measuring the amount of False Positive (FP) and False Negatives (FN). Strange enough they come to different conclusions when it comes to deciding the best placement for the phone; PerFallID concludes that the waist is the most accurate area, while the Taiwanese Android project concludes that the chest is the best location when using only one device with an accelerometer. The different conclusions might because different approaches and algorithms are used to detecting falls. This could mean that there is no universal optimal position for the sensors to be located.
 
+%Figure here showing where the devices are placed
 
-The current trend shows that smartphones are becoming more affordable \cite{find_some_data_here} and with the correct software these phones can notify healthcare personnel about falls, giving the elderly an extra safety. Mobile systems for fall prevention has also been tried, with promissing results \cite{fallPrevention}.
+\subsection{Additional sensors}
+A common limitation for the papers that have been reviews involve that only the smartphone is used as a sensors. The PerFallID implements an additional mangetic sensor that is placed above the knee. By using the data from the magnetic sensor they are able to improve the accuracy of the application, backward and lateral falls gain a significant improvement with the additional sensor. The Environmental-Adaptive Fall Detection System \cite{fallDetectionWithExtraSensors} project takes advantage of 3 sensors, and the smartphone itself acts only as a hub. The sensors are located on the waist, left ankle and right ankle. Their solution is able to detect falls with 80\% accuracy in all kinds of situations, such as running, walking, ramp, standing still, and stairs. It seems to be the biggest and most complex solution so far, which makes battery life an interesting factor, but there is no mention of it in the paper.
 
-A limitation for many of the previously discussed solutions is that they only make use of the embedded accelerometers in the smart phone. Increasing the number of sensors and their positioning can make the fall detection application more accurate \cite{fallDetectionWithExtraSensors}. 
-
-In this study the goal is to examine if using cheap external sensors can give more accurate and additional sensor data to help make fall detection/prevention applications more effective. The sensors examined will be the Wii Remote and the Sony Move controller. These are cheap mass produced game controllers with embedded sensors and Bluetooth support. Using Bluetooth wireless technology the sensors can be connected to the smartphone and stream supplementary acceleromter and gyroscope data.
-
-The Google Play Store has 3 applications that allow a user to connect a WiiRemote to an Android Device. All of these applications focus only on the buttons, and ignore sensor data \cite{wiimoteController, simpleWiiController}. The applications seem unstable and are far from user friendly, but they are the only of its kind out there.
+%Figure here showing the extra sensors system architecture?
 
