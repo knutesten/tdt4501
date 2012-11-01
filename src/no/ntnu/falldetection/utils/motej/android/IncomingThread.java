@@ -27,14 +27,15 @@ import android.util.Log;
 /**
  * 
  * <p>
+ * 
  * @author <a href="mailto:vfritzsch@users.sourceforge.net">Volker Fritzsch</a>
  */
-class IncomingThread extends Thread{
-	
+class IncomingThread extends Thread {
+
 	private static final long THREAD_SLEEP = 1l;
 
 	private Mote source;
-	
+
 	private Extension extension;
 
 	private volatile boolean active;
@@ -44,37 +45,35 @@ class IncomingThread extends Thread{
 	private IrPoint[] interleavedIrCameraData;
 
 	private int[] interleavedAccelerometerData;
-	
+
 	private static final int PORT = 0x13;
-	
-	
-	
-	public IncomingThread(Mote source, BluetoothDevice remoteDevice) throws InterruptedException{
+
+	public IncomingThread(Mote source, BluetoothDevice remoteDevice)
+			throws InterruptedException {
 		active = true;
 		new ConnectThread(remoteDevice, PORT).start();
 		this.source = source;
 		Thread.sleep(THREAD_SLEEP);
 	}
 
-	
 	public void disconnect() {
 		active = false;
 	}
 
 	protected void parseAccelerometerData(byte[] bytes) {
-		float x = ((bytes[4] & 0xff) << 2) | ((bytes[2] & 0xff)>>5 & 0x03);
-		float y = ((bytes[5] & 0xff) << 2) | ((bytes[3] & 0xff)>>5 & 0x02);
-		float z = ((bytes[6] & 0xff) << 2) | ((bytes[3] & 0xff)>>5 & 0x02);
-		
+		float x = ((bytes[4] & 0xff) << 2) | ((bytes[2] & 0xff) >> 5 & 0x03);
+		float y = ((bytes[5] & 0xff) << 2) | ((bytes[3] & 0xff) >> 5 & 0x02);
+		float z = ((bytes[6] & 0xff) << 2) | ((bytes[3] & 0xff) >> 5 & 0x02);
+
 		CalibrationDataReport c = source.getCalibrationDataReport();
-		if(c == null){
+		if (c == null) {
 			return;
 		}
-		
-		x = (float)((x-c.getZeroX())/(c.getGravityX()-c.getZeroX()));
-		y = (float)((y-c.getZeroY())/(c.getGravityY()-c.getZeroY()));
-		z = (float)((z-c.getZeroZ())/(c.getGravityZ()-c.getZeroZ()));
-				
+
+		x = (float) ((x - c.getZeroX()) / (c.getGravityX() - c.getZeroX()));
+		y = (float) ((y - c.getZeroY()) / (c.getGravityY() - c.getZeroY()));
+		z = (float) ((z - c.getZeroZ()) / (c.getGravityZ() - c.getZeroZ()));
+
 		source.fireAccelerometerEvent(x, y, z);
 	}
 
@@ -94,7 +93,7 @@ class IncomingThread extends Thread{
 		int x3 = bytes[offset + 8] & 0xff ^ (bytes[offset + 7] & 0x03) << 8;
 		int y3 = bytes[offset + 9] & 0xff ^ (bytes[offset + 7] & 0x0c) << 6;
 		IrPoint p3 = new IrPoint(x3, y3);
-		
+
 		source.fireIrCameraEvent(IrCameraMode.BASIC, p0, p1, p2, p3);
 	}
 
@@ -126,21 +125,21 @@ class IncomingThread extends Thread{
 
 		source.fireIrCameraEvent(IrCameraMode.EXTENDED, p0, p1, p2, p3);
 	}
-	
+
 	protected void parseExtensionData(byte[] bytes, int offset, int length) {
 		if (extension == null) {
 			return;
 		}
-		
-//		String debug = "";
-//		for(byte b : bytes){
-//			debug += String.format("%02X", b);
-//		}
+
+		// String debug = "";
+		// for(byte b : bytes){
+		// debug += String.format("%02X", b);
+		// }
 		byte[] extensionData = new byte[length];
 		System.arraycopy(bytes, offset, extensionData, 0, length);
 		extension.parseExtensionData(extensionData);
 	}
-	
+
 	protected void parseFullIrCameraData(byte[] bytes, int reportMode) {
 		if (interleavedIrCameraData == null) {
 			interleavedIrCameraData = new IrPoint[4];
@@ -154,8 +153,9 @@ class IncomingThread extends Thread{
 			int xmax0 = bytes[10] & 0x7f;
 			int ymax0 = bytes[11] & 0x7f;
 			int intensity0 = bytes[13] & 0xff;
-			interleavedIrCameraData[0] = new IrPoint(x0, y0, size0, xmin0, ymin0, xmax0, ymax0, intensity0);
-		
+			interleavedIrCameraData[0] = new IrPoint(x0, y0, size0, xmin0,
+					ymin0, xmax0, ymax0, intensity0);
+
 			int x1 = (bytes[14] & 0xff) ^ ((bytes[16] & 0x30) << 4);
 			int y1 = (bytes[15] & 0xff) ^ ((bytes[16] & 0xc0) << 2);
 			int size1 = bytes[16] & 0x0f;
@@ -164,9 +164,10 @@ class IncomingThread extends Thread{
 			int xmax1 = bytes[19] & 0x7f;
 			int ymax1 = bytes[20] & 0x7f;
 			int intensity1 = bytes[22] & 0xff;
-			interleavedIrCameraData[1] = new IrPoint(x1, y1, size1, xmin1, ymin1, xmax1, ymax1, intensity1);
+			interleavedIrCameraData[1] = new IrPoint(x1, y1, size1, xmin1,
+					ymin1, xmax1, ymax1, intensity1);
 		}
-		
+
 		if (reportMode == ReportModeRequest.DATA_REPORT_0x3f) {
 			int x2 = (bytes[5] & 0xff) ^ ((bytes[7] & 0x30) << 4);
 			int y2 = (bytes[6] & 0xff) ^ ((bytes[7] & 0xc0) << 2);
@@ -176,8 +177,9 @@ class IncomingThread extends Thread{
 			int xmax2 = bytes[10] & 0x7f;
 			int ymax2 = bytes[11] & 0x7f;
 			int intensity2 = bytes[13] & 0xff;
-			interleavedIrCameraData[2] = new IrPoint(x2, y2, size2, xmin2, ymin2, xmax2, ymax2, intensity2);
-			
+			interleavedIrCameraData[2] = new IrPoint(x2, y2, size2, xmin2,
+					ymin2, xmax2, ymax2, intensity2);
+
 			int x3 = (bytes[14] & 0xff) ^ ((bytes[16] & 0x30) << 4);
 			int y3 = (bytes[15] & 0xff) ^ ((bytes[16] & 0xc0) << 2);
 			int size3 = bytes[16] & 0x0f;
@@ -186,11 +188,12 @@ class IncomingThread extends Thread{
 			int xmax3 = bytes[19] & 0x7f;
 			int ymax3 = bytes[20] & 0x7f;
 			int intensity3 = bytes[22] & 0xff;
-			interleavedIrCameraData[3] = new IrPoint(x3, y3, size3, xmin3, ymin3, xmax3, ymax3, intensity3);
+			interleavedIrCameraData[3] = new IrPoint(x3, y3, size3, xmin3,
+					ymin3, xmax3, ymax3, intensity3);
 		}
-		
-		if (interleavedIrCameraData[0] != null &&
-				interleavedIrCameraData[2] != null) {
+
+		if (interleavedIrCameraData[0] != null
+				&& interleavedIrCameraData[2] != null) {
 			IrPoint p0 = interleavedIrCameraData[0];
 			IrPoint p1 = interleavedIrCameraData[1];
 			IrPoint p2 = interleavedIrCameraData[2];
@@ -200,21 +203,22 @@ class IncomingThread extends Thread{
 		}
 	}
 
-	protected void parseInterleavedAccelerometerData(byte[] bytes, int reportMode) {
+	protected void parseInterleavedAccelerometerData(byte[] bytes,
+			int reportMode) {
 		int x = 0;
 		int y = 0;
 		int z = 0;
-		
+
 		if (reportMode == ReportModeRequest.DATA_REPORT_0x3e) {
 			x = bytes[4] & 0xff;
 			z = ((bytes[3] & 0x60) << 1) ^ ((bytes[2] & 0x60) >> 1);
 		}
-		
+
 		if (reportMode == ReportModeRequest.DATA_REPORT_0x3f) {
 			y = bytes[4] & 0xff;
 			z = ((bytes[3] & 0x60) >> 3) ^ ((bytes[2] & 0x60) >> 5);
 		}
-		
+
 		if (interleavedAccelerometerData == null) {
 			interleavedAccelerometerData = new int[3];
 			interleavedAccelerometerData[0] ^= x;
@@ -248,46 +252,57 @@ class IncomingThread extends Thread{
 		boolean speakerEnabled = (bytes[4] & 0x04) == 0x04;
 		boolean continuousReportingEnabled = (bytes[4] & 0x08) == 0x08;
 		byte batteryLevel = bytes[7];
-		
-		StatusInformationReport info = new StatusInformationReport(leds, speakerEnabled, continuousReportingEnabled, extensionControllerConnected, batteryLevel);
+
+		StatusInformationReport info = new StatusInformationReport(leds,
+				speakerEnabled, continuousReportingEnabled,
+				extensionControllerConnected, batteryLevel);
 		source.fireStatusInformationChangedEvent(info);
 	}
 
-	
 	private int count = 0;
+
 	public void run() {
 		// Wait for the connection to complete
-		while(incoming== null && active);
-		
+		while (incoming == null && active)
+			;
+
 		byte[] buf = new byte[23];
 		while (active) {
 			try {
 				incoming.read(buf);
-				
-//				int test = incoming.read();
-//				Log.i("TEST", test+ "");
-//				if (log.isTraceEnabled()) {
-//					StringBuffer sb = new StringBuffer();
-//					log.trace("received:");
-//					for (int i = 0; i < 23; i++) {
-//						String hex = Integer.toHexString(buf[i] & 0xff);
-//						sb.append(hex.length() == 1 ? "0x0" : "0x").append(hex).append(" ");
-//						if ((i + 1) % 8 == 0) {
-//							log.trace(sb.toString());
-//							sb.delete(0, sb.length());
-//						}
-//					}
-//					if (sb.length() > 0) {
-//						log.trace(sb.toString());
-//					}
-//				}
-				
+
+				// int test = incoming.read();
+				// Log.i("TEST", test+ "");
+				// if (log.isTraceEnabled()) {
+				// StringBuffer sb = new StringBuffer();
+				// log.trace("received:");
+				// for (int i = 0; i < 23; i++) {
+				// String hex = Integer.toHexString(buf[i] & 0xff);
+				// sb.append(hex.length() == 1 ? "0x0" :
+				// "0x").append(hex).append(" ");
+				// if ((i + 1) % 8 == 0) {
+				// log.trace(sb.toString());
+				// sb.delete(0, sb.length());
+				// }
+				// }
+				// if (sb.length() > 0) {
+				// log.trace(sb.toString());
+				// }
+				// }
+
 				switch (buf[1]) {
+				case 0x22:
+					Log.e("done", "done");
+					source.writeDone();
+					break;
+
 				case ReportModeRequest.DATA_REPORT_0x20:
+					Log.w("status", "received");
 					parseStatusInformation(buf);
 					break;
 
 				case ReportModeRequest.DATA_REPORT_0x21:
+					Log.w("data", "received");
 					parseCoreButtonData(buf);
 					parseMemoryData(buf);
 					break;
@@ -342,37 +357,44 @@ class IncomingThread extends Thread{
 
 				case ReportModeRequest.DATA_REPORT_0x3e:
 					parseCoreButtonData(buf);
-					parseInterleavedAccelerometerData(buf, ReportModeRequest.DATA_REPORT_0x3e);
-					parseFullIrCameraData(buf, ReportModeRequest.DATA_REPORT_0x3e);
+					parseInterleavedAccelerometerData(buf,
+							ReportModeRequest.DATA_REPORT_0x3e);
+					parseFullIrCameraData(buf,
+							ReportModeRequest.DATA_REPORT_0x3e);
 					break;
 
 				case ReportModeRequest.DATA_REPORT_0x3f:
 					parseCoreButtonData(buf);
-					parseInterleavedAccelerometerData(buf, ReportModeRequest.DATA_REPORT_0x3f);
-					parseFullIrCameraData(buf, ReportModeRequest.DATA_REPORT_0x3f);
+					parseInterleavedAccelerometerData(buf,
+							ReportModeRequest.DATA_REPORT_0x3f);
+					parseFullIrCameraData(buf,
+							ReportModeRequest.DATA_REPORT_0x3f);
 					break;
 
 				default:
 					String hex = Integer.toHexString(buf[1] & 0xff);
-					Log.d("motej.android", "Unknown or not yet implemented data report: " + (hex.length() == 1 ? "0x0" + hex : "0x" + hex));
+					Log.d("motej.android",
+							"Unknown or not yet implemented data report: "
+									+ (hex.length() == 1 ? "0x0" + hex : "0x"
+											+ hex));
 				}
 
 				Thread.sleep(THREAD_SLEEP);
 			} catch (InterruptedException ex) {
 				Log.e("motej.android", "incoming wiimote thread interrupted.");
 			} catch (IOException ex) {
-				Log.e("motej.android","connection closed?");
+				Log.e("motej.android", "connection closed?");
 				active = false;
 				// Only fire a disconnection event
 				// when something goes wrong
 				source.fireMoteDisconnectedEvent();
 			}
 		}
-		
+
 		Log.d("motej.android", "Connection closing.");
-		
+
 		try {
-			if(incoming != null){
+			if (incoming != null) {
 				incoming.close();
 			}
 		} catch (IOException ex) {
@@ -395,7 +417,8 @@ class IncomingThread extends Thread{
 			try {
 				incoming = socket.getInputStream();
 			} catch (IOException e) {
-				Log.e("motej.android", e.getMessage() +": " + e.getStackTrace());
+				Log.e("motej.android",
+						e.getMessage() + ": " + e.getStackTrace());
 			}
 		}
 
@@ -404,7 +427,6 @@ class IncomingThread extends Thread{
 			Log.e("motej.android", "Connection Failure: " + cause.getMessage());
 			active = false;
 		}
-		
+
 	}
 }
-

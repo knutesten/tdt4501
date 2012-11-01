@@ -61,13 +61,6 @@ public class WiiMoteHandler implements AccelerometerListener<Mote>,
 				this.extension = (MotionPlus) evt.getExtension();
 				extension.addGyroListener(this);
 
-				// Ugly fix
-				try {
-					Thread.sleep(1000);
-				} catch (Exception e) {
-
-				}
-				mote.setReportMode(ReportModeRequest.DATA_REPORT_0x37);
 				mote.setPlayerLeds(new boolean[] { true, true, false, false });
 			}
 		}

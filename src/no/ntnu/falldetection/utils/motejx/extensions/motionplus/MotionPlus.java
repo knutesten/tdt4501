@@ -40,6 +40,7 @@ public class MotionPlus extends AbstractExtension implements DataListener {
 		// Request calibration data
 		mote.readRegisters(new byte[] { (byte) 0xa4, 0x00, 0x20 }, new byte[] {
 				0x00, (byte) 0x32 });
+		
 	}
 
 

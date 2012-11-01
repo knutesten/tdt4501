@@ -18,11 +18,12 @@ package no.ntnu.falldetection.utils.motej.android;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.Semaphore;
 
 import no.ntnu.falldetection.utils.motej.android.request.MoteRequest;
 import no.ntnu.falldetection.utils.motej.android.request.PlayerLedRequest;
 import no.ntnu.falldetection.utils.motej.android.request.RumbleRequest;
-
+import no.ntnu.falldetection.utils.motej.android.request.WriteRegisterRequest;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.util.Log;
@@ -49,6 +50,8 @@ class OutgoingThread extends Thread {
 
 	private Mote source;
 
+	private Semaphore mutex = new Semaphore(1);
+
 	private static final int PORT = 0x11;
 
 	protected OutgoingThread(Mote source, BluetoothDevice remoteDevice)
@@ -67,7 +70,7 @@ class OutgoingThread extends Thread {
 	}
 
 	public void run() {
-		while (outgoing==null && active)
+		while (outgoing == null && active)
 			;
 
 		while (active || !requestQueue.isEmpty()) {
@@ -109,11 +112,19 @@ class OutgoingThread extends Thread {
 					// }
 					// }
 
+					
 					outgoing.write(request.getBytes());
+					if(request instanceof WriteRegisterRequest){
+						Log.e("writing", "writing");
+						synchronized(this){
+							wait();
+						}
+					}
 				}
 				Thread.sleep(THREAD_SLEEP);
 			} catch (InterruptedException ex) {
-				ex.printStackTrace();
+//				ex.printStackTrace();
+				Log.e("motej.android", "Interrupted exception" + ex.getStackTrace());
 			} catch (IOException ex) {
 				Log.e("motej.android", "connection closed?" + ex.getMessage());
 				active = false;
@@ -121,7 +132,7 @@ class OutgoingThread extends Thread {
 			}
 		}
 		try {
-			if(outgoing != null){
+			if (outgoing != null) {
 				outgoing.close();
 			}
 		} catch (IOException ex) {
@@ -144,7 +155,8 @@ class OutgoingThread extends Thread {
 			try {
 				outgoing = socket.getOutputStream();
 			} catch (IOException e) {
-				Log.e("motej.android", e.getMessage() +": " + e.getStackTrace());
+				Log.e("motej.android",
+						e.getMessage() + ": " + e.getStackTrace());
 			}
 		}
 
@@ -154,5 +166,11 @@ class OutgoingThread extends Thread {
 			active = false;
 		}
 
+	}
+
+	public void writeDone() {
+		synchronized (this) {
+			notify();
+		}
 	}
 }

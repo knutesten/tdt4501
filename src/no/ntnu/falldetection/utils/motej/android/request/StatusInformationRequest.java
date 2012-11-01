@@ -24,7 +24,12 @@ package no.ntnu.falldetection.utils.motej.android.request;
 public class StatusInformationRequest implements MoteRequest {
 
 	public byte[] getBytes() {
-		return new byte[] { 0x52, 0x15, 0x00 };
+		byte[] bytes = new byte[3];
+		bytes[0] = 0x52;
+		bytes[1] = 0x15;
+		bytes[2] = 0x00;
+		
+		return bytes;
 	}
 
 }

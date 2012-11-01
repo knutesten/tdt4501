@@ -38,7 +38,6 @@ import no.ntnu.falldetection.utils.motej.android.request.RumbleRequest;
 import no.ntnu.falldetection.utils.motej.android.request.StatusInformationRequest;
 import no.ntnu.falldetection.utils.motej.android.request.WriteRegisterRequest;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothSocket;
 import android.util.Log;
 
 /**
@@ -64,7 +63,11 @@ public class Mote {
 	private EventListenerList listenerList = new EventListenerList();
 
 	private BluetoothDevice device;
+	
+	private boolean statusRequested = false;
 
+	private byte reportMode = 0x37;
+	
 	public Mote(BluetoothDevice device) {
 		try {
 			this.device = device;
@@ -83,11 +86,17 @@ public class Mote {
 			incoming.start();
 			outgoing.start();
 
-			outgoing.sendRequest(new StatusInformationRequest());
+			getStatus();
 			outgoing.sendRequest(new CalibrationDataRequest());
+			setReportMode((byte)0x37);
 		} catch (Exception ex) {
 			throw new RuntimeException(ex.fillInStackTrace());
 		}
+	}
+
+	private void getStatus() {
+		statusRequested = true;
+		outgoing.sendRequest(new StatusInformationRequest());
 	}
 
 	public void addAccelerometerListener(AccelerometerListener<Mote> listener) {
@@ -349,6 +358,10 @@ public class Mote {
 
 	protected void fireStatusInformationChangedEvent(
 			StatusInformationReport report) {
+		if(!statusRequested){
+			setReportMode(reportMode);
+		}
+		statusRequested = false;
 		// decide if we should query the extension port
 		boolean extensionChanged;
 		if (statusInformationReport == null) {
@@ -443,10 +456,12 @@ public class Mote {
 	}
 
 	public void setReportMode(byte mode) {
+		reportMode = mode;
 		outgoing.sendRequest(new ReportModeRequest(mode));
 	}
 
 	public void setReportMode(byte mode, boolean continuous) {
+		reportMode = mode;
 		outgoing.sendRequest(new ReportModeRequest(mode, continuous));
 	}
 
@@ -466,5 +481,9 @@ public class Mote {
 	@Override
 	public String toString() {
 		return "Mote[" + device + "]";
+	}
+	
+	public void writeDone(){
+		outgoing.writeDone();
 	}
 }

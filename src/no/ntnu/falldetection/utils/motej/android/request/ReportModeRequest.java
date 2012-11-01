@@ -112,7 +112,7 @@ public class ReportModeRequest implements MoteRequest {
 	}
 	
 	public byte[] getBytes() {
-		return new byte[] { 82, 18, continuous ? (byte) 4 : (byte) 0, mode };
+		return new byte[] { 0x52, 0x12, (byte) (continuous ? 0x04 : 0x00), mode };
 	}
 
 }
