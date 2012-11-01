@@ -50,8 +50,6 @@ class OutgoingThread extends Thread {
 
 	private Mote source;
 
-	private Semaphore mutex = new Semaphore(1);
-
 	private static final int PORT = 0x11;
 
 	protected OutgoingThread(Mote source, BluetoothDevice remoteDevice)
