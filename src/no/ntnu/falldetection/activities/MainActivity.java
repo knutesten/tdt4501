@@ -2,8 +2,7 @@ package no.ntnu.falldetection.activities;
 
 
 import no.ntnu.falldetection.utils.ExternalStorage;
-import no.ntnu.falldetection.utils.MadgwickAHRS;
-import no.ntnu.falldetection.utils.ToDegrees;
+import no.ntnu.falldetection.utils.AngleCalc;
 import no.ntnu.falldetection.utils.motej.android.Mote;
 import no.ntnu.falldetection.utils.motej.android.event.AccelerometerEvent;
 import no.ntnu.falldetection.utils.motej.android.event.AccelerometerListener;
@@ -38,7 +37,7 @@ public class MainActivity extends Activity {
 			.getDefaultAdapter();
 	private Mote mote;
 	private ExternalStorage es = new ExternalStorage();
-	private ToDegrees converter = new ToDegrees();
+	private AngleCalc converter = new AngleCalc();
 
 	private long start;
 	private long time;
@@ -47,9 +46,6 @@ public class MainActivity extends Activity {
 	private AccelerometerEvent<Mote> newAccelEvent = null;
 	
 	
-	//Variables for the Madgwick Algorithm
-	
-	private float[] quat;
 	
 	
 	// Create a BroadcastReceiver for ACTION_FOUND
@@ -85,7 +81,7 @@ public class MainActivity extends Activity {
 
 						
 						public void gyroChanged(GyroEvent evt) {
-							Log.i("gyro", evt.getYaw() + " " + evt.getRoll() + " " + evt.getPitch());
+//							Log.i("gyro", evt.getPitch() + " " + evt.getRoll() + " " + evt.getYaw());
 							shit(evt, null);
 						}
 						
@@ -145,9 +141,9 @@ public class MainActivity extends Activity {
 		
 		if(newGyroEvent != null && newAccelEvent != null){
 		
-//			float pitch = converter.convertTo(newGyroEvent.getPitch(), newGyroEvent.getRoll(), newGyroEvent.getYaw(), newAccelEvent.getX(), newAccelEvent.getY(), newAccelEvent.getZ());	
+			float[] angles = converter.convertTo(newGyroEvent.getPitch(), newGyroEvent.getRoll(), newGyroEvent.getYaw(), newAccelEvent.getX(), newAccelEvent.getY(), newAccelEvent.getZ());	
 //			
-//			Log.i("alg", "pitch: " + pitch);
+			Log.i("alg", " test "+ angles[0] +  " " + angles[1] + " " + angles[2]);
 //			
 			
 //			Log.i("alg", "pa: " + pitchAngle + " ya: " + yawAngle + " ra: " + rollAngle);
