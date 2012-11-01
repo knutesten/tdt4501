@@ -1,8 +1,8 @@
 package no.ntnu.falldetection.activities;
 
+import no.ntnu.falldetection.controllers.AngleCalc;
+import no.ntnu.falldetection.controllers.WiiMoteHandler;
 import no.ntnu.falldetection.models.OrientationModel;
-import no.ntnu.falldetection.utils.AngleCalc;
-import no.ntnu.falldetection.utils.WiiMoteHandler;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;

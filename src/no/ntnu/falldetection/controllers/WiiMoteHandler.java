@@ -1,7 +1,9 @@
-package no.ntnu.falldetection.utils;
+package no.ntnu.falldetection.controllers;
 
 import java.util.ArrayList;
 
+import no.ntnu.falldetection.utils.SensorEvent;
+import no.ntnu.falldetection.utils.SensorListener;
 import no.ntnu.falldetection.utils.motej.android.Mote;
 import no.ntnu.falldetection.utils.motej.android.event.AccelerometerEvent;
 import no.ntnu.falldetection.utils.motej.android.event.AccelerometerListener;
