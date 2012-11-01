@@ -1,6 +1,8 @@
 package no.ntnu.falldetection.utils;
 
 public class SensorEvent {
+	private boolean calibrated;
+	
 	private float yaw;
 	private float pitch;
 	private float roll;
@@ -9,13 +11,14 @@ public class SensorEvent {
 	private float accelY;
 	private float accelZ;
 	
-	public SensorEvent(float yaw, float pitch, float roll, float accelX, float accelY, float accelZ){
+	public SensorEvent(float yaw, float pitch, float roll, float accelX, float accelY, float accelZ, boolean calibrated){
 		this.accelX = accelX;
 		this.accelY = accelY;
 		this.accelZ = accelZ;
 		this.yaw = yaw;
 		this.pitch = pitch;
 		this.roll = roll;
+		this.calibrated = calibrated;
 	}
 
 	public float getYaw() {
@@ -35,5 +38,8 @@ public class SensorEvent {
 	}
 	public float getAccelZ() {
 		return accelZ;
+	}
+	public boolean wasCalibrated(){
+		return calibrated;
 	}
 }

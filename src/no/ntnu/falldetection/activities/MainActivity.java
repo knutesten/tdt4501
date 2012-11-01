@@ -1,5 +1,6 @@
 package no.ntnu.falldetection.activities;
 
+import no.ntnu.falldetection.models.OrientationModel;
 import no.ntnu.falldetection.utils.AngleCalc;
 import no.ntnu.falldetection.utils.WiiMoteHandler;
 import android.app.Activity;
@@ -26,8 +27,10 @@ public class MainActivity extends Activity {
 
 	private Handler handler = new Handler();
 	private WiiMoteHandler wiiMoteHandler;
+	
 	private Button connectButton;
 	private Button calibrateButton;
+
 
 	// Create a BroadcastReceiver for ACTION_FOUND
 	private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
@@ -43,13 +46,27 @@ public class MainActivity extends Activity {
 
 				if (device.getName().startsWith("Nintendo")) {
 					mBluetoothAdapter.cancelDiscovery();
-
-					wiiMoteHandler = new WiiMoteHandler(device);
-					wiiMoteHandler.addSensorListener(new AngleCalc());
+					connectToWiiMote(device);
 				}
 			}
 		}
 	};
+	
+	private void connectToWiiMote(BluetoothDevice device){
+		//Create hander for wii mote
+		wiiMoteHandler = new WiiMoteHandler(device);
+		
+		//Create orientation model for the connected wii mote
+		OrientationModel model = new OrientationModel();
+		
+		//Create angleCalc to convert the values from the sensors to angles
+		AngleCalc angleCalc = new AngleCalc(model);
+		wiiMoteHandler.addSensorListener(angleCalc);
+		
+		//Let the view listen to changes made to the model
+		CubeView cubeView = (CubeView)findViewById(R.id.cubeView);
+		model.addOrientationListener(cubeView);
+	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -96,10 +113,10 @@ public class MainActivity extends Activity {
 							} catch (Exception e) {
 							}
 						}
-						if (wiiMoteHandler.isConnected()) {
+						if (wiiMoteHandler!= null && wiiMoteHandler.isConnected()) {
 							setButtonText("Connected");
 						} else {
-							connectButton.setEnabled(true);
+							setButtonEnabled(true);
 							setButtonText("Connect");
 						}
 					}
@@ -110,6 +127,16 @@ public class MainActivity extends Activity {
 							@Override
 							public void run() {
 								connectButton.setText(finText);
+							}
+						});
+					}
+					
+					private void setButtonEnabled(boolean on){
+						final boolean bool = on;
+						handler.post(new Runnable() {
+							@Override
+							public void run() {
+								connectButton.setEnabled(bool);
 							}
 						});
 					}

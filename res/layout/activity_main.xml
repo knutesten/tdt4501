@@ -25,8 +25,8 @@
 
         </LinearLayout>
 
-        <View
-            android:id="@+id/viewWiiRemote"
+        <no.ntnu.falldetection.activities.CubeView
+            android:id="@+id/cubeView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 

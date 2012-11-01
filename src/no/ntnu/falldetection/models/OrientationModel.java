@@ -4,15 +4,34 @@ import java.util.ArrayList;
 
 
 public class OrientationModel {
-	private float[] angles = new float[]{0f, 0f, 0f};
+	private final float NOISE_THRESHOLD = 1f;
+	
+	private float pitch = 0;
+	private float roll = 0;
+	private float yaw = 0;
+	
+	private float lastPitch =0;
+	private float lastRoll =0;
+	private float lastYaw = 0;
+	
 	private ArrayList<OrientationListener> listeners = new ArrayList<OrientationListener>();
 	
 	public void setAngles(float[] angles){
-		this.angles = angles;
+		pitch = removeNoise(lastPitch, angles[0]);
+		roll = removeNoise(lastRoll, angles[1]);
+		yaw = removeNoise(lastYaw, angles[2]);
 		
 		OrientationEvent evt = new OrientationEvent(angles);
 		for(OrientationListener listener : listeners){
 			listener.orientationChanged(evt);
+		}
+	}
+	
+	private float removeNoise(float oldValue, float newValue){
+		if(Math.abs(newValue - oldValue) < NOISE_THRESHOLD){
+			return oldValue;
+		}else{
+			return newValue;
 		}
 	}
 	
@@ -25,18 +44,18 @@ public class OrientationModel {
 	}
 	
 	public float[] getAngles(){
-		return angles;
+		return new float[]{pitch, roll, yaw};
 	}
 	
 	public float getPitch(){
-		return angles[0];
+		return pitch;
 	}
 	
 	public float getRoll(){
-		return angles[1];
+		return roll;
 	}
 	
 	public float getYaw(){
-		return angles[2];
+		return yaw;
 	}
 }

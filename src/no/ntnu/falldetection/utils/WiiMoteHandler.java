@@ -23,6 +23,7 @@ public class WiiMoteHandler implements AccelerometerListener<Mote>,
 	private GyroEvent newGyroEvent = null;
 	private AccelerometerEvent<Mote> newAccelEvent = null;
 	private ArrayList<SensorListener> listeners = new ArrayList<SensorListener>();
+	private boolean calibrated = false;
 
 	public WiiMoteHandler(BluetoothDevice device) {
 		this.mote = new Mote(device);
@@ -41,13 +42,13 @@ public class WiiMoteHandler implements AccelerometerListener<Mote>,
 
 	@Override
 	public void gyroChanged(GyroEvent evt) {
-		Log.i("gyro", evt.getYaw() + " " + evt.getRoll() + " " + evt.getPitch());
+//		Log.i("gyro", evt.getYaw() + " " + evt.getRoll() + " " + evt.getPitch());
 		fireSensorEvent(evt);
 	}
 
 	@Override
 	public void accelerometerChanged(AccelerometerEvent<Mote> evt) {
-		Log.i("accel", evt.getX() + " : " + evt.getY() + " : " + evt.getZ());
+//		Log.i("accel", evt.getX() + " : " + evt.getY() + " : " + evt.getZ());
 		fireSensorEvent(evt);
 	}
 
@@ -83,6 +84,7 @@ public class WiiMoteHandler implements AccelerometerListener<Mote>,
 	public void calibrateMotionPlus() {
 		if (extension != null) {
 			extension.calibrate();
+			calibrated = true;
 		}
 	}
 
@@ -97,7 +99,10 @@ public class WiiMoteHandler implements AccelerometerListener<Mote>,
 			SensorEvent orientationEvent = new SensorEvent(
 					newGyroEvent.getYaw(), newGyroEvent.getPitch(),
 					newGyroEvent.getRoll(), newAccelEvent.getX(),
-					newAccelEvent.getY(), newAccelEvent.getZ());
+					newAccelEvent.getY(), newAccelEvent.getZ(), calibrated);
+			if(calibrated){
+				calibrated = false;
+			}
 			for (SensorListener listener : listeners) {
 				listener.newSensorData(orientationEvent);
 			}
