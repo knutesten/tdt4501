@@ -1,26 +1,23 @@
 package no.ntnu.falldetection.utils;
 
-import java.util.Currency;
+import android.util.Log;
 
-public class AngleCalc {
+
+public class AngleCalc implements SensorListener{
 
 	private MadgwickAHRS alg;
-	private float[] quat;
-	private float pitchAngle = Integer.MAX_VALUE;
-	private float rollAngle = Integer.MAX_VALUE;
-	private float yawAngle = Integer.MAX_VALUE;
 
 	public AngleCalc() {
 		alg = new MadgwickAHRS(1f / 100f, 0.5f);
 	}
 
-	public float[] convertTo(float wiiPitch, float wiiRoll, float wiiYaw,
+	public float[] calculateAngle(float wiiPitch, float wiiRoll, float wiiYaw,
 			float accelX, float accelY, float accelZ) {
 
 		alg.update(degToRad(wiiPitch), degToRad(wiiRoll), degToRad(wiiYaw),
 				accelX, accelY, accelZ);
 
-		quat = alg.getQuaternion();
+		float[] quat = alg.getQuaternion();
 
 		double pitch = Math.atan2(2 * (quat[0] * quat[1] + quat[2] * quat[3]),
 				1 - 2 * (quat[1] * quat[1] + quat[2] * quat[2]));
@@ -35,10 +32,16 @@ public class AngleCalc {
 		float[] angles = new float[] { pitchAngle, rollAngle, yawAngle };
 
 		return angles;
-
 	}
 
 	private float degToRad(float degrees) {
 		return (float) (Math.PI / 180) * degrees;
+	}
+
+	@Override
+	public void newSensorData(SensorEvent evt) {
+		float[] angles = calculateAngle(evt.getPitch(), evt.getRoll(), evt.getYaw(), evt.getAccelX(), evt.getAccelY(), evt.getAccelZ());
+		
+		Log.i("hestemann", angles[0] + " " + angles[1] + " " + angles[2]);
 	}
 }
