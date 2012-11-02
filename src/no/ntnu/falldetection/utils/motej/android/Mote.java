@@ -93,7 +93,7 @@ public class Mote {
 
 			outgoing.sendRequest(new CalibrationDataRequest());
 			setReportMode((byte) 0x37);
-			timer.schedule(new CheckStatus(), 0, 1500);
+			timer.schedule(new CheckStatus(), 0, 1000);
 		} catch (Exception ex) {
 			throw new RuntimeException(ex.fillInStackTrace());
 		}

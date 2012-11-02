@@ -1,7 +1,10 @@
 package no.ntnu.falldetection.controllers;
 
+import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Date;
 
+import no.ntnu.falldetection.activities.CubeView;
 import no.ntnu.falldetection.utils.SensorEvent;
 import no.ntnu.falldetection.utils.SensorListener;
 import no.ntnu.falldetection.utils.motej.android.Mote;
@@ -17,7 +20,6 @@ import no.ntnu.falldetection.utils.motejx.extensions.motionplus.GyroEvent;
 import no.ntnu.falldetection.utils.motejx.extensions.motionplus.GyroListener;
 import no.ntnu.falldetection.utils.motejx.extensions.motionplus.MotionPlus;
 import android.bluetooth.BluetoothDevice;
-import android.util.Log;
 
 public class WiiMoteHandler implements AccelerometerListener<Mote>,
 		GyroListener, MoteDisconnectedListener<Mote>, ExtensionListener,
@@ -29,13 +31,21 @@ public class WiiMoteHandler implements AccelerometerListener<Mote>,
 	private ArrayList<SensorListener> listeners = new ArrayList<SensorListener>();
 	private boolean calibrated = false;
 	private int batteryLevel = -1;
+	
+	private CubeView cubeView;
+	
+	private long start;
 
-	public WiiMoteHandler(BluetoothDevice device) {
+	public WiiMoteHandler(BluetoothDevice device, CubeView cubeView) {
 		this.mote = new Mote(device);
+		start = System.currentTimeMillis();
 		mote.addAccelerometerListener(this);
 		mote.addMoteDisconnectedListener(this);
 		mote.addExtensionListener(this);
 		mote.addStatusInformationListener(this);
+	
+	
+		this.cubeView = cubeView;
 	}
 
 	public void addSensorListener(SensorListener listener) {
@@ -78,7 +88,22 @@ public class WiiMoteHandler implements AccelerometerListener<Mote>,
 
 	@Override
 	public void moteDisconnected(MoteDisconnectedEvent<Mote> evt) {
-		// TODO notify activity
+		printTime();
+	}
+
+	private void printTime() {
+		long time = System.currentTimeMillis() - start;
+		time/=1000;
+		int hours = (int)time/3600;
+		int minutes = (int)(time/60)%60;
+		int seconds = (int)(time)%60;
+		
+		String s = hours+":";
+		s+=(minutes<10?"0"+minutes:minutes) + ":";
+		s+=seconds<10?"0"+seconds:seconds +"";
+		
+		
+		cubeView.setText(s);
 	}
 
 	public void calibrateMotionPlus() {
@@ -123,22 +148,12 @@ public class WiiMoteHandler implements AccelerometerListener<Mote>,
 	}
 
 	public void rumble() {
-		new Thread() {
-			public void run() {
-				while (true) {
-					try {
-						mote.rumble(100);
-						Thread.sleep(200);
-					} catch (Exception e) {
-
-					}
-				}
-			}
-		}.start();
+		mote.rumble(Long.MAX_VALUE);
 	}
 
 	@Override
 	public void statusInformationReceived(StatusInformationReport report) {
+		printTime();
 		float battery = (float)(report.getBatteryLevel() & 0xff) / 0xc0;
 		battery = battery/0.25f;
 		
