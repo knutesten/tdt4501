@@ -292,17 +292,14 @@ class IncomingThread extends Thread {
 
 				switch (buf[1]) {
 				case 0x22:
-					Log.e("done", "done");
 					source.writeDone();
 					break;
 
 				case ReportModeRequest.DATA_REPORT_0x20:
-					Log.w("status", "received");
 					parseStatusInformation(buf);
 					break;
 
 				case ReportModeRequest.DATA_REPORT_0x21:
-					Log.w("data", "received");
 					parseCoreButtonData(buf);
 					parseMemoryData(buf);
 					break;
@@ -388,6 +385,9 @@ class IncomingThread extends Thread {
 				// Only fire a disconnection event
 				// when something goes wrong
 				source.fireMoteDisconnectedEvent();
+
+			}catch (NullPointerException ex){
+				Log.e("motej.android", "Connection lost");
 			}
 		}
 

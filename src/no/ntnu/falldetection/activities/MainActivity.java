@@ -159,25 +159,23 @@ public class MainActivity extends Activity {
 		unregisterReceiver(mReceiver);
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.activity_main, menu);
-		return true;
-	}
+//	@Override
+//	public boolean onCreateOptionsMenu(Menu menu) {
+//		getMenuInflater().inflate(R.menu.activity_main, menu);
+//		return true;
+//	}
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// deviceArrayAdapter.add("hest");
-		switch (item.getItemId()) {
-		case R.id.menu_settings:
-			if (wiiMoteHandler != null) {
-				wiiMoteHandler.searchForMotionPlus();
-			}
-			return true;
-		case R.id.test:
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
-		}
-	}
+//	@Override
+//	public boolean onOptionsItemSelected(MenuItem item) {
+//		// deviceArrayAdapter.add("hest");
+//		switch (item.getItemId()) {
+//		case R.id.menu_settings:
+//			return true;
+//		case R.id.test:
+//			wiiMoteHandler.rumble();
+//			return true;
+//		default:
+//			return super.onOptionsItemSelected(item);
+//		}
+//	}
 }

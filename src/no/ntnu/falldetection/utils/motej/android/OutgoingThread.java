@@ -45,9 +45,11 @@ class OutgoingThread extends Thread {
 	private volatile ConcurrentLinkedQueue<MoteRequest> requestQueue;
 
 	private byte ledByte;
+	
+	private long rumbleStop = 0;
 
-	private long rumbleMillis = Long.MIN_VALUE;
-
+	private boolean rumbling = false;
+	
 	private Mote source;
 
 	private static final int PORT = 0x11;
@@ -73,13 +75,9 @@ class OutgoingThread extends Thread {
 
 		while (active || !requestQueue.isEmpty()) {
 			try {
-				if (rumbleMillis > 0) {
-					rumbleMillis -= THREAD_SLEEP;
-				}
-				if (rumbleMillis == 0) {
-					rumbleMillis = Long.MIN_VALUE;
+				if (rumbling && rumbleStop < System.currentTimeMillis()) {
 					outgoing.write(RumbleRequest.getStopRumbleBytes(ledByte));
-					Thread.sleep(THREAD_SLEEP);
+					rumbling = false;
 					continue;
 				}
 				if (!requestQueue.isEmpty()) {
@@ -88,45 +86,31 @@ class OutgoingThread extends Thread {
 						ledByte = ((PlayerLedRequest) request).getLedByte();
 					}
 					if (request instanceof RumbleRequest) {
-						((RumbleRequest) request).setLedByte(ledByte);
-						rumbleMillis = ((RumbleRequest) request).getMillis();
+						long tmp = System.currentTimeMillis() + ((RumbleRequest)request).getMillis();
+						if(rumbling && tmp < rumbleStop){
+							continue;
+						}else{
+							((RumbleRequest) request).setLedByte(ledByte);
+							rumbleStop = tmp;
+							rumbling = true;
+						}
 					}
-
-					// if (log.isTraceEnabled()) {
-					// byte[] buf = request.getBytes();
-					// StringBuffer sb = new StringBuffer();
-					// log.trace("sending:");
-					// for (int i = 0; i < buf.length; i++) {
-					// String hex = Integer.toHexString(buf[i] & 0xff);
-					// sb.append(hex.length() == 1 ? "0x0" :
-					// "0x").append(hex).append(" ");
-					// if ((i + 1) % 8 == 0) {
-					// log.trace(sb.toString());
-					// sb.delete(0, sb.length());
-					// }
-					// }
-					// if (sb.length() > 0) {
-					// log.trace(sb.toString());
-					// }
-					// }
-
 					
 					outgoing.write(request.getBytes());
 					if(request instanceof WriteRegisterRequest){
-						Log.e("writing", "writing");
 						synchronized(this){
 							wait();
 						}
 					}
 				}
-				Thread.sleep(THREAD_SLEEP);
 			} catch (InterruptedException ex) {
-//				ex.printStackTrace();
 				Log.e("motej.android", "Interrupted exception" + ex.getStackTrace());
 			} catch (IOException ex) {
 				Log.e("motej.android", "connection closed?" + ex.getMessage());
 				active = false;
 				source.fireMoteDisconnectedEvent();
+			}catch (NullPointerException ex){
+				Log.e("motej.android", "Connection lost");
 			}
 		}
 		try {

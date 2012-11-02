@@ -15,6 +15,9 @@
  */
 package no.ntnu.falldetection.utils.motej.android;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import no.ntnu.falldetection.libs.EventListenerList;
 import no.ntnu.falldetection.utils.motej.android.event.AccelerometerEvent;
 import no.ntnu.falldetection.utils.motej.android.event.AccelerometerListener;
@@ -63,11 +66,13 @@ public class Mote {
 	private EventListenerList listenerList = new EventListenerList();
 
 	private BluetoothDevice device;
-	
+
 	private boolean statusRequested = false;
 
 	private byte reportMode = 0x37;
-	
+
+	private Timer timer = new Timer();
+
 	public Mote(BluetoothDevice device) {
 		try {
 			this.device = device;
@@ -77,20 +82,31 @@ public class Mote {
 					// Something goes wrong with one of my Thread
 					// Try to properly cleanup everything
 					disconnect();
-				} 
+				}
 			});
-			
+
 			outgoing = new OutgoingThread(this, device);
 			incoming = new IncomingThread(this, device);
 
 			incoming.start();
 			outgoing.start();
 
-			getStatus();
 			outgoing.sendRequest(new CalibrationDataRequest());
-			setReportMode((byte)0x37);
+			setReportMode((byte) 0x37);
+			timer.schedule(new CheckStatus(), 0, 1500);
 		} catch (Exception ex) {
 			throw new RuntimeException(ex.fillInStackTrace());
+		}
+	}
+
+	private class CheckStatus extends TimerTask {
+		@Override
+		public void run() {
+			getStatus();
+
+			// Check for MotionPlus
+			readRegisters(new byte[] { (byte) 0xa6, 0x00, (byte) 0xfa },
+					new byte[] { 0x00, 0x06 });
 		}
 	}
 
@@ -144,7 +160,8 @@ public class Mote {
 			try {
 				outgoing.join(5000l);
 			} catch (InterruptedException ex) {
-				Log.e("motej.android", ex.getMessage() + ": " + ex.getStackTrace());
+				Log.e("motej.android",
+						ex.getMessage() + ": " + ex.getStackTrace());
 			}
 		}
 		if (incoming != null) {
@@ -239,8 +256,7 @@ public class Mote {
 
 	@SuppressWarnings("unchecked")
 	protected void fireAccelerometerEvent(float x, float y, float z) {
-		
-		
+
 		AccelerometerListener<Mote>[] listeners = listenerList
 				.getListeners(AccelerometerListener.class);
 		AccelerometerEvent<Mote> evt = new AccelerometerEvent<Mote>(this, x, y,
@@ -288,41 +304,36 @@ public class Mote {
 	}
 
 	protected void fireReadDataEvent(byte[] address, byte[] payload, int error) {
-		String debug = "Address: 0x";
-		for(byte a : address){
-			debug += String.format("%02X", a);
-		}
-		debug += " Payload: 0x";
-		for(byte p : payload)
-			debug += String.format("%02X", p);
-
-		Log.d("HYPERDEBUG", debug);
 		byte[] buff = payload;
 
 		if (calibrationDataReport == null && error == 0 && address[0] == 0x00
 				&& address[1] == 0x20) {
 			// calibration data (most probably)
 			Log.d("motej.android", "Received Calibration Data Report.");
-			
-			int x0 =((buff[0] & 0xff) << 2) | (buff[3]      & 0x03);
-            int y0 =((buff[1] & 0xff) << 2) | ((buff[3] & 0xff)>> 2 & 0x03);
-            int z0 = ((buff[2] & 0xff)  << 2) | ((buff[3] & 0xff) >> 4 & 0x03);
 
-            int xg = ((buff[4] & 0xff)  << 2) | (buff[3]      & 0x03);
-            int yg = ((buff[5] & 0xff) << 2) | ((buff[3] & 0xff)  >> 2 & 0x03);
-            int zg = ((buff[6] & 0xff)  << 2) | ((buff[3] & 0xff)  >> 4 & 0x03);
-            
-			CalibrationDataReport report = new CalibrationDataReport(x0, y0, z0, xg, yg, zg);
+			int x0 = ((buff[0] & 0xff) << 2) | (buff[3] & 0x03);
+			int y0 = ((buff[1] & 0xff) << 2) | ((buff[3] & 0xff) >> 2 & 0x03);
+			int z0 = ((buff[2] & 0xff) << 2) | ((buff[3] & 0xff) >> 4 & 0x03);
+
+			int xg = ((buff[4] & 0xff) << 2) | (buff[3] & 0x03);
+			int yg = ((buff[5] & 0xff) << 2) | ((buff[3] & 0xff) >> 2 & 0x03);
+			int zg = ((buff[6] & 0xff) << 2) | ((buff[3] & 0xff) >> 4 & 0x03);
+
+			CalibrationDataReport report = new CalibrationDataReport(x0, y0,
+					z0, xg, yg, zg);
 			calibrationDataReport = report;
 		}
-		
+
 		int motionplus = 0;
-		if(error == 0 && address[0]== 0 && (address[1] & 0xff) == 0xfa){
-			motionplus = ((int)buff[0] << 40) | ((int)buff[1] << 32) | ((int)buff[2]) << 24 | ((int)buff[3]) << 16 | ((int)buff[4]) << 8 | buff[5];
+		if (error == 0 && address[0] == 0 && (address[1] & 0xff) == 0xfa) {
+			motionplus = ((int) buff[0] << 40) | ((int) buff[1] << 32)
+					| ((int) buff[2]) << 24 | ((int) buff[3]) << 16
+					| ((int) buff[4]) << 8 | buff[5];
 		}
-		
-		if (currentExtension == null && ((error == 0 && address[0] == 0x00
-				&& (address[1] & 0xff) == 0xfe && payload.length == 2) || (motionplus & 0xffffffff)==0xa6200005)) {
+
+		if (currentExtension == null
+				&& ((error == 0 && address[0] == 0x00
+						&& (address[1] & 0xff) == 0xfe && payload.length == 2) || (motionplus & 0xffffffff) == 0xa6200005)) {
 			// extension ID (most probably)
 			String id0 = Integer.toHexString(payload[0] & 0xff);
 			String id1 = Integer.toHexString(payload[1] & 0xff);
@@ -331,14 +342,15 @@ public class Mote {
 					+ (id1.length() == 1 ? "0x0" + id1 : "0x" + id1));
 
 			if ((payload[0] & 0xff) == 0xff && (payload[1] & 0xff) == 0xff) {
-				Log.d("motej.android", "Connection not completed, re-requesting extension id.");
+				Log.d("motej.android",
+						"Connection not completed, re-requesting extension id.");
 				outgoing.sendRequest(new ReadRegisterRequest(new byte[] {
 						(byte) 0xa4, 0x00, (byte) 0xfe }, new byte[] { 0x00,
 						0x02 }));
 			} else {
 
 				currentExtension = extensionProvider.getExtension(payload);
-					Log.i("motej.android", "Found extension: " + currentExtension);
+				Log.i("motej.android", "Found extension: " + currentExtension);
 				if (currentExtension != null) {
 					currentExtension.setMote(this);
 					currentExtension.initialize();
@@ -358,7 +370,7 @@ public class Mote {
 
 	protected void fireStatusInformationChangedEvent(
 			StatusInformationReport report) {
-		if(!statusRequested){
+		if (!statusRequested) {
 			setReportMode(reportMode);
 		}
 		statusRequested = false;
@@ -482,8 +494,9 @@ public class Mote {
 	public String toString() {
 		return "Mote[" + device + "]";
 	}
-	
-	public void writeDone(){
+
+	public void writeDone() {
 		outgoing.writeDone();
 	}
+
 }
