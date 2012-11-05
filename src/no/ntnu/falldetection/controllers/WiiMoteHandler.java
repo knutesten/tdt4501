@@ -4,26 +4,21 @@ import java.util.ArrayList;
 
 import no.ntnu.falldetection.utils.SensorEvent;
 import no.ntnu.falldetection.utils.SensorListener;
-import no.ntnu.falldetection.utils.motej.android.Mote;
-import no.ntnu.falldetection.utils.motej.android.StatusInformationReport;
-import no.ntnu.falldetection.utils.motej.android.event.AccelerometerEvent;
-import no.ntnu.falldetection.utils.motej.android.event.AccelerometerListener;
-import no.ntnu.falldetection.utils.motej.android.event.ExtensionEvent;
-import no.ntnu.falldetection.utils.motej.android.event.ExtensionListener;
-import no.ntnu.falldetection.utils.motej.android.event.MoteDisconnectedEvent;
-import no.ntnu.falldetection.utils.motej.android.event.MoteDisconnectedListener;
-import no.ntnu.falldetection.utils.motej.android.event.StatusInformationListener;
-import no.ntnu.falldetection.utils.motejx.extensions.motionplus.GyroEvent;
-import no.ntnu.falldetection.utils.motejx.extensions.motionplus.GyroListener;
-import no.ntnu.falldetection.utils.motejx.extensions.motionplus.MotionPlus;
+import no.ntnu.falldetection.utils.motea.Mote;
+import no.ntnu.falldetection.utils.motea.StatusInformationReport;
+import no.ntnu.falldetection.utils.motea.event.AccelerometerEvent;
+import no.ntnu.falldetection.utils.motea.event.AccelerometerListener;
+import no.ntnu.falldetection.utils.motea.event.GyroEvent;
+import no.ntnu.falldetection.utils.motea.event.GyroListener;
+import no.ntnu.falldetection.utils.motea.event.MoteDisconnectedEvent;
+import no.ntnu.falldetection.utils.motea.event.MoteDisconnectedListener;
+import no.ntnu.falldetection.utils.motea.event.StatusInformationListener;
 import android.bluetooth.BluetoothDevice;
-import android.util.Log;
 
 public class WiiMoteHandler implements AccelerometerListener<Mote>,
-		GyroListener, MoteDisconnectedListener<Mote>, ExtensionListener,
+		GyroListener, MoteDisconnectedListener<Mote>, 
 		StatusInformationListener {
 	private Mote mote;
-	private MotionPlus extension;
 	private GyroEvent newGyroEvent = null;
 	private AccelerometerEvent<Mote> newAccelEvent = null;
 	private ArrayList<SensorListener> listeners = new ArrayList<SensorListener>();
@@ -34,8 +29,8 @@ public class WiiMoteHandler implements AccelerometerListener<Mote>,
 		this.mote = new Mote(device);
 		mote.addAccelerometerListener(this);
 		mote.addMoteDisconnectedListener(this);
-		mote.addExtensionListener(this);
 		mote.addStatusInformationListener(this);
+		mote.addGyroListener(this);
 	}
 
 	public void addSensorListener(SensorListener listener) {
@@ -48,32 +43,15 @@ public class WiiMoteHandler implements AccelerometerListener<Mote>,
 
 	@Override
 	public void gyroChanged(GyroEvent evt) {
-		// Log.i("gyro", evt.getYaw() + " " + evt.getRoll() + " " +
-		// evt.getPitch());
+//		 Log.i("gyro", evt.getYaw() + " " + evt.getRoll() + " " +
+//		 evt.getPitch());
 		fireSensorEvent(evt);
 	}
 
 	@Override
 	public void accelerometerChanged(AccelerometerEvent<Mote> evt) {
-		// Log.i("accel", evt.getX() + " : " + evt.getY() + " : " + evt.getZ());
+//		 Log.i("accel", evt.getX() + " : " + evt.getY() + " : " + evt.getZ());
 		fireSensorEvent(evt);
-	}
-
-	@Override
-	public void extensionConnected(ExtensionEvent evt) {
-		if (evt.isExtensionConnected()) {
-			if (evt.getExtension() instanceof MotionPlus) {
-				this.extension = (MotionPlus) evt.getExtension();
-				extension.addGyroListener(this);
-
-				mote.setPlayerLeds(new boolean[] { true, true, false, false });
-			}
-		}
-	}
-
-	@Override
-	public void extensionDisconnected(ExtensionEvent evt) {
-		extension = null;
 	}
 
 	@Override
@@ -82,10 +60,8 @@ public class WiiMoteHandler implements AccelerometerListener<Mote>,
 	}
 
 	public void calibrateMotionPlus() {
-		if (extension != null) {
-			extension.calibrate();
-			calibrated = true;
-		}
+		calibrated = true;
+		mote.calibrateMotionPlus();
 	}
 
 	public void fireSensorEvent(Object evt) {

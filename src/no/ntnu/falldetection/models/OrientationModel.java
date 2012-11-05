@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 
 public class OrientationModel {
-	private final float NOISE_THRESHOLD = 1f;
+	private final float NOISE_THRESHOLD = 1.5f;
 	
 	private float pitch = 0;
 	private float roll = 0;

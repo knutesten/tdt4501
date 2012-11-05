@@ -27,10 +27,9 @@ public class MainActivity extends Activity {
 
 	private Handler handler = new Handler();
 	private WiiMoteHandler wiiMoteHandler;
-	
+
 	private Button connectButton;
 	private Button calibrateButton;
-
 
 	// Create a BroadcastReceiver for ACTION_FOUND
 	private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
@@ -43,28 +42,30 @@ public class MainActivity extends Activity {
 						.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
 				// Add the name and address to an array adapter to show in a
 				// ListView
-
-				if (device.getName().startsWith("Nintendo")) {
-					mBluetoothAdapter.cancelDiscovery();
-					connectToWiiMote(device);
+				try{
+					if (device.getName().startsWith("Nintendo")) {
+						mBluetoothAdapter.cancelDiscovery();
+						connectToWiiMote(device);
+					}
+				}catch(NullPointerException e){
 				}
 			}
 		}
 	};
-	
-	private void connectToWiiMote(BluetoothDevice device){
-		//Create hander for wii mote
+
+	private void connectToWiiMote(BluetoothDevice device) {
+		// Create hander for wii mote
 		wiiMoteHandler = new WiiMoteHandler(device);
-		
-		//Create orientation model for the connected wii mote
+
+		// Create orientation model for the connected wii mote
 		OrientationModel model = new OrientationModel();
-		
-		//Create angleCalc to convert the values from the sensors to angles
+
+		// Create angleCalc to convert the values from the sensors to angles
 		AngleCalc angleCalc = new AngleCalc(model);
 		wiiMoteHandler.addSensorListener(angleCalc);
-		
-		//Let the view listen to changes made to the model
-		CubeView cubeView = (CubeView)findViewById(R.id.cubeView);
+
+		// Let the view listen to changes made to the model
+		CubeView cubeView = (CubeView) findViewById(R.id.cubeView);
 		model.addOrientationListener(cubeView);
 	}
 
@@ -113,7 +114,8 @@ public class MainActivity extends Activity {
 							} catch (Exception e) {
 							}
 						}
-						if (wiiMoteHandler!= null && wiiMoteHandler.isConnected()) {
+						if (wiiMoteHandler != null
+								&& wiiMoteHandler.isConnected()) {
 							setButtonText("Connected");
 						} else {
 							setButtonEnabled(true);
@@ -130,8 +132,8 @@ public class MainActivity extends Activity {
 							}
 						});
 					}
-					
-					private void setButtonEnabled(boolean on){
+
+					private void setButtonEnabled(boolean on) {
 						final boolean bool = on;
 						handler.post(new Runnable() {
 							@Override
@@ -147,7 +149,9 @@ public class MainActivity extends Activity {
 		calibrateButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				wiiMoteHandler.calibrateMotionPlus();
+				if (wiiMoteHandler != null) {
+					wiiMoteHandler.calibrateMotionPlus();
+				}
 			}
 		});
 	}
@@ -155,27 +159,29 @@ public class MainActivity extends Activity {
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		wiiMoteHandler.disconnect();
+		if (wiiMoteHandler != null) {
+			wiiMoteHandler.disconnect();
+		}
 		unregisterReceiver(mReceiver);
 	}
 
-//	@Override
-//	public boolean onCreateOptionsMenu(Menu menu) {
-//		getMenuInflater().inflate(R.menu.activity_main, menu);
-//		return true;
-//	}
+	// @Override
+	// public boolean onCreateOptionsMenu(Menu menu) {
+	// getMenuInflater().inflate(R.menu.activity_main, menu);
+	// return true;
+	// }
 
-//	@Override
-//	public boolean onOptionsItemSelected(MenuItem item) {
-//		// deviceArrayAdapter.add("hest");
-//		switch (item.getItemId()) {
-//		case R.id.menu_settings:
-//			return true;
-//		case R.id.test:
-//			wiiMoteHandler.rumble();
-//			return true;
-//		default:
-//			return super.onOptionsItemSelected(item);
-//		}
-//	}
+	// @Override
+	// public boolean onOptionsItemSelected(MenuItem item) {
+	// // deviceArrayAdapter.add("hest");
+	// switch (item.getItemId()) {
+	// case R.id.menu_settings:
+	// return true;
+	// case R.id.test:
+	// wiiMoteHandler.rumble();
+	// return true;
+	// default:
+	// return super.onOptionsItemSelected(item);
+	// }
+	// }
 }
