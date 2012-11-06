@@ -2,8 +2,6 @@ package no.ntnu.falldetection.models;
 
 import java.util.ArrayList;
 
-import android.util.Log;
-
 public class ThresholdAlarm implements OrientationListener{
 	private final int ALARM_THRESHOLD = 20;
 	private ArrayList<AlarmListener> listenerList = new ArrayList<AlarmListener>();

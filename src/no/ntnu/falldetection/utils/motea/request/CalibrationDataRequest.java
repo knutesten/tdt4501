@@ -15,7 +15,6 @@
  */
 package no.ntnu.falldetection.utils.motea.request;
 
-import java.util.ArrayList;
 
 /**
  * Requests a memory report (0x21) containing calibration data (starting at 0x20)

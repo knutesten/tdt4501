@@ -1,11 +1,8 @@
 package no.ntnu.falldetection.activities;
 
-import java.io.IOException;
 
 import no.ntnu.falldetection.controllers.AngleCalc;
 import no.ntnu.falldetection.controllers.WiiMoteHandler;
-import no.ntnu.falldetection.models.AlarmEvent;
-import no.ntnu.falldetection.models.AlarmListener;
 import no.ntnu.falldetection.models.OrientationModel;
 import no.ntnu.falldetection.models.ThresholdAlarm;
 import android.app.Activity;
@@ -15,10 +12,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.res.AssetFileDescriptor;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
-import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;

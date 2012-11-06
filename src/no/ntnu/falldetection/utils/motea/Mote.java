@@ -25,7 +25,6 @@ import no.ntnu.falldetection.utils.motea.request.StatusInformationRequest;
 import no.ntnu.falldetection.utils.motea.request.WriteRegisterRequest;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
-import android.content.IntentSender.SendIntentException;
 import android.util.Log;
 
 public class Mote extends L2CAPConnectThread{
@@ -200,9 +199,6 @@ public class Mote extends L2CAPConnectThread{
 		}
 	}
 
-	
-	
-	private StatusInformationReport statusInformationReport = null;
 	protected void fireStatusInformationChangedEvent(
 			StatusInformationReport report) {
 		if(extension != null && !report.isExtensionControllerConnected()){

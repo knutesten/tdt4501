@@ -2,7 +2,6 @@ package no.ntnu.falldetection.activities;
 
 import no.ntnu.falldetection.models.OrientationEvent;
 import no.ntnu.falldetection.models.OrientationListener;
-import no.ntnu.falldetection.models.OrientationModel;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -10,7 +9,6 @@ import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.Path;
 import android.util.AttributeSet;
-import android.view.MotionEvent;
 import android.view.View;
 
 public class CubeView extends View implements OrientationListener{
