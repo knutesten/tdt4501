@@ -63,6 +63,9 @@ public class MainActivity extends Activity {
 		// Create angleCalc to convert the values from the sensors to angles
 		AngleCalc angleCalc = new AngleCalc(model);
 		wiiMoteHandler.addSensorListener(angleCalc);
+		
+		// Create alarm
+		ThresholdAlarm alarm = new ThresholdAlarm(model);
 
 		// Let the view listen to changes made to the model
 		CubeView cubeView = (CubeView) findViewById(R.id.cubeView);
