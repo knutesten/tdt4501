@@ -1,8 +1,13 @@
 package no.ntnu.falldetection.activities;
 
+import java.io.IOException;
+
 import no.ntnu.falldetection.controllers.AngleCalc;
 import no.ntnu.falldetection.controllers.WiiMoteHandler;
+import no.ntnu.falldetection.models.AlarmEvent;
+import no.ntnu.falldetection.models.AlarmListener;
 import no.ntnu.falldetection.models.OrientationModel;
+import no.ntnu.falldetection.models.ThresholdAlarm;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -10,16 +15,18 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.AssetFileDescriptor;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity{
 
 	private int REQUEST_ENABLE_BT;
 	private BluetoothAdapter mBluetoothAdapter = BluetoothAdapter
@@ -42,12 +49,12 @@ public class MainActivity extends Activity {
 						.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
 				// Add the name and address to an array adapter to show in a
 				// ListView
-				try{
+				try {
 					if (device.getName().startsWith("Nintendo")) {
 						mBluetoothAdapter.cancelDiscovery();
 						connectToWiiMote(device);
 					}
-				}catch(NullPointerException e){
+				} catch (NullPointerException e) {
 				}
 			}
 		}
@@ -63,9 +70,12 @@ public class MainActivity extends Activity {
 		// Create angleCalc to convert the values from the sensors to angles
 		AngleCalc angleCalc = new AngleCalc(model);
 		wiiMoteHandler.addSensorListener(angleCalc);
-		
+
 		// Create alarm
+		AlarmSound alarmSound = new AlarmSound(getApplicationContext());
 		ThresholdAlarm alarm = new ThresholdAlarm(model);
+		alarm.addAlarmListener(alarmSound);
+		alarm.addAlarmListener(wiiMoteHandler);
 
 		// Let the view listen to changes made to the model
 		CubeView cubeView = (CubeView) findViewById(R.id.cubeView);
@@ -162,11 +172,13 @@ public class MainActivity extends Activity {
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		if (wiiMoteHandler != null) {
-			wiiMoteHandler.disconnect();
-		}
-		unregisterReceiver(mReceiver);
+//		if (wiiMoteHandler != null) {
+//			wiiMoteHandler.disconnect();
+//		}
+//		unregisterReceiver(mReceiver);
+		System.exit(0);
 	}
+
 
 	// @Override
 	// public boolean onCreateOptionsMenu(Menu menu) {

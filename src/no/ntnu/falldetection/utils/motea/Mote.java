@@ -35,8 +35,8 @@ public class Mote extends L2CAPConnectThread{
 	private CalibrationDataReport calibrationDataReport = null;
 	private byte reportMode = (byte)0x37;
 	private EventListenerList listenerList = new EventListenerList();
-	private boolean statusRequested = false;
 	private boolean rumble = false;
+	private boolean[] leds = new boolean[]{true, true, true, true};
 	private Extension extension = null;
 	
 	public Mote(BluetoothDevice device){
@@ -77,7 +77,6 @@ public class Mote extends L2CAPConnectThread{
 	}
 	
 	private void getStatus() {
-		statusRequested = true;
 		connection.sendRequest(new StatusInformationRequest(rumble));
 	}
 	
@@ -206,12 +205,6 @@ public class Mote extends L2CAPConnectThread{
 	private StatusInformationReport statusInformationReport = null;
 	protected void fireStatusInformationChangedEvent(
 			StatusInformationReport report) {
-		if (!statusRequested) {
-			Log.e("status", "unrequested");
-			setReportMode(reportMode);
-		}
-		statusRequested = false;
-
 		if(extension != null && !report.isExtensionControllerConnected()){
 			extension = null;
 		}
@@ -260,14 +253,15 @@ public class Mote extends L2CAPConnectThread{
 
 	public void rumble(boolean on) {
 		rumble = on;
-		getStatus();
+		setLeds(leds);
 	}
 
 	public boolean isRumbling(){
 		return rumble;
 	}
 	
-	public void setPlayerLeds(boolean[] leds) {
+	public void setLeds(boolean[] leds) {
+		this.leds = leds;
 		connection.sendRequest(new PlayerLedRequest(leds, rumble));
 	}
 
@@ -277,5 +271,9 @@ public class Mote extends L2CAPConnectThread{
 	
 	public void readRegisters(byte[] offset, byte[] size){
 		connection.sendRequest(new ReadRegisterRequest(offset, size, rumble));
+	}
+
+	public void setReportMode() {
+		setReportMode(reportMode);
 	}
 }

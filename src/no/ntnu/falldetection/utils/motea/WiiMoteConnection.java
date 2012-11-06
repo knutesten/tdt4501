@@ -8,6 +8,7 @@ import no.ntnu.falldetection.utils.motea.event.GyroEvent;
 import no.ntnu.falldetection.utils.motea.extension.MotionPlus;
 import no.ntnu.falldetection.utils.motea.request.MoteRequest;
 import no.ntnu.falldetection.utils.motea.request.ReportModeRequest;
+import no.ntnu.falldetection.utils.motea.request.StatusInformationRequest;
 import android.bluetooth.BluetoothSocket;
 import android.util.Log;
 
@@ -16,6 +17,7 @@ public class WiiMoteConnection extends Thread{
 	private OutputStream outgoing;
 	private Mote source;
 	private boolean active;
+	private boolean statusRequested = false;
 	
 	public WiiMoteConnection(BluetoothSocket socket, Mote source) throws IOException{
 		this.source = source;
@@ -26,7 +28,6 @@ public class WiiMoteConnection extends Thread{
 	
 	public void sendRequest(MoteRequest request){
 		try {
-			
 			String s = "";
 			for(byte b : request.getBytes()){
 				if((b & 0xff) < 0x10){
@@ -35,7 +36,10 @@ public class WiiMoteConnection extends Thread{
 				s+=Integer.toHexString(b & 0xff);
 			}
 			Log.d("motea", "Writing: "+s);
-			
+
+			if(request instanceof StatusInformationRequest){
+				statusRequested = true;
+			}
 			outgoing.write(request.getBytes());
 		} catch (IOException e) {
 			Log.e("motea", "Connection lost.");
@@ -54,6 +58,10 @@ public class WiiMoteConnection extends Thread{
 								
 				switch (buf[1]) {
 				case ReportModeRequest.DATA_REPORT_0x20:
+					if(!statusRequested){
+						source.setReportMode();
+					}
+					statusRequested = false;
 					parseStatusInformation(buf);
 					break;
 

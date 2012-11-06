@@ -2,6 +2,9 @@ package no.ntnu.falldetection.controllers;
 
 import java.util.ArrayList;
 
+import no.ntnu.falldetection.models.AlarmEvent;
+import no.ntnu.falldetection.models.AlarmListener;
+import no.ntnu.falldetection.models.ThresholdAlarm;
 import no.ntnu.falldetection.utils.SensorEvent;
 import no.ntnu.falldetection.utils.SensorListener;
 import no.ntnu.falldetection.utils.motea.Mote;
@@ -17,7 +20,7 @@ import android.bluetooth.BluetoothDevice;
 
 public class WiiMoteHandler implements AccelerometerListener<Mote>,
 		GyroListener, MoteDisconnectedListener<Mote>, 
-		StatusInformationListener {
+		StatusInformationListener, AlarmListener {
 	private Mote mote;
 	private GyroEvent newGyroEvent = null;
 	private AccelerometerEvent<Mote> newAccelEvent = null;
@@ -31,6 +34,24 @@ public class WiiMoteHandler implements AccelerometerListener<Mote>,
 		mote.addMoteDisconnectedListener(this);
 		mote.addStatusInformationListener(this);
 		mote.addGyroListener(this);
+		
+		new Thread() {
+			public void run() {
+				while (true) {
+					try {
+						if(alarm){
+							mote.rumble(true);
+							Thread.sleep(100);
+							mote.rumble(false);
+						}else if(!alarm){
+							mote.rumble(false);
+						}
+						Thread.sleep(100l +(long)(DELAY*(1-severity)));
+					} catch (Exception e) {
+					}
+				}
+			}
+		}.start();	
 	}
 
 	public void addSensorListener(SensorListener listener) {
@@ -95,21 +116,6 @@ public class WiiMoteHandler implements AccelerometerListener<Mote>,
 		return mote != null;
 	}
 
-	public void rumble() {
-		new Thread() {
-			public void run() {
-				while (true) {
-					try {
-						mote.rumble(mote.isRumbling()?false:true);
-						Thread.sleep(200);
-					} catch (Exception e) {
-
-					}
-				}
-			}
-		}.start();
-	}
-
 	@Override
 	public void statusInformationReceived(StatusInformationReport report) {
 		float battery = (float)(report.getBatteryLevel() & 0xff) / 0xc8;		
@@ -127,7 +133,21 @@ public class WiiMoteHandler implements AccelerometerListener<Mote>,
 					leds[i] = false;
 				}
 			}
-			mote.setPlayerLeds(leds);
+			mote.setLeds(leds);
 		}
+	}
+
+	private final long DELAY = 1000l;
+	private boolean alarm = false;
+	private float severity = 0;
+	@Override
+	public void alarmOn(AlarmEvent evt) {
+		alarm = true;
+		severity = evt.getSeverity();
+	}
+
+	@Override
+	public void alarmOff() {
+		alarm = false;
 	}
 }
