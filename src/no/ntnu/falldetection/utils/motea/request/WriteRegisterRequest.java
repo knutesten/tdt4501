@@ -27,9 +27,12 @@ public class WriteRegisterRequest implements MoteRequest {
 	
 	private byte[] payload;
 	
-	public WriteRegisterRequest(byte[] offset, byte[] payload) {
+	private boolean rumble;
+	
+	public WriteRegisterRequest(byte[] offset, byte[] payload, boolean rumble) {
 		this.offset = offset;
 		this.payload = payload;
+		this.rumble = rumble;
 	}
 	
 	public byte[] getBytes() {
@@ -40,7 +43,7 @@ public class WriteRegisterRequest implements MoteRequest {
 		// output report 0x16
 		data[1] = 0x16;		
 		// select control register address space
-		data[2] = 0x04;		
+		data[2] = (byte) (0x04 | (rumble?0x01:0x00));		
 		// set offset
 		System.arraycopy(offset, 0, data, 3, 3);
 

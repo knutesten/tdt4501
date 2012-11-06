@@ -29,9 +29,10 @@ public class StatusInformationRequest implements MoteRequest {
 	}
 	
 	public byte[] getBytes() {
-		byte[] bytes = new byte[22];
-		bytes[0] = 0x15;
-		bytes[1] = (byte) (rumble?0x01:0x00);
+		byte[] bytes = new byte[3];
+		bytes[0] = (byte)0xa2;
+		bytes[1] = 0x15;
+		bytes[2] = (byte) (rumble?0x01:0x00);
 		
 		return bytes;
 	}

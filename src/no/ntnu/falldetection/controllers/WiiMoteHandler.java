@@ -43,14 +43,11 @@ public class WiiMoteHandler implements AccelerometerListener<Mote>,
 
 	@Override
 	public void gyroChanged(GyroEvent evt) {
-//		 Log.i("gyro", evt.getYaw() + " " + evt.getRoll() + " " +
-//		 evt.getPitch());
 		fireSensorEvent(evt);
 	}
 
 	@Override
 	public void accelerometerChanged(AccelerometerEvent<Mote> evt) {
-//		 Log.i("accel", evt.getX() + " : " + evt.getY() + " : " + evt.getZ());
 		fireSensorEvent(evt);
 	}
 
@@ -103,7 +100,7 @@ public class WiiMoteHandler implements AccelerometerListener<Mote>,
 			public void run() {
 				while (true) {
 					try {
-						mote.rumble(100);
+						mote.rumble(mote.isRumbling()?false:true);
 						Thread.sleep(200);
 					} catch (Exception e) {
 
@@ -115,7 +112,7 @@ public class WiiMoteHandler implements AccelerometerListener<Mote>,
 
 	@Override
 	public void statusInformationReceived(StatusInformationReport report) {
-		float battery = (float)(report.getBatteryLevel() & 0xff) / 0xc0;
+		float battery = (float)(report.getBatteryLevel() & 0xff) / 0xc8;		
 		battery = battery/0.25f;
 		
 		int newBatteryLevel = Math.round(battery);

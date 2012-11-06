@@ -27,9 +27,12 @@ public class ReadMemoryRequest implements MoteRequest {
 	
 	private byte[] size;
 	
-	public ReadMemoryRequest(byte[] offset, byte[] size) {
+	private boolean rumble;
+	
+	public ReadMemoryRequest(byte[] offset, byte[] size, boolean rumble) {
 		this.offset = offset;
 		this.size = size;
+		this.rumble = rumble;
 	}
 	
 	public byte[] getBytes() {
@@ -39,7 +42,7 @@ public class ReadMemoryRequest implements MoteRequest {
 		data[1] = 0x17;
 		
 		// eeprom memory address space
-		data[2] = 0x00;
+		data[2] = (byte) (0x00 | (rumble?0x01:0x00));
 		
 		System.arraycopy(offset, 0, data, 3, 3);
 //		for (int i = 0; i < 3; i++) {

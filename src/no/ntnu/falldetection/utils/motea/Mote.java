@@ -25,6 +25,7 @@ import no.ntnu.falldetection.utils.motea.request.StatusInformationRequest;
 import no.ntnu.falldetection.utils.motea.request.WriteRegisterRequest;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.content.IntentSender.SendIntentException;
 import android.util.Log;
 
 public class Mote extends L2CAPConnectThread{
@@ -47,6 +48,7 @@ public class Mote extends L2CAPConnectThread{
 	void manageConnectedSocket(BluetoothSocket socket) {
 		try{
 			connection = new WiiMoteConnection(socket, this);
+			connection.start();
 			initialize();
 		}catch(IOException e){
 			connectionFailure(e);
@@ -54,9 +56,10 @@ public class Mote extends L2CAPConnectThread{
 	}
 	
 	private void initialize(){
+		connection.sendRequest(new CalibrationDataRequest(rumble));
 		setReportMode(reportMode);
-		connection.sendRequest(new CalibrationDataRequest());
-		timer.schedule(new CheckStatus(), 0, 1000);
+		getStatus();
+		timer.schedule(new CheckStatus(), 1000, 1000);
 	}
 	
 	private class CheckStatus extends TimerTask {
@@ -187,10 +190,7 @@ public class Mote extends L2CAPConnectThread{
 					| ((int) buff[2]) << 24 | ((int) buff[3]) << 16
 					| ((int) buff[4]) << 8 | buff[5];
 			if(extension == null && (motionplus & 0xffffffff) == 0xa6200005){
-				Log.e("motea", "motion plus");
-				extension = new MotionPlus();
-				extension.setMote(this);
-				extension.initialize();
+				extension = new MotionPlus(this);
 			}
 		}
 		
@@ -201,14 +201,21 @@ public class Mote extends L2CAPConnectThread{
 		}
 	}
 
+	
+	
+	private StatusInformationReport statusInformationReport = null;
 	protected void fireStatusInformationChangedEvent(
 			StatusInformationReport report) {
 		if (!statusRequested) {
-			Log.e("now", "status");
+			Log.e("status", "unrequested");
 			setReportMode(reportMode);
 		}
 		statusRequested = false;
 
+		if(extension != null && !report.isExtensionControllerConnected()){
+			extension = null;
+		}
+		
 		StatusInformationListener[] listeners = listenerList
 				.getListeners(StatusInformationListener.class);
 		for (StatusInformationListener l : listeners) {
@@ -251,20 +258,24 @@ public class Mote extends L2CAPConnectThread{
 		connection.disconnect();
 	}
 
-	public void rumble(int i) {
-		// TODO Auto-generated method stub
-		
+	public void rumble(boolean on) {
+		rumble = on;
+		getStatus();
 	}
 
+	public boolean isRumbling(){
+		return rumble;
+	}
+	
 	public void setPlayerLeds(boolean[] leds) {
 		connection.sendRequest(new PlayerLedRequest(leds, rumble));
 	}
 
 	public void writeRegisters(byte[] offset, byte[] payload){
-		connection.sendRequest(new WriteRegisterRequest(offset, payload));
+		connection.sendRequest(new WriteRegisterRequest(offset, payload, rumble));
 	}
 	
 	public void readRegisters(byte[] offset, byte[] size){
-		connection.sendRequest(new ReadRegisterRequest(offset, size));
+		connection.sendRequest(new ReadRegisterRequest(offset, size, rumble));
 	}
 }

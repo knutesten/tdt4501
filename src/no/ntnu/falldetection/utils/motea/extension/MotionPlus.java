@@ -18,6 +18,11 @@ public class MotionPlus implements DataListener, Extension {
 	private final double HIGHSPEED_SCALING = 4.0; // RawValues / 4 =
 													// x degree
 	
+	public MotionPlus(Mote mote){
+		this.mote = mote;
+		initialize();
+	}
+	
 	/**
 	 * Initializes the Motion plus extension
 	 */
@@ -86,11 +91,6 @@ public class MotionPlus implements DataListener, Extension {
 
 		return new GyroEvent(this, yaw, roll, pitch);
 	}
-
-	public void setMote(Mote mote) {
-		this.mote = mote;
-	}
-
 
 	public void dataRead(DataEvent evt) {
 		if (calibrationData == null && evt.getError() == 0

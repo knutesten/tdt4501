@@ -76,22 +76,7 @@ public class CubeView extends View implements OrientationListener{
 		// Allow the view to receive touch input.
 		setFocusableInTouchMode(true);
 	}
-
-	@Override
-	public boolean onTouchEvent(MotionEvent event) {
-		if (event.getAction() == MotionEvent.ACTION_DOWN) {
-			lastTouchX = event.getX();
-			lastTouchY = event.getY();
-		} else if (event.getAction() == MotionEvent.ACTION_MOVE) {
-			float dx = (event.getX() - lastTouchX) / 30.0f;
-			float dy = (event.getY() - lastTouchY) / 30.0f;
-			ax += dy;
-			ay -= dx;
-			postInvalidate();
-		}
-		return true;
-	}
-
+	
 	@Override
 	protected void onDraw(Canvas canvas) {
 		Vector3D t[] = new Vector3D[8];

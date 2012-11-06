@@ -24,7 +24,7 @@ import java.util.ArrayList;
  */
 public class CalibrationDataRequest extends ReadMemoryRequest {
 
-	public CalibrationDataRequest() {
-		super(new byte[] { 0x00, 0x00, 0x20 }, new byte[] { 0x00, 0x0a });
+	public CalibrationDataRequest(boolean rumble) {
+		super(new byte[] { 0x00, 0x00, 0x20 }, new byte[] { 0x00, 0x0a }, rumble);
 	}
 }
