@@ -164,15 +164,6 @@ public class MainActivity extends Activity{
 		});
 	}
 
-	@Override
-	public void onDestroy() {
-//		super.onDestroy();
-//		if (wiiMoteHandler != null) {
-//			wiiMoteHandler.disconnect();
-//		}
-//		unregisterReceiver(mReceiver);
-//		System.exit(0);
-	}
 
 
 	 @Override
