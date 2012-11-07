@@ -1,15 +1,10 @@
 package no.ntnu.falldetection.controllers;
 
-import java.sql.Time;
 import java.util.ArrayList;
-import java.util.Date;
 
 import no.ntnu.falldetection.activities.CubeView;
-<<<<<<< HEAD
 import no.ntnu.falldetection.models.AlarmEvent;
 import no.ntnu.falldetection.models.AlarmListener;
-=======
->>>>>>> 6b008ca88bdbca743cb0764c02dbb74b3a05ee4d
 import no.ntnu.falldetection.utils.SensorEvent;
 import no.ntnu.falldetection.utils.SensorListener;
 import no.ntnu.falldetection.utils.motea.Mote;
@@ -22,6 +17,7 @@ import no.ntnu.falldetection.utils.motea.event.MoteDisconnectedEvent;
 import no.ntnu.falldetection.utils.motea.event.MoteDisconnectedListener;
 import no.ntnu.falldetection.utils.motea.event.StatusInformationListener;
 import android.bluetooth.BluetoothDevice;
+import android.util.Log;
 
 public class WiiMoteHandler implements AccelerometerListener<Mote>,
 		GyroListener, MoteDisconnectedListener<Mote>, 
@@ -32,17 +28,10 @@ public class WiiMoteHandler implements AccelerometerListener<Mote>,
 	private ArrayList<SensorListener> listeners = new ArrayList<SensorListener>();
 	private boolean calibrated = false;
 	private int batteryLevel = -1;
-<<<<<<< HEAD
 	private long start;
 	private CubeView cubeView;
 	
 	
-=======
-	
-	private CubeView cubeView;
-	
-	private long start;
->>>>>>> 6b008ca88bdbca743cb0764c02dbb74b3a05ee4d
 
 	public WiiMoteHandler(BluetoothDevice device, CubeView cubeView) {
 		this.mote = new Mote(device);
@@ -50,33 +39,27 @@ public class WiiMoteHandler implements AccelerometerListener<Mote>,
 		mote.addAccelerometerListener(this);
 		mote.addMoteDisconnectedListener(this);
 		mote.addStatusInformationListener(this);
-<<<<<<< HEAD
 		mote.addGyroListener(this);
 		start = System.currentTimeMillis();
 		
 		this.cubeView = cubeView;
-		new Thread() {
-			public void run() {
-				while (true) {
-					try {
-						if(alarm){
-							mote.rumble(true);
-							Thread.sleep(100);
-							mote.rumble(false);
-						}else if(!alarm){
-							mote.rumble(false);
-						}
-						Thread.sleep(100l +(long)(DELAY*(1-severity)));
-					} catch (Exception e) {
-					}
-				}
-			}
-		}.start();	
-=======
-	
-	
-		this.cubeView = cubeView;
->>>>>>> 6b008ca88bdbca743cb0764c02dbb74b3a05ee4d
+//		new Thread() {
+//			public void run() {
+//				while (true) {
+//					try {
+//						if(alarm){
+//							mote.rumble(true);
+//							Thread.sleep(100);
+//							mote.rumble(false);
+//						}else if(!alarm){
+//							mote.rumble(false);
+//						}
+//						Thread.sleep(100l +(long)(DELAY*(1-severity)));
+//					} catch (Exception e) {
+//					}
+//				}
+//			}
+//		}.start();	
 	}
 
 	public void addSensorListener(SensorListener listener) {
@@ -99,26 +82,7 @@ public class WiiMoteHandler implements AccelerometerListener<Mote>,
 
 	@Override
 	public void moteDisconnected(MoteDisconnectedEvent<Mote> evt) {
-<<<<<<< HEAD
 		cubeView.setText(getActiveTime());
-=======
-		printTime();
-	}
-
-	private void printTime() {
-		long time = System.currentTimeMillis() - start;
-		time/=1000;
-		int hours = (int)time/3600;
-		int minutes = (int)(time/60)%60;
-		int seconds = (int)(time)%60;
-		
-		String s = hours+":";
-		s+=(minutes<10?"0"+minutes:minutes) + ":";
-		s+=seconds<10?"0"+seconds:seconds +"";
-		
-		
-		cubeView.setText(s);
->>>>>>> 6b008ca88bdbca743cb0764c02dbb74b3a05ee4d
 	}
 
 	public void calibrateMotionPlus() {
@@ -160,7 +124,6 @@ public class WiiMoteHandler implements AccelerometerListener<Mote>,
 		return mote != null;
 	}
 
-<<<<<<< HEAD
 	private String getActiveTime(){
 		int time = (int) (System.currentTimeMillis() - start);
 		time/=1000;
@@ -170,20 +133,11 @@ public class WiiMoteHandler implements AccelerometerListener<Mote>,
 		int seconds = (time%60);
 		
 		return "Time active: "+hours+":" +(minutes<10?"0"+minutes:minutes) +":" +(seconds<10?"0"+seconds:seconds); 
-=======
-	public void rumble() {
-		mote.rumble(Long.MAX_VALUE);
->>>>>>> 6b008ca88bdbca743cb0764c02dbb74b3a05ee4d
 	}
 	
 	@Override
 	public void statusInformationReceived(StatusInformationReport report) {
-<<<<<<< HEAD
 		float battery = (float)(report.getBatteryLevel() & 0xff) / 0xc8;		
-=======
-		printTime();
-		float battery = (float)(report.getBatteryLevel() & 0xff) / 0xc0;
->>>>>>> 6b008ca88bdbca743cb0764c02dbb74b3a05ee4d
 		battery = battery/0.25f;
 		
 		int newBatteryLevel = Math.round(battery);
@@ -200,6 +154,7 @@ public class WiiMoteHandler implements AccelerometerListener<Mote>,
 					leds[i] = false;
 				}
 			}
+			Log.e("test", "leds set");
 			mote.setLeds(leds);
 		}
 	}

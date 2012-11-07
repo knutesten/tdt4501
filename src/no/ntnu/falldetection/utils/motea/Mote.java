@@ -85,7 +85,6 @@ public class Mote extends L2CAPConnectThread{
 	
 	@Override
 	void connectionFailure(IOException cause) {
-		timer.cancel();
 		Log.e("motea", "Connection failure");
 		fireMoteDisconnectedEvent();
 	}
@@ -143,7 +142,7 @@ public class Mote extends L2CAPConnectThread{
 	@SuppressWarnings("unchecked")
 	protected void fireMoteDisconnectedEvent() {
 		timer.cancel();
-		
+		timer.purge();
 		MoteDisconnectedListener<Mote>[] listeners = listenerList
 				.getListeners(MoteDisconnectedListener.class);
 		MoteDisconnectedEvent<Mote> evt = new MoteDisconnectedEvent<Mote>(this);
