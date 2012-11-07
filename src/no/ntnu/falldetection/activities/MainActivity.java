@@ -54,12 +54,21 @@ public class MainActivity extends Activity{
 			}
 		}
 	};
+<<<<<<< HEAD
 
 	private void connectToWiiMote(BluetoothDevice device) {
 		// Create hander for wii mote
 		wiiMoteHandler = new WiiMoteHandler(device, (CubeView)findViewById(R.id.cubeView));
 
 		// Create orientation model for the connected wii mote
+=======
+	
+	private void connectToWiiMote(BluetoothDevice device){
+		//Create hander for wii mote
+		wiiMoteHandler = new WiiMoteHandler(device, (CubeView)findViewById(R.id.cubeView));
+		
+		//Create orientation model for the connected wii mote
+>>>>>>> 6b008ca88bdbca743cb0764c02dbb74b3a05ee4d
 		OrientationModel model = new OrientationModel();
 
 		// Create angleCalc to convert the values from the sensors to angles
@@ -174,12 +183,20 @@ public class MainActivity extends Activity{
 		System.exit(0);
 	}
 
+<<<<<<< HEAD
 
 	 @Override
 	 public boolean onCreateOptionsMenu(Menu menu) {
 	 getMenuInflater().inflate(R.menu.activity_main, menu);
 	 return true;
 	 }
+=======
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.activity_main, menu);
+		return true;
+	}
+>>>>>>> 6b008ca88bdbca743cb0764c02dbb74b3a05ee4d
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
