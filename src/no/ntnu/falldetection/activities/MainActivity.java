@@ -15,6 +15,8 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -55,7 +57,7 @@ public class MainActivity extends Activity{
 
 	private void connectToWiiMote(BluetoothDevice device) {
 		// Create hander for wii mote
-		wiiMoteHandler = new WiiMoteHandler(device);
+		wiiMoteHandler = new WiiMoteHandler(device, (CubeView)findViewById(R.id.cubeView));
 
 		// Create orientation model for the connected wii mote
 		OrientationModel model = new OrientationModel();
@@ -67,8 +69,8 @@ public class MainActivity extends Activity{
 		// Create alarm
 		AlarmSound alarmSound = new AlarmSound(getApplicationContext());
 		ThresholdAlarm alarm = new ThresholdAlarm(model);
-		alarm.addAlarmListener(alarmSound);
-		alarm.addAlarmListener(wiiMoteHandler);
+//		alarm.addAlarmListener(alarmSound);
+//		alarm.addAlarmListener(wiiMoteHandler);
 
 		// Let the view listen to changes made to the model
 		CubeView cubeView = (CubeView) findViewById(R.id.cubeView);
@@ -173,23 +175,23 @@ public class MainActivity extends Activity{
 	}
 
 
-	// @Override
-	// public boolean onCreateOptionsMenu(Menu menu) {
-	// getMenuInflater().inflate(R.menu.activity_main, menu);
-	// return true;
-	// }
+	 @Override
+	 public boolean onCreateOptionsMenu(Menu menu) {
+	 getMenuInflater().inflate(R.menu.activity_main, menu);
+	 return true;
+	 }
 
-	// @Override
-	// public boolean onOptionsItemSelected(MenuItem item) {
-	// // deviceArrayAdapter.add("hest");
-	// switch (item.getItemId()) {
-	// case R.id.menu_settings:
-	// return true;
-	// case R.id.test:
-	// wiiMoteHandler.rumble();
-	// return true;
-	// default:
-	// return super.onOptionsItemSelected(item);
-	// }
-	// }
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// deviceArrayAdapter.add("hest");
+		switch (item.getItemId()) {
+		case R.id.menu_settings:
+			return true;
+		case R.id.test:
+			wiiMoteHandler.rumble();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
 }

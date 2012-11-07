@@ -32,6 +32,8 @@ public class CubeView extends View implements OrientationListener{
 
 	protected float lastTouchX;
 	protected float lastTouchY;
+	
+	private String text ="";
 
 	/* This constructor is used when the view is created from code. */
 	public CubeView(Context context) {
@@ -123,6 +125,9 @@ public class CubeView extends View implements OrientationListener{
 		Paint paint = new Paint();
 		paint.setColor(Color.WHITE);
 		paint.setStyle(Style.FILL);
+		
+		  paint.setTextSize(24);
+	        canvas.drawText(text,10,40,paint);
 
 		for (int i = 0; i < 6; i++) {
 			int index = order[i];
@@ -146,5 +151,10 @@ public class CubeView extends View implements OrientationListener{
 		ay = angles[1];
 		az = -angles[2];
 		postInvalidate();
+	}
+
+	public void setText(String activeTime) {
+		text = activeTime;
+		
 	}
 }

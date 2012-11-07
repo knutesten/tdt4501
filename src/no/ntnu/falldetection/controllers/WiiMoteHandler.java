@@ -2,6 +2,7 @@ package no.ntnu.falldetection.controllers;
 
 import java.util.ArrayList;
 
+import no.ntnu.falldetection.activities.CubeView;
 import no.ntnu.falldetection.models.AlarmEvent;
 import no.ntnu.falldetection.models.AlarmListener;
 import no.ntnu.falldetection.utils.SensorEvent;
@@ -26,14 +27,20 @@ public class WiiMoteHandler implements AccelerometerListener<Mote>,
 	private ArrayList<SensorListener> listeners = new ArrayList<SensorListener>();
 	private boolean calibrated = false;
 	private int batteryLevel = -1;
+	private long start;
+	private CubeView cubeView;
+	
+	
 
-	public WiiMoteHandler(BluetoothDevice device) {
+	public WiiMoteHandler(BluetoothDevice device, CubeView cubeView) {
 		this.mote = new Mote(device);
 		mote.addAccelerometerListener(this);
 		mote.addMoteDisconnectedListener(this);
 		mote.addStatusInformationListener(this);
 		mote.addGyroListener(this);
+		start = System.currentTimeMillis();
 		
+		this.cubeView = cubeView;
 		new Thread() {
 			public void run() {
 				while (true) {
@@ -73,7 +80,7 @@ public class WiiMoteHandler implements AccelerometerListener<Mote>,
 
 	@Override
 	public void moteDisconnected(MoteDisconnectedEvent<Mote> evt) {
-		// TODO notify activity
+		cubeView.setText(getActiveTime());
 	}
 
 	public void calibrateMotionPlus() {
@@ -115,12 +122,25 @@ public class WiiMoteHandler implements AccelerometerListener<Mote>,
 		return mote != null;
 	}
 
+	private String getActiveTime(){
+		int time = (int) (System.currentTimeMillis() - start);
+		time/=1000;
+		
+		int hours = (int)time/3600;
+		int minutes = ((int)time/60)%60;
+		int seconds = (time%60);
+		
+		return "Time active: "+hours+":" +(minutes<10?"0"+minutes:minutes) +":" +(seconds<10?"0"+seconds:seconds); 
+	}
+	
 	@Override
 	public void statusInformationReceived(StatusInformationReport report) {
 		float battery = (float)(report.getBatteryLevel() & 0xff) / 0xc8;		
 		battery = battery/0.25f;
 		
 		int newBatteryLevel = Math.round(battery);
+		
+		cubeView.setText(getActiveTime());
 		
 		if (batteryLevel != newBatteryLevel) {
 			batteryLevel = newBatteryLevel;
@@ -143,6 +163,16 @@ public class WiiMoteHandler implements AccelerometerListener<Mote>,
 	public void alarmOn(AlarmEvent evt) {
 		alarm = true;
 		severity = evt.getSeverity();
+	}
+	
+	private boolean rumble = false;
+	public void rumble(){
+		if(rumble){
+			rumble = false;
+		}else{
+			rumble = true;
+		}
+		mote.rumble(rumble);
 	}
 
 	@Override
