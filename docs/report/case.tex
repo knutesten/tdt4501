@@ -5,10 +5,11 @@ Since no library with Android support currently exist it was decided to use the 
 \section{Introduction}
 At the time of writing no research has been done on using motion game controllers as peripherals in a smart-phone based bio-feedback system. In order to answer the research questions posed in this report it will be necessary to create a simple but working prototype of the aforementioned system. The equipment used to realize the system will be a rooted HTC Desire HD \cite{desireHdSpecs} running CyanogenMod 7 and Wii Remotes with the Motion Plus extension. The application will be created using the Android SDK, Java and the Motej library.
 
+
 %Write about why we chose motej?
 
 \section{Software Architecture}
-In this section contains an explination and documentation of the various software architectural choices.
+In this section contains an explanation and documentation of the various software architectural choices.
 
 The two main focuses when creating the architecture was \emph{modifiability} and \emph{usability}. Modifiability was important to insure the ability to replace the Wii remote with other senors without major changes in the source code. Though the main goal of this project does not include the creation of a complex graphical user interface, usability was still considered a priority for the source code to be reused in future work. 
 
@@ -81,12 +82,15 @@ Using the discussed patterns as a basis, the following package diagram shown in 
 \end{figure}
 
 \begin{description}
-	\item[libs] Contains the library classes used by the project. Currently only contains the java.swing.event.EventListenerList which is used by Motej and Motejx. This class is not included in the standard android packages because swing is not part of android.
-	\item[utils] The modified Motej library, our implementation of the MadgwickAHRS algorithm and other help classes resides here. The application uses these classes to update the current state of the Wii remote. 
+	\item[libs] Contains the library classes used by the project. Currently only contains the java.swing.event.EventListenerList, which is used by Motea. This class is not included in the standard android packages because swing is not part of android.
+	\item[utils] The modified Motej library (Modea), our implementation of the MadgwickAHRS algorithm resides here. Motea generates sensor events, and the MadgwickAHRS algorithm is used to calculate orientation.
 	\item[modles] Classes holding the state of the Wii remote are contained here.
-	\item[activites] Holds the Android activitiy classes.
-	\item[controller] Controller classes for interacting with the model are put here.
+	\item[activites] Holds the Android activitiy classes. The MainActivity class starts the application and handles Android activity events. The CubeView class is used to generate a 3D-model illustrating the orientation of the connected Wii remote.
+	\item[controller] Contains controller classes for interacting with the models and the Wii remote.
 \end{description}
+
+\subsection{Data flow}
+
 
 \section{Limitations}
 %Se på dette avsnittet knut. Tror hele må skriver på nytt hvor avsnittene under er merget og forklart bedre
