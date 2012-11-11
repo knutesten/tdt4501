@@ -222,3 +222,25 @@ The algorithm returns the result as a Quaternion that need to be stored and conv
 During the modification of the Motej library it soon became apparent that several parts of the library were outdated or not optimal for the current application. One problem was discovered when implementing rumbling response to alarm events. The rumble pack was turned off each time a request for status information was sent to the Wii remote. This bug was caused by the fact that Motej did not modify the status information request with the current status of the rumble pack.
 
 It was also discovered that Motej used an outdated port to send requests to the Wii remote. Motej used the control pipe with report 0x52 to send requests. This method only works for the original Wii remotes, and will not work for the newer models. During testing the original Wii remote with external MotionPlus was used and therefore this problem was not discovered before later in the development phase.
+
+Because of all the small bugs and the large portions of the library that were not used it was decided to create a lightweight Wii remote library from scratch. The new library was based on the general structure of Motej, and some of the code was also reused. Motea uses the data pipe for both sending and receiving data from the Wii remote. This way the new library should suppor the newer Wii remotes. 
+
+Currently these input report modes are supported:
+\begin{description}
+	\item[0x20] Status information
+	\item[0x21] Read memory and registers
+	\item[0x37] Core buttons, acceleromter, extension data (gyroscope)
+\end{description}
+
+Report mode 0x37 also contains bytes with data from the IR camera, but this functionality was not needed and therefore not added to the Motea library.
+
+Supported output reports are:
+\begin{decription}
+	\item[0x11] Set LEDs and activate rumble pack
+	\item[0x12] Sed data report mode (only 0x37 will be used)
+	\item[0x15] Status information request
+	\item[0x16] Write to memory and registers (used for activating MotionPlus)
+	\item[0x17] Read memory and registers (for calibration reports)
+\end{description}
+
+The new library has working support for rumbling and connecting the MotionPlus extension while rumbling, which also was problematic with Motej. Motea also sends requests for status information and checks for MotionPlus (if not connected) each second. This way any class listening to status information events get regular updates, and not just when an extension is connected.
