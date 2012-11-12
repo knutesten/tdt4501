@@ -12,15 +12,21 @@ The application used was a slightly modified version of our prototype applicatio
 Two set of tests were performed in order to measure battery life. The first set involved the WiiMote transmitting sensor data to the Galaxy Nexus. The second test set had the WiiMote rumbling while sensor data was being transmitted. Time and resource constraints limited what type of battery tests could be performed, so two extremes was decided as a good indicator of expected battery life. The results from the tests can be seen in %REFERENCE TO FIGURE
 
 \begin{table}[h]
-\begin{tabular}{|p{3cm}|p{3cm}|p{3cm}|p{3cm}|}
-\hline
-& & & \\ \hline
-& & & \\ \hline
-& & & \\ \hline
+\centering
+\setlength{\extrarowheight}{0,2cm}
+\begin{tabular}{p{2cm}|p{4.75cm}|p{4.75cm}|}
+\cline{2-3}
+&\multicolumn{2}{c|}{\textbf{Time}}\\ \hline
+\textbf{Test Nr.} &\textbf{No Rumble} & \textbf{Rumble} \\ \hline
+1 & VALUE & VALUE \\ \hline
+2 & VALUE & VALUE \\ \hline
+3 & VALUE & VALUE \\ \hline
 \end{tabular}
-
-The table shows a consistent time of around 30 hours with constant rumble and around 60 when only sensor data is being transmitted. Our system will have a mix of both depending on the amount of feedback it needs to provide.
+\caption{Test Results}
+\label{cake}
 \end{table}
+
+The table shows a consistent time of around 30 hours with constant rumble and around 60 when only sensor data is being transmitted. Our system will have a mix of both depending on the amount of feedback it needs to provide. The expected uptime on the battery type we tested is then somewhere between 30 - 60 hours of use. Considering constant rumbling is highly unlikley, we assume that the battery life is on higher end of the scale.
 
 \section{Threshold alarm}
 
