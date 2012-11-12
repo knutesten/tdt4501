@@ -18,16 +18,16 @@ The software center for Android is known as "Google Play" and allows developers 
 \subsection{Architecture}
 Older Android versions are based on Linux kernel 2.6 while Android version 4.0 and higher use Linux kernel 3.0. Google has made alternations to the standard Linux kernel by not including all the standard libraries, this makes porting existing Linux desktop applications difficult. The kernel interacts with the hardware and contains all the necessary drivers in order to do so. As the operating system was designed to run on a variety of hardware, and the kernel functions as an abstraction layer between the hardware and software in addition to handling the standard kernel tasks such as resource management, networking and security.
 
+\begin{figure}[!h]
+  \centering
+    \includegraphics[width=1\textwidth]{androidArchitecture.png}
+    \caption{\footnotesize A visual representation of the Android architecture}
+\end{figure}
+
 The library layer contains the native android libraries that enable android devices to handle different types of data. The libraries are written in c++ or c and are hardware specific. These libraries can be accessed through the use of the Android NDK and is recommended for functionality not attainable through the standard SDK. There are dozen of native libraries but some of them include: Webkit is the browser engine used to display HTML content, SQLite is used for data storage locally on the device, OpenGL to render 2D and 3D graphics, in addition to several media codecs.Google has developed their own Java Virtual Machine called the Dalvik Virtual Machine. It runs Android applications and is optimized for low memory and low processing power environments. It provides most of the same features as the JVM such as isolation, multi-threading and memory management. The DVK in addition to core java libraries are considered to be the Android Runtime.
 
 The Application framework level is what applications on the Android device interact with. Developers use the programs located in this framework as tools to build their own applications on. These programs provide access to and manage basic phone functions, such as gps tracking (Location manager), sharing data between applications(Content Providers) voice calls (Telephone Manager), applications lifecycles (Activity Manager) and so on. Any application installed by the user is located in the top application layer. These are applications created by developers and can range from sms clients, to 3D games. As long as the user permits it and the hardware can handle it the applications can be programmed to do anything.
 
-
-\begin{figure}[!h]
-  \centering
-    \includegraphics[width=.70\textwidth]{androidArchitecture.png}
-    \caption{\footnotesize A visual representation of the Android architecture}
-\end{figure}
 
 \section{Existing Applications}
 The Google Play Store contains a handful of applications that enable an Android device to be connected to a WiiRemote through Bluetooth. The majority of these applications only provide basic features such as key presses, led lights, and rumbling \cite{wiimoteController, simpleWiiController}. There was one application that stood out and utilized the motion detection features of the Wii Remote and gave the sense of a complete application. Wii Motion Monitor \cite{wiiMotionMonitor} turns the Wii MotionPlus into a motion sensor, and is able to represent the orientation of the Wii Remote correctly. Yaw was off by about 45 degrees, but pitch and roll worked perfectly. This proves that the WiiRemote can be used for motion detection and an Android device can act as a hub.

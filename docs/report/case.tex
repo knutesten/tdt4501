@@ -1,4 +1,4 @@
-\chapter{The Case}
+\chapter{The Prototype}
 %Development
 Since no library with Android support currently exist it was decided to use the Motej library as a core for further development.
 
@@ -94,6 +94,8 @@ The majority of Android devices have built-in Bluetooth cards, but the current A
 
 Motej uses the BlueCove library as a multi-platform interface to the Bluetooth stack. Unfortunately, BlueCove does not support the Android OS. Android comes with its own Bluetooth API, the Android Bluetooth API. This means that the library will have to be re-written to work on the Android OS and support for the MotionPlus will have to be implemented. WiiMoteLib\cite{wiiMoteLib} is a C\# library which has support for the MotionPlus, by looking at the solutions in this library it should reduce the time required to implement MotionPlus support for the Motej library.
 
+% Skrive om at Wii Remote Plus ikke støttes
+
 \section{Motej on Android}
 For Motej to work on Android the BlueCove library has to be replaced with the Android Bluetooth API. This presents a major problem. Wii  remotes uses the low level Bluetooth protocol L2CAP to connect to different platforms. As of Android version 4.1, Jelly Bean, \cite{jellyBean} there is no official support for L2CAP. Android only has full support for the higher level protocol \emph{radio frequency communication} (RFCOMM). RFCOMM is built on top of the L2CAP protocol and provides serial port emulation. 
 
@@ -155,7 +157,7 @@ An additional class was added for manual calibration of the gyroscope. There is 
 
 When implementing Motion Plus support, another weakness in the Motej library was discovered. After the Motion Plus extension has been connected to the Wii remote, the new data is not sent automatically. To receive the data, the report mode has to be changed. The report mode tells the Wii remote what data to send back to the device it is conneted to. To change the report mode you have to send a some specific bytes to the Wii remote. This functionality is already implemented in Motej, however the library did not check for the message to be received by the Wii remote before allowing new commands to be sent. Because of this, changing the report mode right after initializing the extension was not detected by the Wii remote. 
 
-\subsection{Orientation}
+\section{Orientation}
 A major disadvantage with the Wii Remote compared to competing gaming peripherals such as PS Move and Kinect is that the data output is always relative to itself. In other words, the Wii Remote does not say anything about where it is located in space. Even though the Wii Remote does not provide its orientation out of the box, the data it does provide is enough for developers to calculate the orientation of the Wii Remote. Calculating the orentation of the Wii requires dedicated algorithms that used advanced mathematical formulas. Calculations are performed on the sensor data collected from the Wii Remote and Motion Plus extension. The accelerometer data enables developers to determine the tilt of the Wii Remote while gyroscope data allows developers to determine the movement speed in three directions. Only by utilizing both can the algorithms calculate the orientation of the Wii Remote.
 
 We chose to use the Madgwick algorithm\cite{madgwick}. This choice was based on the fact that a master thesis by Tryggestad\cite{Tryggestad} had used the same algorithm for Wii Remote orientation successfully. A C\# implementation of the algorithm is available at the x-io Technologies Limited website \cite{opensourceMadgwick}, we used this as a basis for the Java implementation of the algorithm which is used in our application. The constructor of the algorithm requires two parameters a sample periode and an algorithm gain beta. The sample period was set to 1f/100f and the algorithm gain beta was set to 0,5f. Sample periode is equal to the refresh rate of the Wii Remote and the beta is based on findings by Tryggestad. These values proved to be satisfactory for us as well.
@@ -172,3 +174,9 @@ The algorithm update method requires six parameters: The first three are the gyr
 The algorithm returns the result as a Quaternion that need to be stored and converted to Euler angles. The formulas for converting the Quaternion to Euler angles are provided in the Madgwick paper. The formula for roll is incorrect in the paper, providing us with incorrect values, Tryggestads calculation was used for the roll conversion. The change was minor as Madgwick uses the wrong quaternion unit for roll calculation.
 
 %SHINY PICTURZS OF OUR CODE
+
+\section{Prototype application}
+The prototype application interface is quite simple. It consists of two buttons and a 3D representation of the Wii Remote, a picture of the interface is provided in \#REFERENCE TO FIGURE. In order to connect a Wii Remote to the application, pairing must be initiated on the Wii Remote by pressing 1 and 2 at the same time followed by pressing the "Connect" button on the application. Once the Wii Remote is connected the Connect button will be grayed out and the 3D box will start mirroring the orientation of the Wii Remote. In order to achieve the best replication of the Wii Remote's orentation, it should be calibrated. In order to do these the WiiMote should be placed on a horizontal surface facing up, and the "Calibrate" button should be pressed on the phone. The calibration is instantaneous and the Wii Remote orientation should be more accurate after calibration.
+
+%PWETTY PIX
+
