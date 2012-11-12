@@ -1,7 +1,28 @@
 \chapter{Viability Testing}
+This section will focus on the qualitative and quantitative tests we perform on the system to help determine if the system is viable as a bio-feedback system, and discover any potential shortcomings with the implementation or hardware. All the tests are performed using a Galaxy Nexus \cite{galaxyNexus} %http://www.samsung.com/uk/consumer/mobile-devices/smartphones/android/GT-I9250TSAXEU-spec
+ and a Wii Remote with a Motion Plus extension.
 
 \section{Battery life}
+Battery life testing was only performed on the WiiMote. Android device batteries are device-specific making it easy to find the estimated battery life, and charging is easier. THe WiiMote is powered by two AA batteries and battery life is based on several factors. The official response from Nintendo is "up to 30 hours" \cite{wiiBattery} %http://www.nintendo.com/consumer/systems/wii/en_na/gi_system.jsp?menu=wiiremote&submenu=rvl-gi-sys-remote-batts-how-long.
+
+As the prototype application does not utilize all of the features the Wii Remote offers but only the sensor data and rumble feature we hope to have a battery life of at least 30 hours wit ha fresh set of batteries. The batteries used to perform the test are a fresh set of Duracell Ultra Power batteries. These were chosen because they are available from almost any convenient store. The Galaxy Nexus was connected to power during the entire time, while the WiiMote had a fresh set of batteries put into it before each test.
+
+The application used was a slightly modified version of our prototype application. The changes should have no unintended impact of the battery life of the Wii Remote as most of them were computational and interface data on the Android device, which is not being tested. A timer was added that starts counting when a WiiMote is connected, and stops when the connection is lost. The threshold alarm was disabled, and instead a button allowing manual enabling and disabling of rumbling was added.
+
+Two set of tests were performed in order to measure battery life. The first set involved the WiiMote transmitting sensor data to the Galaxy Nexus. The second test set had the WiiMote rumbling while sensor data was being transmitted. Time and resource constraints limited what type of battery tests could be performed, so two extremes was decided as a good indicator of expected battery life. The results from the tests can be seen in %REFERENCE TO FIGURE
+
+\begin{table}[h]
+\begin{tabular}{|p{3cm}|p{3cm}|p{3cm}|p{3cm}|}
+\hline
+& & & \\ \hline
+& & & \\ \hline
+& & & \\ \hline
+\end{tabular}
+
+The table shows a consistent time of around 30 hours with constant rumble and around 60 when only sensor data is being transmitted. Our system will have a mix of both depending on the amount of feedback it needs to provide.
+\end{table}
 
 \section{Threshold alarm}
+
 
 \section{Range}
