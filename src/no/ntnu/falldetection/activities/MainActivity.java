@@ -54,21 +54,21 @@ public class MainActivity extends Activity{
 	};
 
 	private void connectToWiiMote(BluetoothDevice device) {
-		// Create hander for wii mote
-		wiiMoteHandler = new WiiMoteHandler(device);
 
 		// Create orientation model for the connected wii mote
 		OrientationModel model = new OrientationModel();
 
+		// Create alarm
+		ThresholdAlarm alarm = new ThresholdAlarm(model);
+		AlarmSound alarmSound = new AlarmSound(getApplicationContext());
+		alarm.addAlarmListener(alarmSound);		
+		
+		// Create hander for wii mote
+		wiiMoteHandler = new WiiMoteHandler(device, alarm);
+
 		// Create angleCalc to convert the values from the sensors to angles
 		AngleCalc angleCalc = new AngleCalc(model);
 		wiiMoteHandler.addSensorListener(angleCalc);
-
-		// Create alarm
-		AlarmSound alarmSound = new AlarmSound(getApplicationContext());
-		ThresholdAlarm alarm = new ThresholdAlarm(model);
-		alarm.addAlarmListener(alarmSound);
-		alarm.addAlarmListener(wiiMoteHandler);
 
 		// Let the view listen to changes made to the model
 		CubeView cubeView = (CubeView) findViewById(R.id.cubeView);
@@ -156,7 +156,7 @@ public class MainActivity extends Activity{
 			@Override
 			public void onClick(View v) {
 				if (wiiMoteHandler != null) {
-					wiiMoteHandler.calibrateMotionPlus();
+					wiiMoteHandler.calibrate();
 				}
 			}
 		});

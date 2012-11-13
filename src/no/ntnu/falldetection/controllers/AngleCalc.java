@@ -46,9 +46,6 @@ public class AngleCalc implements SensorListener{
 	
 	@Override
 	public void newSensorData(SensorEvent evt) {
-		if(evt.wasCalibrated()){
-			alg.reset();
-		}
 		float[] angles = calculateAngle(evt.getPitch(), evt.getRoll(), evt.getYaw(), evt.getAccelX(), evt.getAccelY(), evt.getAccelZ());
 		model.setAngles(angles);
 	}
