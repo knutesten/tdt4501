@@ -6,6 +6,9 @@ public class ThresholdAlarm implements OrientationListener{
 	private final int ALARM_THRESHOLD = 20;
 	private ArrayList<AlarmListener> listenerList = new ArrayList<AlarmListener>();
 	private boolean on = false;
+	private float pitch0 = 0;
+	private float roll0 = 0;
+	private boolean calibrate = false;
 	
 	public ThresholdAlarm(OrientationModel model){
 		model.addOrientationListener(this);
@@ -13,9 +16,16 @@ public class ThresholdAlarm implements OrientationListener{
 	
 	@Override
 	public void orientationChanged(OrientationEvent evt) {
+		if(calibrate){
+			pitch0 = evt.getPitch();
+			roll0 = evt.getRoll();
+			calibrate = false;
+		}
+		
 		double a = (evt.getPitch());
-		a+= 90;
 		double b = (evt.getRoll());
+		a-= pitch0;
+		b-= roll0;
 		
 		double angle = Math.pow(a*a + b*b, 0.5);
 		
@@ -55,5 +65,9 @@ public class ThresholdAlarm implements OrientationListener{
 	
 	public void removeAlarmListener(AlarmListener listener){
 		listenerList.remove(listener);
+	}
+	
+	public void calibrate(){
+		calibrate = true;
 	}
 }

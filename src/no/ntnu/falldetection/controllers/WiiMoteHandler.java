@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import no.ntnu.falldetection.models.AlarmEvent;
 import no.ntnu.falldetection.models.AlarmListener;
+import no.ntnu.falldetection.models.ThresholdAlarm;
 import no.ntnu.falldetection.utils.motea.Mote;
 import no.ntnu.falldetection.utils.motea.StatusInformationReport;
 import no.ntnu.falldetection.utils.motea.event.AccelerometerEvent;
@@ -24,9 +25,12 @@ public class WiiMoteHandler implements AccelerometerListener<Mote>,
 	private ArrayList<SensorListener> listeners = new ArrayList<SensorListener>();
 	private boolean calibrated = false;
 	private int batteryLevel = -1;
-
-	public WiiMoteHandler(BluetoothDevice device) {
+	private ThresholdAlarm alarm;
+	
+	public WiiMoteHandler(BluetoothDevice device, ThresholdAlarm alarm) {
 		this.mote = new Mote(device);
+		this.alarm = alarm;
+		alarm.addAlarmListener(this);
 		mote.addAccelerometerListener(this);
 		mote.addMoteDisconnectedListener(this);
 		mote.addStatusInformationListener(this);
@@ -36,11 +40,11 @@ public class WiiMoteHandler implements AccelerometerListener<Mote>,
 			public void run() {
 				while (true) {
 					try {
-						if(alarm){
+						if(alarmOn){
 							mote.rumble(true);
 							Thread.sleep(100);
 							mote.rumble(false);
-						}else if(!alarm){
+						}else if(!alarmOn){
 							mote.rumble(false);
 						}
 						Thread.sleep(100l +(long)(DELAY*(1-severity)));
@@ -74,9 +78,9 @@ public class WiiMoteHandler implements AccelerometerListener<Mote>,
 		// TODO notify activity
 	}
 
-	public void calibrateMotionPlus() {
-		calibrated = true;
+	public void calibrate() {
 		mote.calibrateMotionPlus();
+		alarm.calibrate();
 	}
 
 	public void fireSensorEvent(Object evt) {
@@ -90,10 +94,7 @@ public class WiiMoteHandler implements AccelerometerListener<Mote>,
 			SensorEvent orientationEvent = new SensorEvent(
 					newGyroEvent.getYaw(), newGyroEvent.getPitch(),
 					newGyroEvent.getRoll(), newAccelEvent.getX(),
-					newAccelEvent.getY(), newAccelEvent.getZ(), calibrated);
-			if (calibrated) {
-				calibrated = false;
-			}
+					newAccelEvent.getY(), newAccelEvent.getZ());
 			for (SensorListener listener : listeners) {
 				listener.newSensorData(orientationEvent);
 			}
@@ -135,16 +136,16 @@ public class WiiMoteHandler implements AccelerometerListener<Mote>,
 	}
 
 	private final long DELAY = 1000l;
-	private boolean alarm = false;
+	private boolean alarmOn = false;
 	private float severity = 0;
 	@Override
 	public void alarmOn(AlarmEvent evt) {
-		alarm = true;
+		alarmOn = true;
 		severity = evt.getSeverity();
 	}
 
 	@Override
 	public void alarmOff() {
-		alarm = false;
+		alarmOn = false;
 	}
 }
