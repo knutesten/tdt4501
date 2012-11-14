@@ -2,8 +2,6 @@ package no.ntnu.falldetection.controllers;
 
 import no.ntnu.falldetection.models.OrientationModel;
 import no.ntnu.falldetection.utils.MadgwickAHRS;
-import no.ntnu.falldetection.utils.SensorEvent;
-import no.ntnu.falldetection.utils.SensorListener;
 
 
 public class AngleCalc implements SensorListener{

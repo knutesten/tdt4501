@@ -1,4 +1,4 @@
-package no.ntnu.falldetection.utils;
+package no.ntnu.falldetection.controllers;
 
 import java.util.EventListener;
 

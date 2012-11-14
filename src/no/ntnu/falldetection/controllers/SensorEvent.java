@@ -1,4 +1,4 @@
-package no.ntnu.falldetection.utils;
+package no.ntnu.falldetection.controllers;
 
 public class SensorEvent {
 	private boolean calibrated;

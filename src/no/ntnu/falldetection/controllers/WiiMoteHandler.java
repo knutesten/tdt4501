@@ -4,8 +4,6 @@ import java.util.ArrayList;
 
 import no.ntnu.falldetection.models.AlarmEvent;
 import no.ntnu.falldetection.models.AlarmListener;
-import no.ntnu.falldetection.utils.SensorEvent;
-import no.ntnu.falldetection.utils.SensorListener;
 import no.ntnu.falldetection.utils.motea.Mote;
 import no.ntnu.falldetection.utils.motea.StatusInformationReport;
 import no.ntnu.falldetection.utils.motea.event.AccelerometerEvent;
