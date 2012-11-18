@@ -47,9 +47,9 @@ public class CubeView extends View implements OrientationListener{
 	}
 	
 	public void calibrate(){
-		ax0 = ax;
-		ay0 = ay;
-		az0 = az;
+		ax0 += ax;
+		ay0 += ay;
+		az0 += az;
 		postInvalidate();
 	}
 

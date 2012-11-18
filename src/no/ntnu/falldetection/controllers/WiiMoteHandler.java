@@ -23,9 +23,9 @@ public class WiiMoteHandler implements AccelerometerListener<Mote>,
 	private GyroEvent newGyroEvent = null;
 	private AccelerometerEvent<Mote> newAccelEvent = null;
 	private ArrayList<SensorListener> listeners = new ArrayList<SensorListener>();
-	private boolean calibrated = false;
 	private int batteryLevel = -1;
 	private ThresholdAlarm alarm;
+	private final float NOISE_THRESHOLD = 1f;
 	
 	public WiiMoteHandler(BluetoothDevice device, ThresholdAlarm alarm) {
 		this.mote = new Mote(device);
@@ -92,8 +92,8 @@ public class WiiMoteHandler implements AccelerometerListener<Mote>,
 
 		if (newGyroEvent != null && newAccelEvent != null) {
 			SensorEvent orientationEvent = new SensorEvent(
-					newGyroEvent.getYaw(), newGyroEvent.getPitch(),
-					newGyroEvent.getRoll(), newAccelEvent.getX(),
+					removeNoise(newGyroEvent.getYaw()), removeNoise(newGyroEvent.getPitch()),
+					removeNoise(newGyroEvent.getRoll()), newAccelEvent.getX(),
 					newAccelEvent.getY(), newAccelEvent.getZ());
 			for (SensorListener listener : listeners) {
 				listener.newSensorData(orientationEvent);
@@ -101,6 +101,14 @@ public class WiiMoteHandler implements AccelerometerListener<Mote>,
 
 			newAccelEvent = null;
 			newGyroEvent = null;
+		}
+	}
+
+	private float removeNoise(float value) {
+		if(Math.abs(value) < NOISE_THRESHOLD){
+			return 0;
+		}else{
+			return value;
 		}
 	}
 

@@ -158,6 +158,7 @@ public class MainActivity extends Activity{
 				if (wiiMoteHandler != null) {
 					wiiMoteHandler.calibrate();
 				}
+				((CubeView)findViewById(R.id.cubeView)).calibrate();
 			}
 		});
 	}
