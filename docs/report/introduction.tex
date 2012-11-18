@@ -18,9 +18,8 @@ Motion based games and game controllers have been a trend in the gaming industry
 
 \section{Research goals}
 %What are the questions you are answering with your project? Normally, you specify a main question and related sub-questions. Remember that at the end you have to demonstrate you have answered to the stated questions. It is not uncommon that the questions are changed during the project, but it is important to be as explicit as possible and as early as possible with research questions since they help you to focus.
-The primary research goal is to develop a mobile bio-feedback system through mass produced off the shelf products. A smartphone will function as the central hub for the system. Game controllers with motion detecting capabilities will be attached to the user in key locations and transmit sensor data to the smartphone. The phone will process the data, compute it. The user will control and interact with the system through the smartphone. The system will provide the user with feedback through audio and vibration. In addition to the audio on the phone, a bluetooth speaker can be connected, and the game controllers provide vibration and audio as well.
+The primary research goal is to develop a mobile bio-feedback system through mass produced off the shelf products. A smartphone will function as the central hub for the system. Game controllers with motion detecting capabilities will be attached to the user in key locations and transmit sensor data to the smartphone. The phone will process and compute data. Interaction with the system will primarily be done through the smartphone. The system will provide the user with feedback through audio and vibration. The smarphone will be responsible for the audio feedback, while the game controller will provied feedback through vibration.
 
-%PRETTY PICTURE THAT SHOW HOW THINGS WORK TOGHETER IN THE SYSTEM
 \begin{figure}[h!]
   \centering
     \includegraphics[width=.80\textwidth]{hub.png}
@@ -71,7 +70,7 @@ The second part will focus on reaching research goal (c) and (d) through a more 
 
 \section{Literature review}
 %This chapter provides an overview of the literature. It positions your work with respect to work already done by others
-Several studies have shown that the use of biofeedback systems can reduce trunk sway \cite{multiModualBiofeedback, vibrotactileBiofeedback, vibrotactileTiltFeedback}. These studies make use of sensors strapped to test subjects in order to gather information about the position of the trunk. The sensors gathered data on the test subjects initial position, which was then processed and stored on a computer. The test subjects were then asked to challenge their balance by either walking, or standing on a balance board so that data could be collected.
+Several studies have shown that the use of biofeedback systems can reduce trunk sway \cite{multiModualBiofeedback, vibrotactileBiofeedback, vibrotactileTiltFeedback}. These studies make use of sensors strapped to test subjects in order to gather information about the position of the trunk. The sensors gathered data on the test subjects initial position, which was then processed and stored on a computer. Afterwards the test subjects were asked to challenge their balance by either walking, or standing on a balance board so that new data could be collected.
 
 \begin{figure}[h!]
   \centering
@@ -89,7 +88,9 @@ The collected data was sent to the computer in order to calculate the and compar
 
 These studies all conclude that giving vibrotactile and other types of biofeedback reduces the angular trunk displacement of patients. One of the studies showed that in some cases such systems influenced the balance of older adults \cite{multiModualBiofeedback}, while others showed improved control of mediolateral sway during gait and dynamic gait index, which are fall risk indicators in elders \cite{vibrotactileTiltFeedback}.
 
-Making biofeedback systems available for home users creates a new set of challenges. The sensors would have to be smaller and there would be the need for a computer to interpret the information gathered by the sensors. Smartphones are one example of portable computing units with small sensors that can be used for such purposes. Several attempts have been made to create fall detection systems using smart phone technology \cite{iFall, semiSupervisedFallDetection, mobilePhoneBasedFallDetection, detectionOfFalls}, all of these studies show positive results. Sadly are no projects that focus on preventing falls through the use of smartphones and bio-feedback, all of them focus on being reacting to a fall, and not preventing it.
+%Be Knut å nevnte det med at unge ble ikke like påvirket som eldre, eller noe slikt
+
+Making biofeedback systems available for home users creates a new set of challenges. The sensors would have to be smaller and there would be the need for a computer to interpret the information gathered by the sensors. Smartphones are one example of portable computing units with small sensors that can be used for such purposes. Several attempts have been made to create fall detection systems using smart phone technology \cite{iFall, semiSupervisedFallDetection, mobilePhoneBasedFallDetection, detectionOfFalls}, all of these studies show positive results. Sadly there are no projects that focus on preventing falls through the use of smartphones and bio-feedback, all of them focus on reacting to a fall, rather than preventing it.
 
 \subsection{iFall}
 The iFall \cite{iFall} project is a lightweight Android application designed to run in the background. It monitors the data from the phones accelerometer if the accelerometer data matches a pre-defined pattern it will assume a fall has occurred. When a fall is detected the user has a certain amount of time to get up again, this is to prevent false alarms when small falls occur or the phone is dropped. If the user does not get up, a prompt window is presented that the user has to respond to, if no response is registered an alarm will be triggered. 
@@ -104,9 +105,13 @@ One of the challenges the project faced was to alter and adapt the threshold dep
 
 \subsection{Placement of device}
 
-The PerFallID\cite{fallPrevention} project and a Taiwanese Android\cite{mobilePhoneBasedFallDetection} project have similarities to the earlier iFall project, but do more research on how phone placement on the body affects the accuracy of their application. They perform a similar test by attaching the phone to Chest, Waist, and Thigh and measuring the amount of False Positive (FP) and False Negatives (FN). Strange enough they come to different conclusions when it comes to deciding the best placement for the phone; PerFallID concludes that the waist is the most accurate area, while the Taiwanese Android project concludes that the chest is the best location when using only one device with an accelerometer. The different conclusions might because different approaches and algorithms are used to detecting falls. This could mean that there is no universal optimal position for the sensors to be located.
+The PerFallID\cite{fallPrevention} project and a Taiwanese Android\cite{mobilePhoneBasedFallDetection} project have similarities to the earlier iFall project, but do more research on how phone placement on the body affects the accuracy of their application. They perform a similar test by attaching the phone to Chest, Waist, and Thigh and measuring the amount of False Positive (FP) and False Negatives (FN). Strange enough they come to different conclusions when it comes to deciding the best placement for the phone; PerFallID concludes that the waist is the most accurate area, while the Taiwanese Android project concludes that the chest is the best location when using only one device with an accelerometer. The conclusions might come from the fact that different approaches and algorithms are used to detect falls. This could mean that there is no universal optimal position for the sensors to be located.
 
-%Figure here showing where the devices are placed
+\begin{figure}[h!]
+  \centering
+    \includegraphics[width=0.60\textwidth]{phoneLocations.png}
+    \caption{\footnotesize An example of the phone locations tested in the Taiwanese project.} 
+\end{figure}
 
 \subsection{Additional sensors}
 A common limitation for the papers that have been reviews involve that only the smartphone is used as a sensors. The PerFallID implements an additional mangetic sensor that is placed above the knee. By using the data from the magnetic sensor they are able to improve the accuracy of the application, backward and lateral falls gain a significant improvement with the additional sensor. The Environmental-Adaptive Fall Detection System \cite{fallDetectionWithExtraSensors} project takes advantage of 3 sensors, and the smartphone itself acts only as a hub. The sensors are located on the waist, left ankle and right ankle. Their solution is able to detect falls with 80\% accuracy in all kinds of situations, such as running, walking, ramp, standing still, and stairs. It seems to be the biggest and most complex solution so far, which makes battery life an interesting factor, but there is no mention of it in the paper.
