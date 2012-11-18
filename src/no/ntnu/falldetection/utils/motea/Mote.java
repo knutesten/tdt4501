@@ -32,7 +32,7 @@ public class Mote extends L2CAPConnectThread{
 	private WiiMoteConnection connection;
 	private static final byte PORT = 0x13;
 	private CalibrationDataReport calibrationDataReport = null;
-	private byte reportMode = (byte)0x37;
+	private byte reportMode = (byte)0x35;
 	private EventListenerList listenerList = new EventListenerList();
 	private boolean rumble = false;
 	private boolean[] leds = new boolean[]{true, true, true, true};

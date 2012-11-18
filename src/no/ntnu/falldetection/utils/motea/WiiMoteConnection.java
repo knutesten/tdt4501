@@ -73,12 +73,11 @@ public class WiiMoteConnection extends Thread{
 				case ReportModeRequest.DATA_REPORT_0x22:
 					break;
 
-				case ReportModeRequest.DATA_REPORT_0x37:
-					parseCoreButtonData(buf);
-					parseAccelerometerData(buf);
-					// parseBasicIrCameraData(buf, 7);
-					parseExtensionData(buf, 17, 6);
-					break;
+ 				case ReportModeRequest.DATA_REPORT_0x35:
+ 					parseCoreButtonData(buf);
+ 					parseAccelerometerData(buf);
+ 					parseExtensionData(buf, 7, 16);
+ 					break;
 
 				default:
 					String hex = Integer.toHexString(buf[1] & 0xff);
