@@ -23,12 +23,15 @@ public class CubeView extends View implements OrientationListener{
 
 	/* Orientation of the cube around X axis. */
 	protected float ax;
-
+	protected float ax0 = 0;
+	
 	/* Orientation of the cube around Y axis. */
 	protected float ay;
+	protected float ay0 = 0;
 
 	/* Orientation of the cube around Z axis. */
 	protected float az;
+	protected float az0 = 0;
 
 	protected float lastTouchX;
 	protected float lastTouchY;
@@ -41,6 +44,13 @@ public class CubeView extends View implements OrientationListener{
 	/* This constructor is used when the view is inflated from a XML file. */
 	public CubeView(Context context, AttributeSet attrs) {
 		super(context, attrs);
+	}
+	
+	public void calibrate(){
+		ax0 = ax;
+		ay0 = ay;
+		az0 = az;
+		postInvalidate();
 	}
 
 	/**
@@ -142,9 +152,9 @@ public class CubeView extends View implements OrientationListener{
 	@Override
 	public void orientationChanged(OrientationEvent evt) {
 		float[] angles = evt.getAngles();
-		ax = -angles[0];
-		ay = angles[1];
-		az = -angles[2];
+		ax = -angles[0] - ax0;
+		ay = angles[1] - ay0;
+		az = -angles[2] -az0;
 		postInvalidate();
 	}
 }
