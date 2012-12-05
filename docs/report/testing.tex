@@ -1,8 +1,19 @@
 \chapter{Viability Testing}
-This section will focus on the qualitative and quantitative tests we perform on the system to help determine if the system is viable as a bio-feedback system, and discover any potential shortcomings with the implementation or hardware. All the tests are performed using a Galaxy Nexus \cite{galaxyNexus} and a Wii Remote with a Motion Plus extension.
+The following chapter presents factors we believe to be of relevance and important to test so that the viability of the system can be established. The initial section will describe what factors are to be tested, why these are being tested, and what we find acceptable parameters to be. The later section describe the tests performed in order to test each factor and the attained results. All the tests are performed using a Galaxy Nexus \cite{galaxyNexus} and a Wii Remote with a Motion Plus extension unless stated otherwise.
+
+\section{Deciding factors}
+The first factor that came to mind was battery life. How was the battery life on the Wii Remote and on the Android smartphone. The majority of Android devices come with specific batteries which are easily rechargeable and have a well documented battery life according to the use. The Wii Remote on the other hand does not. If the battery life is too short it can be cumbersome to change them, come with increase cost and reduce overall satisfaction with the system. We estimated that a Android device battery would at least last 24 hours and be charged while the user is asleep and hence the same rules should apply to the Wii Remote. Therefore a minimum parameter of 24 hours was set in order for the battery life to be satisfactory.
+
+Range is something that should always be considered when dealing with wireless devices. It might be desirable for a user to not carry his phone around if he is at home, or work. Having an awareness of the range would allows the user to comfortably walk around without having to worry about keeping close to the device at all times. Most manufacturers use the Bluetooth Class 2 microchip which allows a minimum range of 10 meters, and thus this is what we consider to be the acceptable value.
+
+The performance of the application on the smartphone needed also to be tested. This was done to ensure that application was smooth and no unexpected behavior would occur on various devices. We found this factor satisfactory if we noticed no hitches or lag from the application in addition that all the functions worked as intended.
+
+The final 
+
+
 
 \section{Battery life}
-Battery life testing was only performed on the WiiMote. Android device batteries are device-specific making it easy to find the estimated battery life, and charging is easier. THe WiiMote is powered by two AA batteries and battery life is based on several factors. The official response from Nintendo is "up to 30 hours" \cite{wiiBattery}
+The WiiMote is powered by two AA batteries and battery life is based on several factors. The official response from Nintendo is "up to 30 hours" \cite{wiiBattery}
 
 As the prototype application does not utilize all of the features the Wii Remote offers but only the sensor data and rumble feature we hope to have a battery life of at least 30 hours wit ha fresh set of batteries. The batteries used to perform the test are a fresh set of Duracell Ultra Power batteries. These were chosen because they are available from almost any convenient store. The Galaxy Nexus was connected to power during the entire time, while the WiiMote had a fresh set of batteries put into it before each test.
 
@@ -28,7 +39,7 @@ Two set of tests were performed in order to measure battery life. The first set 
 The table shows a consistent time of around 33 hours with constant rumble and approximately 62 when only sensor data is being transmitted. Our system will have a mix of both depending on the amount of feedback it needs to provide. The expected uptime on the battery type we tested is then somewhere between 33 - 62 hours of use. Considering constant rumbling is highly unlikely, we assume that the battery life is on higher end of the scale.
 
 \section{Range}
-It should be desirable for users to not have to carry the phone around at home, at work, or if they know they are within a certain vicinity. Hence we decided to an informal in order to test the range of the bluetooth connection once it has been established. The connection was tested with a 30 meter distance in a open landscape computer lab and no connection issues were present. With a room in between the WiiMote and Android device a range of 15 meters was reached before signs of signal loss started to appear, by this we mean that the 3D object was not updating smoothly or the WiiMote started vibrating franticly.
+The connection was tested with a 30 meter distance in a open landscape computer lab and no connection issues were present. With a room in between the WiiMote and Android device a range of 15 meters was reached before signs of signal loss started to appear, by this we mean that the 3D object was not updating smoothly or the WiiMote started vibrating franticly.
 
 \section{Threshold alarm}
 Testing of the threshold alarm was conduced where we were the only test subjects. The tests were of a qualitative nature and we wanted to see if there were any immediate issues we discovered with the system that could be rectified. We did not perform any major tweaking or spend a large amount of resources finding the optimal position and threshold settings for the system. 
