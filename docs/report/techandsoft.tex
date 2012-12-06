@@ -65,6 +65,9 @@ WiiUseJ is a lightweight Java API. It was built on top of the Wiiuse API and onl
 \subsubsection{Motej}
 Motej is an open source (licensed under ASL 2.0) library for the Wii remote written in Java. Motej supports only the Wii Remote and IR Camera in its basic form, but the extras library adds support for the balance board, classic controller, and nunchuk. The project is currently at version 0.9, but was discontinued in 2009. \cite{Motej}
 
-\subsection{Bluetooth}
-%General information about bluetooth, and some text about L2CAP and why Android sucks. THIS SECTION NEEDS MORE EXPLAINING
-Bluetooth is a widely used wireless communication technology for shorter distances. Due to its low power consumption and low cost is has become one of the leading standards in its field and is supported by most modern operating systems, either through integrated hardware or through portable Bluetooth adapter. Most, if not all, modern phones come with a built-in Bluetooth card/radio \cite{bluetooth}. The Wii Remote uses Bluetooth to communicate wirelessly with other devices, using the logical link control and adaptation protocol (L2CAP). 
+\section{Bluetooth}
+Bluetooth is a short-range communication technology that is simple and secure, and is intended to be used as a replacement for cables when connecting devices. Due to its key features such as robustness, low cost, and low power consumption it has become one of the leading standards in its field and is supported by most modern operating systems through integrated hardware or portable Bluetooth adapters.
+
+When a secure connection is established between two Bluetooth devices it is referred to as pairing. The devices can then securely communicate and transfer data with each other. Bluetooth is based on a master-slave architecture, allowing a single device to have up to 7 slaves, meaning that package exchanges are are based on the masters clock. This is know as a piconet and a device can be a member of several piconets simultaneously. Bluetooth has 3 classes av radio that determine the range and power consumption of the radio. Class 3 has the highest range of 100 meters but also consumes the most power, the lowest allows up to only a meter but uses the least power. Class 2 allows a range of at least 10 meters and consumes 2.5mW of power.\cite{bluetooth}.
+
+The most commonly used radio is the Class 2 and the Wii Remote is no exception \cite{controllerSpecs}. It uses a Class 2 radio for wireless communication with other devices by using the logical link control and adaption protocol (L2CAP).
