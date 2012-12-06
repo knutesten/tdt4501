@@ -1,10 +1,7 @@
 \chapter{Prototyping}
-%Development
-Since no library with Android support currently exist it was decided to use the Motej library as a core for further development.
-
-\section{Introduction}
 At the time of writing no research has been done on using motion game controllers as peripherals in a smart-phone based bio-feedback system. In order to answer the research questions posed in this report it will be necessary to create a simple but working prototype of the aforementioned system. The equipment used to realize the system will be a rooted HTC Desire HD \cite{desireHdSpecs} running CyanogenMod 7 and Wii Remotes with the Motion Plus extension. The application will be created using the Android SDK, Java and the Motej library.
-%Write about why we chose motej?
+
+The first section contains docuemntation on the reverse engineering of the Wii remote. No official information has been released as how interpret the Bluetooth connection with the Wii remote, and thus it felt important to doument how we have implemented connecting to and parsing data form the Wii remote. The second section contains an explination of the libraries that were used and created for connection. After this the orientation calculation using the Madgwick algorighm is explained in more detail. The fourth section contains documentation and description of the architectural choices of the Andorid application. Next, we demonstrate the final version of the prototype with pictures of the current GUI. Lastly, we discuss the limitations of the application and the Wii remote through Android.
 
 \section{Wii remote reverse engineering}
 This section will look closer on the reverse engineering of the Wii remote. Since the Wii remote is the only sensor to be used in this project, it is important to explain in detail how the data from this sensor is parsed and calibrated. In this section there will be multiple references to Motea. Motea is a lightweight Wii remote API based on Motej \cite{Motej}, designed specially for this project. A further description of Motea can be found in section~\ref{sec:motea}
@@ -227,7 +224,10 @@ if (pitchFast) {
 	pitch /= LOWSPEED_SCALING;
 }
 \end{lstlisting}
+
 \section{Wii remote library}
+In this section we describe Motej and how it was modified to support MotionPlus and connection through Android. The new, lightweight, library Motea that was created to replace the modified Motej library is also discussed.
+
 \subsection{Motej and Motejx}
 The most complete of the Java based Wii remote libraries that could be found was Motej. Work on the library was discontinued in 2009, but supports all the main Wii remote functionality, and most of the extensions. It was therefore decided to use Motej as the base for a Wii remote library for Android. 
 
