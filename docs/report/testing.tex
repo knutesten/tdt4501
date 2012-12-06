@@ -42,21 +42,25 @@ The connection was tested with a 30 meter distance in a open landscape computer 
 
 A distance of 30 meters in an open landscape and 15 meters between walls is well beyond our initial expectation of 10 meters and helps establish the Wii Remote as a viable sensory device for our system.
 \section{Performance}
-A performance test was performed with the identical software version across three different Android devices. The three device were: A stock HTC One V, stock Google Nexus and a HTC Desire HD using Cynaogenmod 7. The test consisted of connecting the Wii Remote, calibrating, and then changing the orientation of the Wii Remote in several directions at increasing speeds.
+A performance test was done with the identical application version across three different Android devices: A stock HTC One S, stock Galaxy Nexus and a HTC Desire HD using Cynaogenmod 7. The Desire HD was released in 2010 and has the weakest hardware out of the test devices. The test consisted of connecting the Wii Remote, calibrating it, and then changing the orientation of the Wii Remote in several directions at increasing speed. The results are shown in the table below~\ref{tab:testResults}.
 
-\subsection{HTC One S}
-As mentioned in the Limitations (ADD REF!?) section our understanding was that the Wii Remote would not be able to establish a connection with an Android device that has HTC Sense on it. The device performed satisfactory within reason, when orientation changed rapidly and franticly it started to shows signs of not being able to keep up with all the rapid alterations.
+\begin{table}[h!]
+\centering
+\begin{tabularx}{\textwidth}{|X||c|c|c|}
+\hline
+\textbf{Device} & \textbf{Connecting} & \textbf{Calibrating} & \textbf{Change orientation} \\ \hline
+HTC Desire HD & Pass & Pass & Pass \\ \hline
+Galaxy Nexus & Pass & Pass & Pass \\ \hline
+HTC One S & Pass & Pass & Pass \\ \hline
 
-\subsection{Google Nexus}
-The google nexus is considered to be a stock developer phone with no modifications from the re-seller. Surprisingly this one performed the worst out of the test group. At higher speeds stutter became apparent and the sound and vibration started too lag, in addition to the cube not updating. The program would freeze and lag for a second and in the next two seconds it would try to make up for the lost feedback by increasing the frequency of sound and vibration.
+\end{tabularx}
+\caption{\footnotesize Results from the testing}
+\label{tab:testResults}
+\end{table}
 
-\subsection{HTC Desire HD}
-This is the oldest model out of the three devices. Like the HTC one S it presented issues with not being able to keep up with the orientation change and reflect it properly in the frequency of the audio and vibration.
+All three devices performed smoothly, except for a few bugs. This confirms that modern smartphones have the processing power required to function as a hub for processing sensor data in real-time. The fact that the application worked on an Android device with HTC Sense was a major surprise for us, this might mean that devices with Android version 3.0 and 4.0 from HTC do support reflection and allow the application to function properly on the system, but this has not been researched further.
 
-\subsection{Performance results}
-The fact that the application worked on an Android device with HTC Sense was a major surprise for us, this might mean that devices with Android version 3.0 and 4.0 from HTC do support reflection and allow the application to function properly on the system. The issues that became apparent with the sound and vibration stems from our implementation of the functionality. We focused on getting the intended, and not optimizing performance, we believe that with some time given to optimize this issue can be resolved.
+As mentioned a few bugs were discovered during the testing. The implementation of alarm sound did not sound as smooth on Galaxy Nexus and HTC One S as it does on HTC Desire HD which was used for testing. The frequency of beeps is much slower as well as the transition to higher frequencies of beeps being less smooth. This could probably be fixed by changing the way the alarm sound is implemented, but since this application is a proof of concept prototype reimplementing this functionality was not prioritized. Also the 3D-cube sometimes renders incorrectly in small intervals on the Galaxy Nexus. The cube is there  for debugging purposes, therefore time was not dedicated to fixing the issue.
 
-\section{Threshold alarm}
-Testing of the threshold alarm were conduced with the writers of this paper as the only test subjects.
-
-A problem we discovered was that the WiiMote vibration was not strong enough for the user to notice that it was vibrating. During the low frequency pulsing vibrations it was nearly impossible to notice the vibrations unless the user was aware it was about to happen. At higher frequency it was slightly better, but still not satisfactory. During the test the WiiMote was facing with the button surface away from the body. The batteries inside the WiiMote are quite large and heavy and we noticed they were soaking most of the vibration and the area around the batteries was barely vibrating. Turning the WiiMote to  so that the surface containing buttons was facing inwards gave slightly better results. We attempted to remove the strap and hold the WiiMote manually against the skin. This did improve the results but did not seem feasible in a real uncontrollable environment.
+\section{Vibrotactile feedback}
+Testing of the vibrotactile feedback was conduced with the writers of this paper as the only test subjects. A problem we discovered was that the WiiMote vibration was not strong enough for the user to notice that it was vibrating. During the low frequency pulsing vibrations it was nearly impossible to notice the vibrations unless the user was aware it was about to happen. At higher frequency it was slightly better, but still not satisfactory. During the test the WiiMote was facing with the button surface away from the body. The batteries inside the WiiMote are quite large and heavy and we noticed they were soaking most of the vibration and the area around the batteries was barely vibrating. Turning the WiiMote to  so that the surface containing buttons was facing inwards gave slightly better results. We attempted to remove the strap and hold the WiiMote manually against the skin. This did improve the results but did not seem feasible in a real uncontrollable environment.
