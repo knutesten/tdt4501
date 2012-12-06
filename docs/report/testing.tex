@@ -8,9 +8,7 @@ Range is something that should always be considered when dealing with wireless d
 
 The performance of the application on the smartphone needed also to be tested. This was done to ensure that application was smooth and no unexpected behavior would occur on various devices. We found this factor satisfactory if we noticed no hitches or lag from the application in addition that all the functions worked as intended.
 
-The final 
-
-
+We found it necessary to test the initial functionality and tactile feedback that the system provided. The tests were of a qualitative nature and we wanted to see if there were any immediate issues we discovered with the system that could be rectified. We did not perform any major tweaking or spend a large amount of resources finding the optimal position and threshold settings for the system. 
 
 \section{Battery life}
 The WiiMote is powered by two AA batteries and battery life is based on several factors. The official response from Nintendo is "up to 30 hours" \cite{wiiBattery}
@@ -38,10 +36,27 @@ Two set of tests were performed in order to measure battery life. The first set 
 
 The table shows a consistent time of around 33 hours with constant rumble and approximately 62 when only sensor data is being transmitted. Our system will have a mix of both depending on the amount of feedback it needs to provide. The expected uptime on the battery type we tested is then somewhere between 33 - 62 hours of use. Considering constant rumbling is highly unlikely, we assume that the battery life is on higher end of the scale.
 
+Our initial expectation was a minimum of 24 hours, the results were far beyond what we expected it to be, which speaks positively for the Wii Remote as possible sensory device. We used brand batteries that boast about longer battery life, but with such a high numbers we believe that even a non-brand and rechargeable battery will be above the 24 hour minimum limit.
 \section{Range}
 The connection was tested with a 30 meter distance in a open landscape computer lab and no connection issues were present. With a room in between the WiiMote and Android device a range of 15 meters was reached before signs of signal loss started to appear, by this we mean that the 3D object was not updating smoothly or the WiiMote started vibrating franticly.
 
+A distance of 30 meters in an open landscape and 15 meters between walls is well beyond our initial expectation of 10 meters and helps establish the Wii Remote as a viable sensory device for our system.
+\section{Performance}
+A performance test was performed with the identical software version across three different Android devices. The three device were: A stock HTC One V, stock Google Nexus and a HTC Desire HD using Cynaogenmod 7. The test consisted of connecting the Wii Remote, calibrating, and then changing the orientation of the Wii Remote in several directions at increasing speeds.
+
+\subsection{HTC One S}
+As mentioned in the Limitations (ADD REF!?) section our understanding was that the Wii Remote would not be able to establish a connection with an Android device that has HTC Sense on it. The device performed satisfactory within reason, when orientation changed rapidly and franticly it started to shows signs of not being able to keep up with all the rapid alterations.
+
+\subsection{Google Nexus}
+The google nexus is considered to be a stock developer phone with no modifications from the re-seller. Surprisingly this one performed the worst out of the test group. At higher speeds stutter became apparent and the sound and vibration started too lag, in addition to the cube not updating. The program would freeze and lag for a second and in the next two seconds it would try to make up for the lost feedback by increasing the frequency of sound and vibration.
+
+\subsection{HTC Desire HD}
+This is the oldest model out of the three devices. Like the HTC one S it presented issues with not being able to keep up with the orientation change and reflect it properly in the frequency of the audio and vibration.
+
+\subsection{Performance results}
+The fact that the application worked on an Android device with HTC Sense was a major surprise for us, this might mean that devices with Android version 3.0 and 4.0 from HTC do support reflection and allow the application to function properly on the system. The issues that became apparent with the sound and vibration stems from our implementation of the functionality. We focused on getting the intended, and not optimizing performance, we believe that with some time given to optimize this issue can be resolved.
+
 \section{Threshold alarm}
-Testing of the threshold alarm was conduced where we were the only test subjects. The tests were of a qualitative nature and we wanted to see if there were any immediate issues we discovered with the system that could be rectified. We did not perform any major tweaking or spend a large amount of resources finding the optimal position and threshold settings for the system. 
+Testing of the threshold alarm were conduced with the writers of this paper as the only test subjects.
 
 A problem we discovered was that the WiiMote vibration was not strong enough for the user to notice that it was vibrating. During the low frequency pulsing vibrations it was nearly impossible to notice the vibrations unless the user was aware it was about to happen. At higher frequency it was slightly better, but still not satisfactory. During the test the WiiMote was facing with the button surface away from the body. The batteries inside the WiiMote are quite large and heavy and we noticed they were soaking most of the vibration and the area around the batteries was barely vibrating. Turning the WiiMote to  so that the surface containing buttons was facing inwards gave slightly better results. We attempted to remove the strap and hold the WiiMote manually against the skin. This did improve the results but did not seem feasible in a real uncontrollable environment.
