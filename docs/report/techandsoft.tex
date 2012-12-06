@@ -34,8 +34,6 @@ The Google Play Store contains a handful of applications that enable an Android 
 
 There was only one application\cite{sixaxisController} that enabled a user to connect a SixAxis Playstation 3 controller to an Android device. The application required root access, and some additional work had to be done before the controller was ready to be paired. A compatibility checker is available to see if an Android device is compatible with the software.
 
-The Google Play Store contains a handful applications that allow a user to connect a WiiRemote to an Android Device. All of these applications focus only on the buttons, and ignore sensor data \cite{wiimoteController, simpleWiiController}. The applications seem unstable and are far from user friendly, but they are the only of its kind out there.
-
 \section{PS3 Move}
 
 \subsection{Motion Controller Hardware}
@@ -51,9 +49,7 @@ We would like to close this section by pointing out that the API is still in dev
 \section{Wii Remote with Motion Plus}
 
 \subsection{Wii Remote and Motion Plus Hardware}
-The original Wii Remote features motion tracking for vertical movement, left-right horizontal movement, and horizontal rotation through the use of an ADXL330 accelerometer.\cite{wiiAccelerometer}.
-In June 2009 Nintendo released the Wii MotionPlus expansion device which contains a dual-axis tuning fork and a single-axis gyroscope\cite{wiiMotionPlus}.
-The expansion device improves the motion tracking of the Wii Remote greatly, but makes it larger. Nintendo has now started selling the Wii Remote Plus. It is the same size as the Wii Remote, but has the Wii MotionPlus already built in. Both of the controller types have the ability to provide vibration and basic audio feedback.
+The original Wii Remote features motion tracking for vertical movement, left-right horizontal movement, and horizontal rotation through the use of an ADXL330 accelerometer.\cite{wiiAccelerometer}. In June 2009 Nintendo released the Wii MotionPlus expansion device which contains a dual-axis tuning fork and a single-axis gyroscope\cite{wiiMotionPlus}. The expansion device improves the motion tracking of the Wii Remote greatly, but makes it larger. Nintendo has now started selling the Wii Remote Plus. It is the same size as the Wii Remote, but has the Wii MotionPlus already built in. Both of the controller types have the ability to provide vibration and basic audio feedback.
 
 \subsection{Wii Remote API}
 At time of writing no Wii Remote library has been created for the Android OS. Though there are some Wii Remote libraries out there, none of them are intended to be used on Android devices. This section will cover the libraries that are implemented in Java.
@@ -65,9 +61,8 @@ WiiRemoteJ is one of the most complete libraries for the Wii remote. It is a pur
 WiiUseJ is a lightweight Java API. It was built on top of the Wiiuse API and only supports the Wii Remote and the Nunchuck. Like the previous library it lacks support for the MotionPlus extension. The project has been discontinued since January 2009. \cite{Wiiusej}
 
 \subsubsection{Motej}
-Motej is an open source (licensed under ASL 2.0) library for the Wii remote written in Java. Motej supports only the Wii Remote and IR Camera in it's basic form, but the extras library adds support for the balance board, classic controller, and nunchuk. The project is currently at version 0.9, but was discontinued in 2009. \cite{Motej}
+Motej is an open source (licensed under ASL 2.0) library for the Wii remote written in Java. Motej supports only the Wii Remote and IR Camera in its basic form, but the extras library adds support for the balance board, classic controller, and nunchuk. The project is currently at version 0.9, but was discontinued in 2009. \cite{Motej}
 
 \subsection{Bluetooth}
-%General information about bluetooth, and some text about L2CAP and why Android sucks.
-Bluetooth is a widely used wireless communication technology for shorter distances. Due to its low power consumption and low cost is has become one of the leading standards in its field and is supported by most modern operating systems, either through integrated hardware or through portable Bluetooth adapter. Most, if not all, modern phones come with a built-in Bluetooth card/radio. %CITATION BITCHES! 
-The Wii Remote uses Bluetooth to communicate wirelessly with other devices, using the logical link control and adaptation protocol (L2CAP). 
+%General information about bluetooth, and some text about L2CAP and why Android sucks. THIS SECTION NEEDS MORE EXPLAINING
+Bluetooth is a widely used wireless communication technology for shorter distances. Due to its low power consumption and low cost is has become one of the leading standards in its field and is supported by most modern operating systems, either through integrated hardware or through portable Bluetooth adapter. Most, if not all, modern phones come with a built-in Bluetooth card/radio \cite{bluetooth}. The Wii Remote uses Bluetooth to communicate wirelessly with other devices, using the logical link control and adaptation protocol (L2CAP). 

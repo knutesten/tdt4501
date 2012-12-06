@@ -409,7 +409,24 @@ The graphical user interface of the application is quite simplistic, there are t
 
 The GUI consists of 3 components, two buttons and a visual representation of the Wii Remote. A connection with the Wii Remote is attained by pressing the (1) and (2) buttons on the Wii Remote, and afterwards pressing the "Connect" button on the application. The button will change from "Connect" to "Connecting.." in order to inform the user that it is attempting to establish a connection. Once a connection has been established the "Connect" button will be grayed out an changed to "Connected". A connection is confirmed by the 3D box coming to life, and any movement of the Wii Remote is mirrored by the box on screen. A successful connection will also be indicated on the Wii Remote due to the LEDs on the controller being lit. The LEDs represent the battery life; All four LEDs lit means that the Wii Remote battery is full.
 
-PICTURE OF APPLICATION
+\begin{figure}
+        \centering
+        \begin{subfigure}[b]{0.8\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{left.jpg}
+                \caption{Wii Remote pointing left}
+                \label{fig:left}
+        \end{subfigure}
+        \\%add desired spacing between images, e. g. ~, \quad, \qquad etc. 
+          %(or a blank line to force the subfigure onto a new line)
+        \begin{subfigure}[b]{0.8\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{right.jpg}
+                \caption{Wii Remote pointing right}
+                \label{fig:right}
+        \end{subfigure}
+        \caption{Pictures of the application}\label{fig:application}
+\end{figure}
 
 Once a successful connection has been established the Wii Remote should be calibrated in order to achieve optimal accuracy. Through the use of the gyro data the Madgwick algorithm is able to correct inaccurate data. The WiiMote does contain calibration constants sadly these are not accurate. A gyro velocity of up to 30 rad/s is reported when the WiiMote is in fact standing still. Through manual calibration this error is reduced to approximately 0. Calibration is achieved by placing the Wii Remote in the desired position and then pressing the "Calibrate" button.
 
