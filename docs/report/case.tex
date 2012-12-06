@@ -227,139 +227,17 @@ if (pitchFast) {
 	pitch /= LOWSPEED_SCALING;
 }
 \end{lstlisting}
-
-\section{Software Architecture}
-In this section contains an explanation and documentation of the various software architectural choices.
-
-The two main focuses when creating the architecture was \emph{modifiability} and \emph{usability}. Modifiability was important to insure the ability to replace the Wii remote with other senors without major changes in the source code. Though the main goal of this project does not include the creation of a complex graphical user interface, usability was still considered a priority for the source code to be reused in future work. 
-
-\subsection{Architectural Patterns}
-\subsubsection{Event-driven architecture}
-Event-driven architecture is an architectural pattern that focuses on the creation and consumption of events. The event emitters creates new events and pushes them to the event consumers. The event consumers uses the events to produce some reaction. Because the event emitter does not directly speak with the event consumers this pattern makes the different components very loosely coupled.
-
-In our case the event emitters will be the motej and motejx libraries. These classes will handle the connection to the Wii remote and the MotionPlus extension and create events when it receives new date from the Wii remote or its extensions. The event consumers will be the models that change the state in accordance to the received events containing the sensor data. Using this pattern the models are not concerned with the way the event emitters are implemented or what kind of sensors they connect to as long as the events emitted are on the same form.
-
-Fortunatly Motej already implemented the event-driven architecture so there was no need to modify the library in this aspect.
-
-\begin{lstlisting}
-//Example of event-driven architecture using 
-//java.swing.event.EventListenerList and 
-//java.util.EventListener
-
-//Event emittor (parts from the Mote class)
-EventListenerList listenerList = new EventListenerList();
-...
-public void addAcceleromterListener(AcceleromterListener<Mote> listener) {
-	listenerList.add(AccelertomerListener.class, listener);
-}
-...
-protected void fireAccelerometerEvent(float x, float y, float z) {
-	AccelerometerListener<Mote>[] listeners = listenerList
-			.getListeners(AccelerometerListener.class);
-	AccelerometerEvent<Mote> evt = 
-		new AccelerometerEvent<Mote>(this, x, y, z);
-	for (AccelerometerListener<Mote> l : listeners) {
-		l.accelerometerChanged(evt);
-	}
-}
-
-//Interface for the listeners (event consumers)
-public interface AccelerometerListener<T> extends EventListener {
-
-	public void accelerometerChanged(AccelerometerEvent<T> evt);
-
-}
-
-//Event consumer - example
-public class Example implements AccelerometerListener<Mote> {
-	...
-	public void acceleromterChanged(AcceleromterEvent<Mote> evt){
-		//Events are consumed and handled here
-	}
-}
-\end{lstlisting}
-
-\subsubsection{Model View Controller}
-In the model view controller pattern the code is separated into three main components (see figure~\ref{fig:mvc}): model, view and controller. The view handles the graphical user interface and its logic displaying the model to the user. The controller updates the model. The model holds the information or state of the application, which is displayed to the user through the model. This setup gives the users the mental model that they are interacting with the model directly.
-
-\begin{figure}[h!]
-  \centering
-    \includegraphics[width=.80\textwidth]{mvc.png}
-    \caption{\footnotesize Model-View-Controller pattern}
-    \label{fig:mvc}
-\end{figure}
-
-Using the model view controller pattern we can easily change the look and feel of the graphical user interface without interfering with how the model is updated. This gives a lot of freedom to continuously modify and improve the graphical user interface during the development of the application. 
-
-\subsection{Package structure}
-Using the discussed patterns as a basis, the following package diagram shown in figure~\ref{fig:packageDiagram}. 
-
-\begin{figure}[h!]
-  \centering
-    \includegraphics[width=.80\textwidth]{packageDiagram.png}
-    \caption{\footnotesize Package diagram}
-    \label{fig:packageDiagram}
-\end{figure}
-
-\begin{description}
-	\item[libs] Contains the library classes used by the project. Currently only contains the java.swing.event.EventListenerList, which is used by Motea. This class is not included in the standard android packages because swing is not part of android.
-	\item[utils] The modified Motej library (Modea), our implementation of the MadgwickAHRS algorithm resides here. Motea generates sensor events, and the MadgwickAHRS algorithm is used to calculate orientation.
-	\item[models] Classes holding the state of the Wii remote are contained here.
-	\item[activities] Holds the Android activity classes. The MainActivity class starts the application and handles Android activity events. The CubeView class is used to generate a 3D-model illustrating the orientation of the connected Wii remote.
-	\item[controller] Contains controller classes for interacting with the models and the Wii remote.
-\end{description}
-
-\subsection{Activity diagram}
-The current application was created to be a proof of concept for the use of Wii remotes in fall detection/prevention applications. Figure~\ref{fig:activityDiagram} displays the basic functionality implemented in the solution. In addition to the 3D model that graphically displays the orientation of the Wii remote, an alarm system was also implemented. This alarm system is activated when the Wii remotes angle is greater than some predefined threshold. This threshold, is as of now, not customizable from the application itself but is hard-coded  into the application for now. 
-
-The alarm uses sound and vibration to notify the user that the Wii remote angle has broken the threshold. Both sound and vibration is given in pulses with a delay between them, as the Wii remote angle becomes grater the delay between each pulse decreases. For the vibrotactile feedback the Wii remote's rumblepack is used and the sound is generated by the Android smartphone speaker. 
-
-
-\begin{figure}[h!]
-  \centering
-    \includegraphics[width=.40\textwidth]{activityDiagram.png}
-    \caption{\footnotesize Package diagram}
-    \label{fig:activityDiagram}
-\end{figure}
-
-\subsection{Class diagram}
-Figure~\ref{fig:classDiagram} shows a class diagram of the application's most important classes. The different background colors represents different parts of the system.
-
-The classes with the red background handles the connection to the Wii remote. When the MainActivity class receives a BluetoothDevice object, that object is used to create an instance of Mote. The Mote class connects to the Wii remote. Each second the CheckStatus class is run to get an update about the Wii remote's battery life as well as trying to connect to the MotionPlus, if it is not already connected. The MotionPlus parses the extension bytes received from the Wii remote, it also handles the manual calibration of the gyroscope.
-
-The green background contains the controller classes. WiiMoteHandler handles all communication with the Motea classes (red background). It listens to both the accelerometer and gyroscope events from the Mote instance. When both an acceleromter event and a gyroscope event has been received the WiiMoteHandler WiiRemoteHandlerfires a sensor events. WiiMoteHandler also listens to alarm events to start the rumble pack in the Wii remote when the alarm goes off. Since this class is the only one talking to the Motea classes, this is the only class that needs major changes if it is decided to replace the Wii remotes with other types of sensors. 
-
-AngleCalc listens to sensor events from the WiiMoteHandler, the gyroscope and acceleromter data are used to compute the orientation of the Wii remote and the trunk that it is strapped to. To compute the orientation AngleCalc uses Madgwick's altitude and heading reference system algorithm, which is implemented in the MadgwickAHRS class. AngleCalc then updates the OrientationModel with the newly calculated orientation.
-
-The yellow zone holds the models. OrientationModel hods the current orientation of the Wii remote and then fires an event when it is changed. A very simple noise cancelling system has also been implemented here, to reduce the yaw drift when the Wii remote was kept still. Since the yaw rotation is will not be in the actual fall detection/prevention, this functionality is mainly to make the 3d cube model look better.
-
-ThresholdAlarm listens to orientation events fired by the OrientationModel and then calculates whether the angle of is great enough to fire an alarm event. Alarm events have a severity variable that indicates how great the angle is. In the current implementation this variable is used to reduce the delay between rumble pulses and sound beeps, the greater the angle the faster the beeps.
-
-The views have a blue background. MainAcitivty is the class that starts the application. It also handles Bluetooth discovery and initiates the appropriate classes when a Wii remote is detected. CubeView listens to the orientation evnets from the OrientationModel to crate a graphical representation of the position of the Wii remote. AlarmSound handles playing beeps from the smartphone when the ThresholdAlarm fires alarm events. 
-
-\begin{figure}[h!]
-	\centering
-	\includegraphics[width=1\textwidth]{classDiagram.png}
-	\caption{\footnotesize Class diagram}
-	\label{fig:classDiagram}
-\end{figure}
-
-\section{Limitations}
-%Se på dette avsnittet knut. Tror hele må skriver på nytt hvor avsnittene under er merget og forklart bedre
-The majority of Android devices have built-in Bluetooth cards, but the current Android SDK does not offer low level support for the Bluetooth stack, including L2CAP. This constraint can be bypassed on some devices by using reflection to access the socket constructor\cite{l2capHtc}. Access could also be gained through using the Android NDK (Native Developer Kit) but this is outside of our scope. Due to L2CAP not being official supported, certain vendors of Android devices have removed the L2CAP protocols completely, meaning that it would be impossible to use their Android OS to connect to the Wii Remote. Therefore the Android OS on the HTC Desire HD was altered to run with CyanogenMod 7 instead of the default HTC Sense.
-
-Motej uses the BlueCove library as a multi-platform interface to the Bluetooth stack. Unfortunately, BlueCove does not support the Android OS. Android comes with its own Bluetooth API, the Android Bluetooth API. This means that the library will have to be re-written to work on the Android OS and support for the MotionPlus will have to be implemented. WiiMoteLib\cite{wiiMoteLib} is a C\# library which has support for the MotionPlus, by looking at the solutions in this library it should reduce the time required to implement MotionPlus support for the Motej library.
-
-\section{Motej and Motejx}
+\section{Wii remote library}
+\subsection{Motej and Motejx}
 The most complete of the Java based Wii remote libraries that could be found was Motej. Work on the library was discontinued in 2009, but supports all the main Wii remote functionality, and most of the extensions. It was therefore decided to use Motej as the base for a Wii remote library for Android. 
 
-Figure~\ref{fig:motejClassDiagram} shows the most important classes of the Motej and Motejx libraries. To use the library you would create an instance of the Mote object, which takes care of handling the connection to the Wii remote. The Mote constructor takes a string with the bluetooth address of the Wii remote to connect to as input. It is also possible to use the MoteFinder class to discover any Wii remotes that are broadcasting for a connection. The Motej instance fires events whenever it receives data from the Wii remote, these events can be listened to by implementing the different listeners in the motej.events package. 
+Using the library is fairly straight forward, first you would create an instance of the Mote object, which takes care of handling the connection to the Wii remote. The Mote constructor takes a string with the bluetooth address of the Wii remote to connect to as input. It is also possible to use the MoteFinder class to discover any Wii remotes that are broadcasting for a connection. The Motej instance fires events whenever it receives data from the Wii remote, these events can be listened to by implementing the different listeners in the motej.events package. 
 
 Wii remote extensions are handled by the Motejx library, which is an extension to the Motej library. All supported extensions have to be added to a extensions.properties file, which contains the extension id and the class that handles that type of extension. This way Motej does not need to know about any of the different extension implementations in the Motejx library, because they all implement the Extension interface. To get data from the Wii remote extensions a listener has to be added to the extension class of that Wii remote extension. So a program wanting to listen to data from the extension has to cast the extension object to the correct extension class in Motejx in order to add listeners.
 
 %Add class diagram of motej and motejx
 
-\section{Motej on Android}
+\subsection{Motej on Android}
 For Motej to work on Android, the BlueCove library has to be replaced with the Android Bluetooth API. This presents a major problem: Wii remotes uses the low level Bluetooth protocol L2CAP to connect to different platforms. As of Android version 4.1, Jelly Bean, \cite{jellyBean} there is no official support for L2CAP. Android only has full support for the higher level protocol \emph{radio frequency communication} (RFCOMM). RFCOMM is built on top of the L2CAP protocol and provides serial port emulation. 
 
 Though the L2CAP is not directly supported through the Android Bluetooth API it is possible to create an L2CAP socket using a technique called reflection.
@@ -390,14 +268,40 @@ BluetoothSocket socket = constructor.newInstance(type, fd, auth,
 
 This method has limitations. Because there is no official support for L2CAP in Android, many vendors roms will throw errors when trying to Bluetooth devices this way. Major vendors such as HTC and Samusng does, as of now, not support L2CAP connections.
 
-\section{Motion Plus Support}
+\subsection{Motion Plus Support}
 Motej has support for most of the common extensions for the Wii remote. Unfortunately Motion Plus is not one of the supported extensions. Motion Plus was implemented using the already existing extension structure of the Motej library.
 
 Information on how to parse the incoming bytes from the Wii Remote was found on the WiiBrew wiki \cite{wiiBrew}. See section~\ref{sec:gyroParse} for a more detailed description of how the data is parsed. 
 
 An additional class was added for manual calibration of the gyroscope. There is calibration data stored in the Wii remote memory, but WiiBrew states that how to use these data for calibration is still unknown. Some suggestions on how to use the data exist, however the calibrated values are not very accurate compared to the manual calibration method. During manual calibration it is required that the Wii remote is kept still. The calibration takes less than 1 second.
 
-\subsection{Orientation}
+\subsection{Motea}
+\label{sec:motea}
+During the modification of the Motej library it soon became apparent that several parts of the library were outdated or not optimal for the current application. One problem was discovered when implementing rumbling response to alarm events. The rumble pack was turned off each time a request for status information was sent to the Wii remote. This bug was caused by the fact that Motej did not modify the status information request with the current status of the rumble pack.
+
+It was also discovered that Motej used an outdated port to send requests to the Wii remote. Motej used the control pipe with report 0x52 to send requests. This method only works for the original Wii remotes, and will not work for the newer models. During testing the original Wii remote with external MotionPlus was used and therefore this problem was not discovered before later in the development phase.
+
+Because of all the bugs and the large portions of the library that were not used, we decided to create a lightweight Wii remote library from scratch and named it Motea. The new library was based on the general structure of our modified Motej library for Android. Much of the code for connecting and parsing data from the Wii remote was reused. Motea uses the same data pipe, 0x13, for both sending and receiving data from the Wii remote. Implementing support for the newer type of Wii remotes should thus prove much simpler.
+
+Currently these input report modes are supported:
+\begin{description}
+	\item[0x20] Status information
+	\item[0x21] Read memory and registers
+	\item[0x35] Core buttons, accelerometer, extension data (gyroscope)
+\end{description}
+
+Supported output reports are:
+\begin{description}
+	\item[0x11] Set LEDs and activate rumble pack
+	\item[0x12] Set data report mode (only 0x35 will be used)
+	\item[0x15] Status information request
+	\item[0x16] Write to memory and registers (used for activating MotionPlus)
+	\item[0x17] Read memory and registers (for calibration reports)
+\end{description}
+
+The new library has working support for continuous rumbling and connecting the MotionPlus extension while rumbling, which also was problematic with Motej. Motea also sends requests for status information and checks for MotionPlus (if not connected) each second. This way any class listening to status information events get regular updates, and not just when an extension is connected.
+
+\section{Orientation}
 A major disadvantage with the Wii Remote compared to competing gaming peripherals such as PS Move and Kinect is that the data output is always relative to itself. In other words, the Wii Remote does not say anything about where it is located in space. Even though the Wii Remote does not provide its orientation out of the box, the data it does provide is enough for developers to calculate the orientation of the Wii Remote. Calculating the orentation of the Wii requires dedicated algorithms that used advanced mathematical formulas. Calculations are performed on the sensor data collected from the Wii Remote and Motion Plus extension. The accelerometer data enables developers to determine the tilt of the Wii Remote while gyroscope data allows developers to determine the movement speed in three directions. Only by utilizing both can the algorithms calculate the orientation of the Wii Remote.
 
 We chose to use the Madgwick algorithm\cite{madgwick}. This choice was based on the fact that a master thesis by Tryggestad\cite{Tryggestad} had used the same algorithm for Wii Remote orientation successfully. A C\# implementation of the algorithm is available at the x-io Technologies Limited website \cite{opensourceMadgwick}, we used this as a basis for the Java implementation of the algorithm which is used in our application. The constructor of the algorithm requires two parameters a sample periode and an algorithm gain beta. The sample period was set to 1f/100f and the algorithm gain beta was set to 0,5f. Sample periode is equal to the refresh rate of the Wii Remote and the beta is based on findings by Tryggestad. These values proved to be satisfactory for us as well.
@@ -415,33 +319,90 @@ The algorithm returns the result as a Quaternion that need to be stored and conv
 
 %SHINY PICTURZS OF OUR CODE
 
-\section{Motea}
-\label{sec:motea}
-During the modification of the Motej library it soon became apparent that several parts of the library were outdated or not optimal for the current application. One problem was discovered when implementing rumbling response to alarm events. The rumble pack was turned off each time a request for status information was sent to the Wii remote. This bug was caused by the fact that Motej did not modify the status information request with the current status of the rumble pack.
+\section{Software Architecture}
+This section contains an explanation of the various software architectural choices that were made during the implementation of the prototype application. The architecture will be presented from different views, using standard UML diagrams and textual description.
 
-It was also discovered that Motej used an outdated port to send requests to the Wii remote. Motej used the control pipe with report 0x52 to send requests. This method only works for the original Wii remotes, and will not work for the newer models. During testing the original Wii remote with external MotionPlus was used and therefore this problem was not discovered before later in the development phase.
+The two main focuses when creating the architecture was \emph{modifiability} and \emph{usability}. By focusing on creating a highly modifiable architecture different parts of the system can be changed without major changes in the overall source code. Creating a modifiable architecture is all about acknowledging that the application may change in the future, and  making implementation of those changes as painless as possible. This is useful, for example, if we in the future want to add support for multiple Wii remote input, or use other sensors instead of or in combination with the Wii remote.
 
-Because of all the small bugs and the large portions of the library that were not used it was decided to create a lightweight Wii remote library from scratch. The new library was based on the general structure of Motej, and some of the code was also reused. Motea uses the data pipe for both sending and receiving data from the Wii remote. This way the new library should suppor the newer Wii remotes. 
+Usability is the other main focus when creating this application’s architecture. Though the current version of the application will not contain a complex graphical user interface (GUI), having usability in mind during the design is important if the code is to be reused in future work. Ultimately a GUI will have to be created for the application to function as intended, and it is therefore important to facilitate for its creation.
 
-Currently these input report modes are supported:
+\subsection{Architectural Patterns}
+\subsubsection{Event-driven architecture}
+Event-driven architecture is an architectural pattern that focuses on the creation and consumption of events. The event emitters creates new events and pushes them to the event consumers. The event consumers uses the events to produce some reaction. Because the event emitter does not directly speak with the event consumers this pattern makes the different components very loosely coupled.
+
+Previously we discussed the importance of modifiability in the software architecture. Using the event-driven architecture we achieve this by loose coupling between the different components. The event consumers are not concerned with the implementation of the event emitters, therefore as long as the events are on the same form, the only thing that has to be changed is which emitter to listen to. 
+
+The application has been divided into four four layers of event emitters. The lowest level emitter sends accelerometer and gyroscope events. In our case these events are created by the Motea library, which handles the connection to the Wii remote. 
+
+The second level emitter is a handler class for the Wii remote. This class can easily be edited to handle multiple Wii remotes if this becomes necessary at a later date. Accelerometer and gyroscope events are consumed and used to create sensor events. These events are designed to stay the same even if the Wii remote is replaced with other types of sensors.
+
+Sensor events are consumed by a class that uses the sensor data to calculate and update the orientation of the Wii remote. The updated orientation is then distributed by the third level emitter using orientation events. These events are used to update the 3D-cube in the GUI. 
+
+Orientation events are also consumed by the fourth level emitter, which uses the orientation events to calculate if the angle is steep enough to activate the alarm. The alarm is activated using alarm events.
+
+\subsubsection{Model View Controller}
+In the Model-View-Controller (MVC) pattern the code is separated into three main components (see figure~\ref{fig:mvc}): model, view and controller. The view contains the graphical user interface and its logic. The controller updates the model. The model holds the information or state of the application, which is displayed to the user through the GUI. This setup gives the users the mental model that they are interacting with the model directly even though the model and view is separated in the code.
+
+\begin{figure}[h!]
+  \centering
+    \includegraphics[width=.40\textwidth]{mvc.png}
+    \caption{\footnotesize Model-View-Controller pattern}
+    \label{fig:mvc}
+\end{figure}
+
+MVC does not directly contribute to the overall usability of the system, but rather seeks to separate the model and the view improving the modifiability of the GUI. Having the ability to change the GUI continuously through the development is paramount for achieve high usability CITATION NEEDED?. Using the model view controller pattern we can easily change the look and feel of the GUI without interfering with how the model is updated. In our case the model will be the continuously changing orientation of the Wii remote.
+
+Because the application is being developed on the Android platform a strict MVC-pattern was not created. User input logic is currently handled by an Android activity. This activity handles button input and Bluetooth discovery of the Wii remote. It also instantiates the other classes when a Wii remote is discovered. The way Android is constructed a very strict MVC-pattern is not feasible. However, there is still a clear separation between the views, controllers and models using events as described above.
+
+\subsection{Package structure}
+Using the discussed patterns as a basis, the following package structure was created, see also figure~\ref{fig:packageDiagram}.
+
 \begin{description}
-	\item[0x20] Status information
-	\item[0x21] Read memory and registers
-	\item[0x37] Core buttons, acceleromter, extension data (gyroscope)
+	\item[libs] Contains the library classes used by the project. Currently only contains the java.swing.event.EventListenerList, which is used by Motea. This class is not included in the standard android packages because swing is not part of android.
+	\item[utils] The Motea library, for connecting to the Wii remote, and our implementation of the MadgwickAHRS algorithm resides here. Motea generates sensor events, while the MadgwickAHRS algorithm is used to calculate orientation.
+	\item[models] Classes holding the orientation of the Wii remote and alarm state of the application are placed here.
+	\item[activities] Holds the Android activity classes. The MainActivity class starts the application and handles Android activity events. The CubeView class is used to generate a 3D-model illustrating the orientation of the connected Wii remote.
+	\item[controller] Contains controller classes for interacting with the models and the Wii remote.
 \end{description}
 
-Report mode 0x37 also contains bytes with data from the IR camera, but this functionality was not needed and therefore not added to the Motea library.
+\begin{figure}[h!]
+  \centering
+    \includegraphics[width=.80\textwidth]{packageDiagram.png}
+    \caption{\footnotesize Package diagram}
+    \label{fig:packageDiagram}
+\end{figure}
 
-Supported output reports are:
-\begin{description}
-	\item[0x11] Set LEDs and activate rumble pack
-	\item[0x12] Sed data report mode (only 0x37 will be used)
-	\item[0x15] Status information request
-	\item[0x16] Write to memory and registers (used for activating MotionPlus)
-	\item[0x17] Read memory and registers (for calibration reports)
-\end{description}
+\subsection{Activity diagram}
+The current application was created to be a proof of concept for the use of Wii remotes in fall detection/prevention applications. Figure~\ref{fig:activityDiagram} displays the basic functionality implemented in the solution. In addition to the 3D model that graphically displays the orientation of the Wii remote, an alarm system was implemented. This alarm system is activated when the Wii remotes angle is greater than some predefined threshold. This threshold  is, as of now, not customizable from the application itself, but is hard-coded  into the application.
 
-The new library has working support for rumbling and connecting the MotionPlus extension while rumbling, which also was problematic with Motej. Motea also sends requests for status information and checks for MotionPlus (if not connected) each second. This way any class listening to status information events get regular updates, and not just when an extension is connected.
+The alarm uses sound and vibration to notify the user that the Wii remote angle has broken the threshold. Both sound and vibration is given in pulses with a delay between them, as the Wii remote angle becomes greater the delay between each pulse decreases. For the vibrotactile feedback the Wii remote's rumblepack is used and the sound is generated by the Android smartphone speaker. 
+
+\begin{figure}[h!]
+  \centering
+    \includegraphics[width=.40\textwidth]{activityDiagram.png}
+    \caption{\footnotesize Package diagram}
+    \label{fig:activityDiagram}
+\end{figure}
+
+\subsection{Class diagram}
+Figure~\ref{fig:classDiagram} shows a class diagram of the application's most important classes. The different background colors represents different parts of the system.
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=1\textwidth]{classDiagram.png}
+	\caption{\footnotesize Class diagram}
+	\label{fig:classDiagram}
+\end{figure}
+
+The classes with the red background handles the connection to the Wii remote. When the MainActivity class receives a BluetoothDevice object representing a Wii remote, that object is used to create an instance of Mote. The Mote class connects to the Wii remote. Each second the CheckStatus is run to get an update about the Wii remote's battery life and to connect to the MotionPlus, if it is not already connected. The MotionPlus class parses the extension bytes received from the Wii remote, it also handles the manual calibration of the gyroscope.
+
+The green background contains the controller classes. WiiMoteHandler handles all communication with the Motea classes (red background). It listens to both the accelerometer and gyroscope events from the Mote instance. When both an accelerometer event and a gyroscope event has been received the WiiMoteHandler fires a sensor events. WiiMoteHandler also listens to alarm events to start the rumblepack in the Wii remote when the alarm goes off.  A very simple noise cancelling system has also been implemented here, to reduce the yaw drift when the Wii remote was kept still. Since the yaw rotation is will not be in the actual fall detection/prevention, this functionality is mainly to make the 3d cube model look better. Since this class is the only one talking to the Motea classes, this is the only class that needs major changes if it is decided to replace the Wii remotes with other types of sensors.
+
+AngleCalc listens to sensor events from the WiiMoteHandler, the gyroscope and accelerometer data are used to compute the orientation of the Wii remote. To compute the orientation AngleCalc uses Madgwick's altitude and heading reference system algorithm, which is implemented in the MadgwickAHRS class. AngleCalc then updates the OrientationModel with the updated orientation.
+
+The yellow zone holds the models. OrientationModel holds the current orientation of the Wii remote and then fires an event when it is changed. ThresholdAlarm listens to orientation events fired by the OrientationModel and then calculates whether the angle of is great enough to fire an alarm event. Alarm events have a severity variable that indicates how great the angle is. In the current implementation this variable is used to reduce the delay between rumble pulses and sound beeps, the greater the angle the faster the beeps.
+
+The views have a blue background. MainAcitivty is the class that starts the application. It also handles Bluetooth discovery and initiates the appropriate classes when a Wii remote is detected. CubeView listens to the orientation events from the OrientationModel to create a graphical representation of the position of the Wii remote. AlarmSound handles playing beeps from the smartphone when the ThresholdAlarm fires alarm events. 
 
 \section{Prototype application}
 The graphical user interface of the application is quite simplistic, there are two reasons for this. The first being that this prototype is more focused on the technology and viability of a bio-feedback system based on a Wii Remote and an Android device, then the user interface. The application is intended those who do not have great coordination or muscle control, so we are trying to keep the interaction with the phone to a minimum, and when they do need to interact with it, then it should be easy and very simple.
@@ -453,3 +414,9 @@ PICTURE OF APPLICATION
 Once a successful connection has been established the Wii Remote should be calibrated in order to achieve optimal accuracy. Through the use of the gyro data the Madgwick algorithm is able to correct inaccurate data. The WiiMote does contain calibration constants sadly these are not accurate. A gyro velocity of up to 30 rad/s is reported when the WiiMote is in fact standing still. Through manual calibration this error is reduced to approximately 0. Calibration is achieved by placing the Wii Remote in the desired position and then pressing the "Calibrate" button.
 
 The position of the WiiMote at the time of calibration will be set as the starting point when calculating angular displacement. Once the angular displacement is above the set threshold a beep sound will be activated in set internvals, and the WiiMote will vibrate in tune with the beeps. The frequency of the vibration and beeps will increase as the angular displacement increases, and 90 degrees being the max intensity.
+
+\section{Limitations}
+%Se på dette avsnittet knut. Tror hele må skriver på nytt hvor avsnittene under er merget og forklart bedre
+The majority of Android devices have built-in Bluetooth cards, but the current Android SDK does not offer low level support for the Bluetooth stack, including L2CAP. This constraint can be bypassed on some devices by using reflection to access the socket constructor\cite{l2capHtc}. Access could also be gained through using the Android NDK (Native Developer Kit) but this is outside of our scope. Due to L2CAP not being official supported, certain vendors of Android devices have removed the L2CAP protocols completely, meaning that it would be impossible to use their Android OS to connect to the Wii Remote. Therefore the Android OS on the HTC Desire HD was altered to run with CyanogenMod 7 instead of the default HTC Sense.
+
+Motej uses the BlueCove library as a multi-platform interface to the Bluetooth stack. Unfortunately, BlueCove does not support the Android OS. Android comes with its own Bluetooth API, the Android Bluetooth API. This means that the library will have to be re-written to work on the Android OS and support for the MotionPlus will have to be implemented. WiiMoteLib\cite{wiiMoteLib} is a C\# library which has support for the MotionPlus, by looking at the solutions in this library it should reduce the time required to implement MotionPlus support for the Motej library.
