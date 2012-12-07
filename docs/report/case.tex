@@ -302,14 +302,30 @@ Supported output reports are:
 The new library has working support for continuous rumbling and connecting the MotionPlus extension while rumbling, which also was problematic with Motej. Motea also sends requests for status information and checks for MotionPlus (if not connected) each second. This way any class listening to status information events get regular updates, and not just when an extension is connected.
 
 \section{Orientation}
-A major disadvantage with the Wii Remote compared to competing gaming peripherals such as PS Move and Kinect is that the data output is always relative to itself. In other words, the Wii Remote does not say anything about where it is located in space. Even though the Wii Remote does not provide its orientation out of the box, the data it does provide is enough for developers to calculate the orientation of the Wii Remote. Calculating the orentation of the Wii requires dedicated algorithms that used advanced mathematical formulas. Calculations are performed on the sensor data collected from the Wii Remote and Motion Plus extension. The accelerometer data enables developers to determine the tilt of the Wii Remote while gyroscope data allows developers to determine the movement speed in three directions. Only by utilizing both can the algorithms calculate the orientation of the Wii Remote.
+A major disadvantage with the Wii Remote compared to competing gaming peripherals such as PS Move and Kinect is that the data output is always relative to itself. In other words, the Wii Remote does not say anything about where it is located in space. Even though the Wii Remote does not provide its orientation out of the box, the data it does provide is enough for developers to calculate the orientation of the Wii Remote. Calculating the orentation of the Wii requires dedicated algorithms that used advanced mathematical formulas. Calculations are performed on the sensor data collected from the Wii Remote and Motion Plus extension. The accelerometer data enables developers to determine the tilt of the Wii Remote while gyroscope data allows developers to determine the movement speed in three directions.
 
+%Svnæs ville at vi skulle nevne hvordan IR sensoren hjelper med å løse dette.
+
+There are several algorithms that can be used to calculate the orientation of the Wii Remote, based general popularity and the research done by Tryggestad\cite{Tryggestad} we decided to use the Madgwick AHRS algorithm\cite{Madgwick}. The AHRS algorithm uses accelerometer and gyroscope data provided by the sensors to calculate and update the orientation of the remote represented as a quaternion. %Skriv om hvordan magnetometer er en frivilig parameter som kan brukes for å gi en mer nøyaktig yaw og unngå drift
+
+It is nearly impossible to properly explain what a quaternion is without showing the mathematics behind it. Quaternions were defined as a vector divided by another vector. A context relative and simplified explanation would be that a quaternion represents an axis and the amount of rotation around it. A quaternion is complex to work with, by converting it to Euler angles represented by pitch, yaw, and roll the data becomes more manageable. A visual representation of the data manipulation and flow be seen in figure~\ref{fig:orientationProcess}.
+
+\begin{figure}[h!]
+  \centering
+    \includegraphics[width=1\textwidth]{orientationProcess.png}
+    \caption{\footnotesize The image shows what the input and output variables are for methods used in calcualting the Wii Remote orientation.}
+    \label{fig:orientationProcess}
+\end{figure}
+
+%Skriv om hvordan vi implemneterer denn algoritmen i vår kode
+
+\begin{comment}
 We chose to use the Madgwick algorithm\cite{madgwick}. This choice was based on the fact that a master thesis by Tryggestad\cite{Tryggestad} had used the same algorithm for Wii Remote orientation successfully. A C\# implementation of the algorithm is available at the x-io Technologies Limited website \cite{opensourceMadgwick}, we used this as a basis for the Java implementation of the algorithm which is used in our application. The constructor of the algorithm requires two parameters a sample periode and an algorithm gain beta. The sample period was set to 1f/100f and the algorithm gain beta was set to 0,5f. Sample periode is equal to the refresh rate of the Wii Remote and the beta is based on findings by Tryggestad. These values proved to be satisfactory for us as well.
 
 \begin{figure}[h!]
   \centering
     \includegraphics[width=.45\textwidth]{wiimoteAxis.png}
-    \caption{\footnotesize A visual representation of the cartesian coordinate system for the Wii Remote, taken from Wii Brew\cite{wiiBrew}.}
+    \caption{\footnotesize A visual representation of the coordinate system for the Wii Remote, taken from a report by Tryggestad.\cite{Tryggestad}.}
 \end{figure}
 
 % Sette algoritmen i appendix?
@@ -317,7 +333,7 @@ We chose to use the Madgwick algorithm\cite{madgwick}. This choice was based on 
 The algorithm update method requires six parameters: The first three are the gyroscope's X, Y, and Z axis measurements provided in radians/, the following three are the accelerometers X Y Z in any calibrated unit. We discovered that what is defined as yaw, pitch, and roll is not universal, and which axis each corresponds to might be different for aviation and gaming controllers. Rotation about the X axis corresponds pitch, Y corresponds roll and Z corresponds to yaw such as shown in % REF TO IMAGE
 The algorithm returns the result as a Quaternion that need to be stored and converted to Euler angles. The formulas for converting the Quaternion to Euler angles are provided in the Madgwick paper. The formula for roll is incorrect in the paper, providing us with incorrect values, Tryggestads calculation was used for the roll conversion. The change was minor as Madgwick uses the wrong quaternion unit for roll calculation.
 
-%SHINY PICTURZS OF OUR CODE
+\end{comment}
 
 \section{Software Architecture}
 This section contains an explanation of the various software architectural choices that were made during the implementation of the prototype application. The architecture will be presented from different views, using standard UML diagrams and textual description.
