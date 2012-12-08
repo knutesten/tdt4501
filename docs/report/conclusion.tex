@@ -23,7 +23,6 @@ The viability tests were primarily positive and exceeded the minimum parameters 
 The Wii remote was connected to the smartphone using the robust and well proven Bluetooth technology for continuous streaming of sensory data. The Class 2 Bluetooth radio used in smartphones and motion controllers gives a theoretical range of 10 meters. Our tests indicates that the actual range is even greater than this. A range of more than 10 meters should be more than satisfactory considering the use of the application.
 
 The feedback test showed that detecting the vibration might be a problem. The vibration provided by the Wii Remote was barely noticeable through the belt used for attachment to the user. This might be due to the heavy battery absorbing the vibration or the rumble engine simply not being powerful enough. It was necessary to press the Wii Remote firmly against the body before the vibration could be clearly felt. The audio feedback worked as intended and was easy to interpret. The implementation of the sound alarm needs further work and testing to assure that it work smoothly on all versions of the Android OS.
-The
 
 \subsection{Threats to validity}
 One possible threat to validity is the software architectures focus on modifiability. As a proof-of-concept prototype system, prone to constant changes in hardware and functionality, a highly modifiable architecture is essential. For a system with specifed hardware and functionality modifiability would not be as crucial. In such a system availability and performance would be more imporant. For a fall detection/prevention application to be used in practice both high availability and performance would have to be guaranteed for obvious reasons. The architectural choices presented in this paper is therfore to be seen from a prototyping point of view, and not a system for production.
@@ -40,16 +39,20 @@ One possible threat to validity is the software architectures focus on modifiabi
 We created a software architecture with focus on modifiability and usability. Modifiability was important to ensure that different components, e.g. sensor choice, could be replaced or modified without effecting the system as a whole. With all the uncertainties surrounding sensor choice and functionality being able to change different components quickly is paramount. Though little effort was put into the graphical user interface in this project, usability was important for the prototype code to be reused in future work. The Model-View-Controller pattern was used to separate the GUI components, this in combination with the many features offered by the Android OS, creating a GUI at a later date should not be challenging.
 
 \textit{Which game controllers are viable options in the creation of a mobile biofeedback system?}
+
+
 There was no proper documentation on reverse engineering or Java based libraries for the PS Move Controller. The Wii Remote reverse engineering had been well documented by the community and several Java based libraries existed. Eventually it was discovered that all of the libraries were simply too old and inefficient to be of real use, and therefore we have created our own light-weight library under the name Motea.
 
 \textit{What are the limitations of using the Android OS and game controllers in the creation of a biofeedback system?}
+
+
 Older smartphones running stock firmware from major Android brands such as HTC and Samsung cannot run the application due to the lack of support for Bluetooth L2CAP protocol. It was discovered that an HTC smartphone running version 4.0 of the stock firmware was able to run the application however. This probably means that newer HTC phones can run the application out of the box, though this was not tested further.
 
 
 \textit{What are important factors that will determine if the system has any viability as a mobile bio-feedback system, and what are acceptable parameters for these factors?}
-We concluded that the most important factors for an initial prototype was battery life, range, performance, and investigating if the audio and vibration feedback is good enough. The three factors were all beyond satisfactory with a battery life of 60 hours, a range of 30 meters and a smooth performance proved that the prototype is viable. The vibration feedback was not satisfactory and was perceived as too weak to be noticeable, but the audio worked well.
 
-overall conclusion?
+
+We concluded that the most important factors for an initial prototype was battery life, range, performance, and investigating if the audio and vibration feedback is good enough. The three factors were all beyond satisfactory with a battery life of 60 hours, a range of 30 meters and a smooth performance proved that the prototype is viable. The vibration feedback was not satisfactory and was perceived as too weak to be noticeable, but the audio worked well.
 
 \section{Further work}
 This project have shown that Android smartphones with the correct software can connect and receive sensor data form Wii remotes. Our viability testing have shown that both battery life and range is satisfactory. Still, there is a lot of work to be done to create a functioning fall detection/prevention system using Android smartphones and Wii Remotes. First, the application needs to provide helpful feedback reducing the risk of falls, and alerting about falls. Second, the architecture needs to be tested in respect to availability and performance. Third, a user friendly user interface has to be created in order to allow older people, often unexperienced with modern technology, to use the application efficiently and safely. Fourth, an experiment has to be conducted to evaluate the effectiveness of the system and establish the best number of sensors and their optimal position.
