@@ -162,7 +162,9 @@ A major disadvantage with the Wii Remote compared to competing gaming peripheral
 
 %Svnæs ville at vi skulle nevne hvordan IR sensoren hjelper med å løse dette.
 
-There are several algorithms that can be used to calculate the orientation of the Wii Remote, based general popularity and the research done by Tryggestad\cite{Tryggestad} we decided to use the Madgwick AHRS algorithm\cite{Madgwick}. The AHRS algorithm uses accelerometer and gyroscope data provided by the sensors to calculate and update the orientation of the remote represented as a quaternion. %Skriv om hvordan magnetometer er en frivilig parameter som kan brukes for å gi en mer nøyaktig yaw og unngå drift
+There are several algorithms that can be used to calculate the orientation of the Wii Remote, based general popularity and the research done by Tryggestad\cite{Tryggestad} we decided to use the Madgwick AHRS algorithm\cite{Madgwick}. The AHRS algorithm uses accelerometer and gyroscope data provided by the sensors to calculate and update the orientation of the remote represented as a quaternion. Magnetometer data is an optimal parameter for the algorithm. Using the additonal information provided the algorithm can increase the accuracy of yaw by taking the earths magnetic field into consideration and therefore removing the issue of drift.
+
+%Skriv om hvordan magnetometer er en frivilig parameter som kan brukes for å gi en mer nøyaktig yaw og unngå drift
 
 It is nearly impossible to properly explain what a quaternion is without showing the mathematics behind it. Quaternions were defined as a vector divided by another vector. A context relative and simplified explanation would be that a quaternion represents an axis and the amount of rotation around it. A quaternion is complex to work with, by converting it to Euler angles represented by pitch, yaw, and roll the data becomes more manageable. A visual representation of the data manipulation and flow be seen in figure~\ref{fig:orientationProcess}.
 
@@ -175,14 +177,21 @@ It is nearly impossible to properly explain what a quaternion is without showing
 
 %Skriv om hvordan vi implemneterer denn algoritmen i vår kode
 
-\begin{comment}
-We chose to use the Madgwick algorithm\cite{madgwick}. This choice was based on the fact that a master thesis by Tryggestad\cite{Tryggestad} had used the same algorithm for Wii Remote orientation successfully. A C\# implementation of the algorithm is available at the x-io Technologies Limited website \cite{opensourceMadgwick}, we used this as a basis for the Java implementation of the algorithm which is used in our application. The constructor of the algorithm requires two parameters a sample periode and an algorithm gain beta. The sample period was set to 1f/100f and the algorithm gain beta was set to 0,5f. Sample periode is equal to the refresh rate of the Wii Remote and the beta is based on findings by Tryggestad. These values proved to be satisfactory for us as well.
+A C\# implementation of the algorithm is available at the x-io Technologies Limited website \cite{opensourceMadgwick}, we used this as a basis for the Java implementation of the algorithm used in our application. In order to instantiate the algorithm as sample period is required, while a the algorithm filter gain beta is optional. A sample periode decides the time between sample, and it was set to 1/100 which is equal to the refresh rate of the Wii Remote. Filter gain beta represents all mean zero gyroscope measurement errors, expressed ats the magnitude of a quaternion derivate, in other words it is used to predict the error rate of the gyroscope in an attempt to minimize it. The value was set to 0.5 in our application, this being the upper limit suggested by Madgwick \cite{madgwick}. Once the object has been instantiated the update method is used to calculate the new quaternion. The method takes x,y,z values for the accelerometer and yaw,pitch, roll values for the gyroscope. 
+
+The Madgwick object has an update method that requires x,y,z values for the accelerometer and yaw, pitch, and roll values for the gyroscope. Figure~\ref{fig:wiiAxis} shows how the Wii Remote perceives the different axes and rotation. A class to convert quaternions to Euler angles was created based on the formulas provided my Madgwick in his paper. However testing showed that these formulas did not provide the correct results, after comparing them to an article on Wikipedia it was discovered that the incorrect quaternion values were used. Once the mistake had been rectified we were able to gain the correct Euler angles.
 
 \begin{figure}[h!]
   \centering
     \includegraphics[width=.45\textwidth]{wiimoteAxis.png}
-    \caption{\footnotesize A visual representation of the coordinate system for the Wii Remote, taken from a report by Tryggestad.\cite{Tryggestad}.}
+    \caption{\footnotesize A visual representation of the coordinate system for the Wii Remote, taken from the thesis by Tryggestad.\cite{Tryggestad}.}
+    \label{fig:wiiAxis}
 \end{figure}
+
+\begin{comment}
+We chose to use the Madgwick algorithm\cite{madgwick}. This choice was based on the fact that a master thesis by Tryggestad\cite{Tryggestad} had used the same algorithm for Wii Remote orientation successfully. A C\# implementation of the algorithm is available at the x-io Technologies Limited website \cite{opensourceMadgwick}, we used this as a basis for the Java implementation of the algorithm which is used in our application. The constructor of the algorithm requires two parameters a sample periode and an algorithm gain beta. The sample period was set to 1f/100f and the algorithm gain beta was set to 0,5f. Sample periode is equal to the refresh rate of the Wii Remote and the beta is based on findings by Tryggestad. These values proved to be satisfactory for us as well.
+
+
 
 % Sette algoritmen i appendix?
 
