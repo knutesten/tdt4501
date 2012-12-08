@@ -28,7 +28,6 @@ The
 \subsection{Threats to validity}
 One possible threat to validity is the software architectures focus on modifiability. As a proof-of-concept prototype system, prone to constant changes in hardware and functionality, a highly modifiable architecture is essential. For a system with specifed hardware and functionality modifiability would not be as crucial. In such a system availability and performance would be more imporant. For a fall detection/prevention application to be used in practice both high availability and performance would have to be guaranteed for obvious reasons. The architectural choices presented in this paper is therfore to be seen from a prototyping point of view, and not a system for production.
 
--Modifiability vs performance
 -Lack of experience
 -Viability tests are informal
 
@@ -53,8 +52,11 @@ We concluded that the most important factors for an initial prototype was batter
 overall conclusion?
 
 \section{Further work}
+This project have shown that Android smartphones with the correct software can connect and receive sensor data form Wii remotes. Our viability testing have shown that both battery life and range is satisfactory. Still, there is a lot of work to be done to create a functioning fall detection/prevention system using Android smartphones and Wii Remotes. First, the application needs to provide helpful feedback reducing the risk of falls, and alerting about falls. Second, the architecture needs to be tested in respect to availability and performance. Third, a user friendly user interface has to be created in order to allow older people, often unexperienced with modern technology, to use the application efficiently and safely. Fourth, an experiment has to be conducted to evaluate the effectiveness of the system and establish the best number of sensors and their optimal position.
+\begin{comment}
 + Only an initial prototype
 + Optimization
 + Create proper algorithms for the threshold, and tweak sensor values
 + A more user friendly interface
 + Experiment with multiple controllers or different sensors ?
+\end{comment}
