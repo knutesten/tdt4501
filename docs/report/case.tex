@@ -94,6 +94,7 @@ Wii remote extensions are handled by the Motejx library, which is an extension t
 %Add class diagram of motej and motejx
 
 \subsection{Motej on Android}
+\label{sec:motejOnAndroid}
 For Motej to work on Android, the BlueCove library has to be replaced with the Android Bluetooth API. This presents a major problem: Wii remotes uses the low level Bluetooth protocol L2CAP to connect to different platforms. As of Android version 4.1, Jelly Bean, \cite{jellyBean} there is no official support for L2CAP. Android only has full support for the higher level protocol \emph{radio frequency communication} (RFCOMM). RFCOMM is built on top of the L2CAP protocol and provides serial port emulation. 
 
 Though the L2CAP is not directly supported through the Android Bluetooth API it is possible to create an L2CAP socket using a technique called reflection.
