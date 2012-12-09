@@ -150,3 +150,15 @@ if (pitchFast) {
 	pitch /= LOWSPEED_SCALING;
 }
 \end{lstlisting}
+
+\chapter{Quaternion to Euler angles}
+\label{app:eulerConversion}
+If the quaternion is defined:
+\[
+\mathbf{q} = \left[ \begin{array}{cccc} q_0 & q_1 & q_2 & q_3 \end{array} \right ]^T
+\]
+The corresponding Euler angles are calculated:
+\[
+\left [ \begin{array}{c} \phi  \\ \theta  \\ \psi  \end{array} \right ] = \left [ \begin{array}{c} \operatorname{atan2}(2(q_0 q_1 + q_2 q_3), 1 - 2(q_{1}^2 + q_{2}^2)) \\ \arcsin(2(q_0 q_2 - q_3 q_1)) \\ \operatorname{atan2}(2(q_0 q_3 + q_1 q_2), 1- 2(q_2^2 + q_3^2))\end{array} \right ]
+\]
+%Where \phi{}, \theta{}, \psi corresponds to pitch, roll, and yaw respectively.
