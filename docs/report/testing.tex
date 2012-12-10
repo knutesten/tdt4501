@@ -8,16 +8,16 @@ Range is something that should always be considered when dealing with wireless d
 
 The performance of the application on the smartphone is another important factor. In order to create a mobile biofeedback system the application needs to process data from the Wii Remote in real time with as little delay as possible. We found this factor satisfactory if we noticed no hitches and there was no lag present in the 3D cube while mirroring the movements of the Wii Remote.
 
-Finally the audio- and vibrotactile feedback were tested. The tests were of a qualitative nature in order to discover any apparent problems with the two feedback types. We did not perform any major tweaking or spend a large amount of resources finding the optimal position and threshold settings for the system. 
+Finally the audio- and vibrotactile feedback were tested. The tests were of a qualitative nature in order to discover any apparent problems with the two feedback types, and the writers were the only test subjects. We did not perform any major tweaking or spend a large amount of resources finding the optimal position and threshold settings for the system.
 
 \section{Battery life}
-The WiiMote is powered by two AA batteries and battery life is based on several factors. The official response from Nintendo is "up to 30 hours" \cite{wiiBattery}
+The Wii Remote is powered by two AA batteries and battery life is based on several factors. The official statement from Nintendo is ``up to 30 hours’’ \cite{wiiBattery}
 
-As the prototype application does not utilize all of the features the Wii Remote offers but only the sensor data and rumble feature we hope to have a battery life of at least 30 hours wit ha fresh set of batteries. The batteries used to perform the test are a fresh set of Duracell Ultra Power batteries. These were chosen because they are available from almost any convenient store. The Galaxy Nexus was connected to power during the entire time, while the WiiMote had a fresh set of batteries put into it before each test.
+As the prototype application does not utilize all of the features the Wii Remote offers, but only the sensor data and rumble feature we hope to have a battery life of at least 30 hours. The batteries used to perform the test were pairs of Duracell Ultra Power batteries. These were chosen because they are available at almost any convenient store. The Galaxy Nexus was connected to a charger during the entire test, while the Wii Remote had new batteries put into it before each test.
 
-The application used was a slightly modified version of our prototype application. The changes should have no unintended impact of the battery life of the Wii Remote as most of them were computational and interface data on the Android device, which is not being tested. A timer was added that starts counting when a WiiMote is connected, and stops when the connection is lost. The threshold alarm was disabled, and instead a button allowing manual enabling and disabling of rumbling was added.
+The application used was a slightly modified version of our prototype application. The changes should have no impact on the battery life of the Wii Remote as the changes only affected the Android device. Battery life was measured by a timer that started when the Wii Remote was connected,  and stopped when the connection was lost. The threshold alarm was disabled and instead a button was added, allowing manual control of the rumble pack in the Wii Remote.
 
-Two set of tests were performed in order to measure battery life. The first set involved the WiiMote transmitting sensor data to the Galaxy Nexus. The second test set had the WiiMote rumbling while sensor data was being transmitted. Time and resource constraints limited what type of battery tests could be performed, so two extremes was decided as a good indicator of expected battery life. The results from the tests can be seen in %REFERENCE TO FIGURE
+Two set of tests were performed in order to measure battery life. The first set involved the Wii Remote transmitting sensor data to the Galaxy Nexus. The second test set had the Wii Remote rumbling while sensor data was being transmitted. Time and resource constraints limited what type of battery tests could be performed, so two extremes was decided as a good indicator of expected battery life. 
 
 \begin{table}[h]
 \centering
@@ -30,19 +30,21 @@ Two set of tests were performed in order to measure battery life. The first set 
 2 & 61:56:21 & 33:13:45 \\ \hline
 3 & 62:23:55 & 33:10:28 \\ \hline
 \end{tabular}
-\caption{There seemed to be no great variation in the test data, so after 3 runs we concluded that the data was consistent enough.}
-\label{}
+\caption{Results after 6 runs of the battery test}
+\label{tab:batteryLife}
 \end{table}
 
-The table shows a consistent time of around 33 hours with constant rumble and approximately 62 when only sensor data is being transmitted. Our system will have a mix of both depending on the amount of feedback it needs to provide. The expected uptime on the battery type we tested is then somewhere between 33 - 62 hours of use. Considering constant rumbling is highly unlikely, we assume that the battery life is on higher end of the scale.
+The table above (table~\ref{tab:batteryLife}) shows a similar result of 33 hours with constant rumbling and approximately 62 without rumbling. Our system will have a mix of both depending on the amount of feedback it needs to provide. The expected uptime on the battery type we tested is then somewhere between 33 - 62 hours of use. Considering constant rumbling is highly unlikely, we assume that the battery life is on higher end of the scale.
 
 Our initial expectation was a minimum of 24 hours, the results were far beyond what we expected it to be, which speaks positively for the Wii Remote as possible sensory device. We used brand batteries that boast about longer battery life, but with such a high numbers we believe that even a non-brand and rechargeable battery will be above the 24 hour minimum limit.
-\section{Range}
-The connection was tested with a 30 meter distance in a open landscape computer lab and no connection issues were present. With a room in between the WiiMote and Android device a range of 15 meters was reached before signs of signal loss started to appear, by this we mean that the 3D object was not updating smoothly or the WiiMote started vibrating franticly.
 
-A distance of 30 meters in an open landscape and 15 meters between walls is well beyond our initial expectation of 10 meters and helps establish the Wii Remote as a viable sensory device for our system.
+\section{Range}
+The connection was tested with a 30 meter distance in a open landscape computer lab and no connection issues were present. With a wall in between the Wii Remote and Android device a range of 15 meters was reached before signs of signal loss started to appear, by this we mean that the 3D object was not updating smoothly or the Wii Remote started vibrating franticly.
+
+A distance of 30 meters in an open landscape and 15 meters with walls between, is well beyond our initial expectation of 10 meters and helps establish the Wii Remote as a viable sensory device for our system.
+
 \section{Performance}
-A performance test was done with the identical application version across three different Android devices: A stock HTC One S, stock Galaxy Nexus and a HTC Desire HD using Cynaogenmod 7. The Desire HD was released in 2010 and has the weakest hardware out of the test devices. The test consisted of connecting the Wii Remote, calibrating it, and then changing the orientation of the Wii Remote in several directions at increasing speed. The results are shown in the table below~\ref{tab:testResults}.
+A performance test was done with the identical application version across three different Android devices: HTC One S running stock firmware, Galaxy Nexus running stock firmware and a HTC Desire HD running Cynaogenmod 7. The Desire HD was released in 2010 and has the weakest hardware among the test devices. The test consisted of connecting the Wii Remote, calibrating it, and then changing the orientation of the Wii Remote in several directions at increasing speed. The results are shown in the table below~\ref{tab:testResults}.
 
 \begin{table}[h!]
 \centering
@@ -58,9 +60,9 @@ HTC One S & Pass & Pass & Pass \\ \hline
 \label{tab:testResults}
 \end{table}
 
-All three devices performed smoothly, except for a few bugs. This confirms that modern smartphones have the processing power required to function as a hub for processing sensor data in real-time. The fact that the application worked on an Android device with HTC Sense was a major surprise for us, this might mean that devices with Android version 3.0 and 4.0 from HTC do support reflection and allow the application to function properly on the system, but this has not been researched further.
+All three devices performed satisfactory with no lag present in the mirroring of the Wii Remote, though there were some minor bugs. This helps confirm that modern smartphones have the processing power required to function as a hub for processing sensor data in real-time. The fact that the application worked on an Android device with HTC Sense was a major surprise, this might mean that devices with Android version 4.0 from HTC do support L2CAP and allow the application to function properly on the system, but this has not been researched further.
 
-As mentioned a few bugs were discovered during the testing. The implementation of alarm sound did not sound as smooth on Galaxy Nexus and HTC One S as it does on HTC Desire HD which was used for testing. The frequency of beeps is much slower as well as the transition to higher frequencies of beeps being less smooth. This could probably be fixed by changing the way the alarm sound is implemented, but since this application is a proof of concept prototype reimplementing this functionality was not prioritized. Also the 3D-cube sometimes renders incorrectly in small intervals on the Galaxy Nexus. The cube is there  for debugging purposes, therefore time was not dedicated to fixing the issue.
+As mentioned a few bugs were discovered during the testing. The implementation of alarm beeps did not sound as smooth on the Galaxy Nexus and HTC One S as it did on HTC Desire HD used during development. The frequency of beeps is much lower as well as the transition to higher frequencies of beeps being less smooth. This could probably be fixed by changing the way the alarm sound is implemented, but since this application is a proof of concept prototype, improving this functionality was not prioritized. In addition the 3D-cube sometimes renders incorrectly in small intervals on the Galaxy Nexus. The cube is there  for debugging purposes, therefore time was not dedicated to fixing the issue.
 
 \section{Vibrotactile feedback}
-Testing of the vibrotactile feedback was conduced with the writers of this paper as the only test subjects. A problem we discovered was that the WiiMote vibration was not strong enough for the user to notice that it was vibrating. During the low frequency pulsing vibrations it was nearly impossible to notice the vibrations unless the user was aware it was about to happen. At higher frequency it was slightly better, but still not satisfactory. During the test the WiiMote was facing with the button surface away from the body. The batteries inside the WiiMote are quite large and heavy and we noticed they were soaking most of the vibration and the area around the batteries was barely vibrating. Turning the WiiMote to  so that the surface containing buttons was facing inwards gave slightly better results. We attempted to remove the strap and hold the WiiMote manually against the skin. This did improve the results but did not seem feasible in a real uncontrollable environment.
+A problem we discovered was that the Wii Remote vibration was not strong enough for the user to notice it. During the low frequency pulsing vibrations it was nearly impossible to notice the vibrations unless the user knew it was about to happen. At higher frequency it was slightly better, but still not satisfactory. The Wii Remote was facing with the button surface away from the body, and the batteries inside the Wii Remote are quite large and heavy. We noticed that the batteries were absorbing most of the vibration , meaning that the area around the batteries was barely vibrating. Turning the Wii Remote so that the surface containing buttons was facing towards the body gave slightly better results. We attempted to remove the strap and hold the Wii Remote manually against the skin. This did improve the results further, but is not a feasible approach.
