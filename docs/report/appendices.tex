@@ -15,7 +15,7 @@ The LEDs on the Wii remote can be controlled by using output report 0x11:
 \begin{quote}
 0xA2 0x11 0x80
 \end{quote}
-The third byte indicates which lights to turn on, the four most significant bits of this byte each represents one LED (in the example above the rightmost byte is enabled):
+The third byte indicates which lights to turn on, the four most significant bits of this byte each represent one LED (in the example above the rightmost byte is enabled):
 \begin{quote}
 0b0000 0000 : no lights\\
 0b1000 0000 : rightmost LED enabled\\
@@ -27,13 +27,13 @@ Motea also uses this report mode to initialize the rumble pack. The least signif
 0xA2 0x11 0xC1\\
 (0xC1 = 0b1100 0001 the least significant bit representing the rumble pack)
 \end{quote}
-As previously stated all output reports have to change the least significant bit of the third byte to one if the rumble pack is to stay active. Therefore Motea has to keep track of the state of the rumble pack and change the output reports accordingly. All examples in this section, other than the one above, will assume that rumbling is turned off.
+As previously stated all output reports have to change the least significant bit of the third byte to 1 if the rumble pack is to stay active. Therefore Motea has to keep track of the state of the rumble pack and change the output reports accordingly. All examples in this section, other than the one above, will assume that rumbling is turned off.
 
 Status information can be requested by sending:
 \begin{quote}
 0xA2 0x15 0x00
 \end{quote}
-A status information report with ID 0x20 is then sent from the Wii remote to the host:
+A status information report with ID 0x20 is then sent from the Wii Remote to the host:
 \begin{quote}
 0xA1 0x20 0xbb 0xbb 0xss 0x00 0x00 0xll
 \end{quote}
@@ -57,8 +57,7 @@ Reading from registers/memory is done by sending:
 
 \chapter{MotionPlus}
 \label{app:gyroParse}
-
-When you plug in a normal extension to the Wii remote it is automatically receive a status information report notifying that an extension has been connected. Pluging in the MotionPlus however, will not result in such a status information report. To check if the MotionPlus extension is pluged in, the two bytes from Wii remote register address 0xA600FE has to be read by sending the read request:
+When an extension is pluged into the Wii Remote, it sends a status information report notifying the application. Pluging in the MotionPlus however, will not result in such a status information report. To check if the MotionPlus extension is pluged in, the two bytes from Wii Remote register address 0xA600FE have to be read by sending the read request:
 \begin{quote}
 0xA2 0x17 0x04 0xA6 0x00 0xFE 0x00 0x02
 \end{quote}

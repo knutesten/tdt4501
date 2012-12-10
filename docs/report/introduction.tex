@@ -1,13 +1,16 @@
 \chapter{Introduction}
-This chapter aims to familiarize the user with the domain and some of its challenges. The first sections will explain the purpose and motivation of our project. Next we describe our research questions and how we aim to answer them.  Lastly we present relevant research already conducted in the field.
+\pagenumbering{arabic}
+This chapter aims to familiarize the user with the domain and some of its challenges. The first sections will explain the purpose and motivation of our project. Next, we describe our research questions and how we aim to answer them.  Lastly we present relevant research already conducted in the field.
 
 \section{Purpose}
 The purpose of the project is to explore the viability of creating a mobile biofeedback system through the use of an Android smartphone and cheap mass produced peripherals. The smartphone will act as a hub, while sensor based peripherals attached to the user will gather information. The information will be processed by the smartphone, and appropriate feedback will be provided to the user; feedback will be provided by using vibration and audio. By acknowledging the feedback the user can improve his or her gait, and reduce the likelihood of a fall.
 
 \section{Motivation}
-Falls are a major health hazard among the elderly population (age \textgreater{} 65) \cite{fallsHealthHazard}, in addition to being an obstacle for physical activity and independent living. Physical activity can be an important instrument in improving the quality of life and preventing future disabilities for the elderly\cite{physicalActivity}. A third of all elders that experience a fall, develop a fear of falling \cite{fearOfFalling}. Fear of falling causes general anxiety and avoidance of physical activity. Long term consequences result in social isolation, physical deterioration and reduced quality of life.\cite{physicalAvoidance} %Skrive noe om hvor mye det koster staten å passe på de eldre?
+Falls are a major health hazard among the elderly population (age \textgreater{} 65) \cite{fallsHealthHazard}, in addition to being an obstacle for physical activity and independent living. Physical activity can be an important instrument in improving the quality of life and preventing future disabilities for the elderly\cite{physicalActivity}. A third of all elders that experience a fall, develop a fear of falling \cite{fearOfFalling}. Fear of falling causes general anxiety and avoidance of physical activity. Long term consequences result in social isolation, physical deterioration and reduced quality of life \cite{physicalAvoidance}.
 
-Between 30\% and 60\% of the elder population will experience at least one fall per year, and 10-20\% of these will result in an injury, hospitalization or death \cite{fallStatistics}. For the independent elder population it is even more crucial that a fall can be avoided and the proper authorities can be alerted if a fall does occur. In the case of a serious fall a slow response time might increase the likelihood of permanent damage or death\cite{personHomeDeath, dangerousFallHome}.
+Between 30\% and 60\% of the elder population will experience at least one fall per year, and 10-20\% of these will result in an injury, hospitalization or death \cite{fallStatistics}. For the independent elder population it is even more crucial that a fall can be avoided and the proper authorities can be alerted if a fall does occur. In the case of a serious fall a slow response time might increase the likelihood of permanent damage or death \cite{personHomeDeath, dangerousFallHome}.
+
+
 
 Technological progress has made it easy and affordable to incorporate sensors into devices in order to provide a better or more entertaining user experience. Accelerometers, gyroscopes and GPS are an expected feature in today's smartphones. Newer phones include even more advanced sensory such as Barometers, and Proximity Sensors.
 
@@ -25,7 +28,7 @@ The primary goal is to explore the viability of a mobile biofeedback system thro
 \begin{itemize}
 \item RQ1: What architectural decision should be considered in a mobile biofeedback system using an Android smartphone as a hub?
 \item RQ2: Which game controllers are viable options in the creation of a mobile biofeedback system?
-\item RQ3: What are the limitations of using the Android OS and game controllers in the creation of a biofeedback system?
+\item RQ3: What are the limitations of using the Android OS and game controllers in the creation of a mobile biofeedback system?
 \item RQ4: What are important factors that will determine if the system has any viability as a mobile biofeedback system, and what are acceptable parameters for these factors?
 \end{itemize}
 
@@ -74,7 +77,7 @@ The iFall \cite{iFall} project is a lightweight Android application designed to 
 One of the challenges the project faced was to alter and adapt the threshold depending on where the user carried the phone. Strapping it to the arm while running, or putting it inside a purse would generate more movement than on a belt clip or in a pocket. The application would identify patterns in the accelerometer data to decide where the user was most likely carrying his phone and set the appropriate thresholds. The project concludes that their software is viable and affordable, but the challenge is for the users to accept it and testing it out in the field to improve its usability.
 
 \subsubsection{Sensor placement}
-The PerFallID\cite{fallPrevention} project and a Taiwanese Android \cite{mobilePhoneBasedFallDetection} project have similarities to the previously mentioned iFall project, but do more research on how phone placement on the body affects the accuracy of their application. They perform a similar test by attaching the phone to chest, waist, and thigh and measuring the amount of false positive and false negatives. They reach different conclusions concerning the best placement for the smartphone; PerFallID concludes that the waist is the most accurate area, while the Taiwanese Android project concludes that the chest is the best location when using only one device with an accelerometer. The conclusions might come from the fact that different approaches and algorithms are used to detect falls. This could mean that there is no universal optimal position for the sensors to be located.
+The PerFallID \cite{fallPrevention} project and a Taiwanese Android \cite{mobilePhoneBasedFallDetection} project have similarities to the previously mentioned iFall project, but do more research on how phone placement on the body affects the accuracy of their application. They perform a similar test by attaching the phone to chest, waist, and thigh and measuring the amount of false positive and false negatives. They reach different conclusions concerning the best placement for the smartphone; PerFallID concludes that the waist is the most accurate area, while the Taiwanese Android project concludes that the chest is the best location when using only one device with an accelerometer. The conclusions might come from the fact that different approaches and algorithms are used to detect falls. This could mean that there is no universal optimal position for the sensors to be located.
 
 \begin{figure}[h!]
   \centering

@@ -1,17 +1,17 @@
 \chapter{Prototyping}
-At the time of writing no research has been done on using motion game controllers as peripherals in a smartphone based biofeedback system. In order to answer the research questions posed in this report it will be necessary to create a simple but working prototype of the aforementioned system. The equipment used to realize the system will be a rooted HTC Desire HD \cite{desireHdSpecs} running CyanogenMod 7 and Wii Remotes with the Motion Plus extension. The application will be created using the Android SDK, Java and the Motej library.
+At the time of writing no research has been done on using motion game controllers as peripherals in a smartphone based biofeedback system. In order to answer the research questions posed in this report it will be necessary to create a simple but working prototype of the aforementioned system. The equipment used to realize the system will be a rooted HTC Desire HD \cite{desireHdSpecs} running CyanogenMod 7 \cite{cyanogenmod} and Wii Remotes with the Motion Plus extension. The application will be created using the Android SDK, Java and the Motej library.
 
 The first section contains documentation of the reverse engineering of the Wii Remote. The second section contains an explanation of the libraries that were used and created for connection. After this the orientation calculation using the Madgwick algorithm is explained in more detail. The fourth section contains documentation and description of the software architectural choices. Next, we demonstrate the final version of the prototype with pictures of the current GUI. Lastly, we discuss the limitations of the application.
 
 \section{Wii Remote Reverse Engineering}
-This section will look closer on the reverse engineering of the Wii Remote. Since the Wii Remote is the only sensor to be used in this project, it is important to explain in detail how the data from this sensor is parsed and calibrated. In this section there will be multiple references to Motea. Motea is a lightweight Wii Remote API based on Motej \cite{Motej}, designed specially for this project. A further description of Motea can be found in section~\ref{sec:motea}
+This section will look closer at the reverse engineering of the Wii Remote. Since the Wii Remote is the only sensor to be used in this project, it is important to explain in detail how the data from this sensor is parsed and calibrated. In this section there will be multiple references to Motea. Motea is a lightweight Wii Remote API based on Motej \cite{Motej}, designed specially for this project. A further description of Motea can be found in section~\ref{sec:motea}
 
-Nintendo has not released any documentation of how to connect to or use the Wii Remote. All the information in this section is taken from internet communities \cite{wiiBrew} that have reverse engineered the Wii Remote and from open source Wii Remote API projects \cite{wiiMoteLib, Motej}.
+Nintendo has not released any documentation on how to connect to, or parse data from the Wii Remote. All the information in this section is taken from internet communities \cite{wiiBrew} that have reverse engineered the Wii Remote and from open source Wii Remote API projects \cite{wiiMoteLib, Motej}.
 
-The Wii Remote is based on the HID protocol for communication, and will appear as such to any host. It is possible to connect to the Wii Remote both with and without Bluetooth pairing. If paired the Wii Remote will attempt to reconnect to the host if the connection is lost. In the current version Motea no pairing is performed. A HID connection is established using L2CAP, opening a data channel on port 0x13. This channel is used for both sending and receiving data.
+The Wii Remote is based on the HID protocol for communication, and will appear as such to any host. It is possible to connect to the Wii Remote both with and without Bluetooth pairing. If paired the Wii Remote will attempt to reconnect to the host if the connection is lost. In the current version Motea no pairing is performed. A HID connection is established using L2CAP, by opening a data channel on port 0x13. This channel is used for both sending and receiving data.
 
 \subsection{HID Interface}
-The different report types used in the Motea library are displayed in table~\ref{tab:hidInterface}. An output report represents a report that is sent from the host to the Wii Remote. An input report is a report that is sent from the Wii Remote to the host. Input reports are prefixed with 0xa1 and output reports are prefixed with 0xA2. There are more input reports than those listed in table~\ref{tab:hidInterface}, but they are not used by Motea since data report 0x35 contains all the data needed. 
+The different report types used in the Motea library are displayed in table~\ref{tab:hidInterface}. An output report represents a report that is sent from the host to the Wii Remote. An input report is a report that is sent from the Wii Remote to the host. Input reports are prefixed with 0xA1 and output reports are prefixed with 0xA2. There are more input reports than those listed in table~\ref{tab:hidInterface}, but they are not used by Motea since data report 0x35 contains all the data needed. 
 
 \begin{table}[h!]
 \centering
@@ -79,17 +79,17 @@ source.fireAccelerometerEvent(x, y, z);
 \subsection{MotionPlus}
 The MotionPlus extension provides gyroscope data. A complete description on how to connect to, initialize and parse extension data can be found in appendix~\ref{app:gyroParse}.
 
-The gyroscope has two modes: fast and slow. These values tells us what type of scaling to use to get the correct degrees per second. According to WiiBrew \cite{wiiBrew} 20 units from the raw values correspond to 1.45 deg/s in slow mode and 6.59 deg/s in fast mode (e.g. data received with the fast flag on would be multiplied with 1.45/20 = 0.0725 to get the correct degrees per second). Motea uses slightly different values, taken from WiiMoteLib \cite{wiiMoteLib}: 20 units corresponding to 1 deg/s in slow mode and 5 deg/s in fast mode. Which of these values give more accurate data has not been tested, and since the Madgwick algorithm \cite{madgwick} compensates roll and pitch error using the accelerometer, a small error in the gyroscope data can be tolerated.
+The gyroscope has two modes: fast and slow. These values tells us what type of scaling to use to get the correct degrees per second. According to WiiBrew \cite{wiiBrew} 20 units from the raw values correspond to 1.45 deg/s in slow mode and 6.59 deg/s in fast mode (e.g. data received with the fast flag on would be multiplied with 1.45/20 = 0.0725 to get the correct degrees per second). Motea uses slightly different values, taken from WiiMoteLib \cite{wiiMoteLib}: 20 units corresponding to 1 deg/s in slow mode and 5 deg/s in fast mode. Which of these values give more accurate data has not been tested, and since the Madgwick algorithm \cite{madgwick} compensates for roll and pitch error using the accelerometer, a small error in the gyroscope data can be tolerated.
 
 \section{Wii Remote library}
-In this section we describe Motej and how it was modified to support MotionPlus and connection through Android. The new, lightweight, library Motea that was created to replace the modified Motej library is also discussed.
+In this section we describe Motej and how it was modified to support MotionPlus and connection through Android. We aslo present the new lightweight library, Motea, implemented to replace Motej.
 
 \subsection{Motej and Motejx}
-The most complete Java based Wii Remote library that we found was Motej. Work on the library was discontinued in 2009, but supports all the main Wii Remote functionality, and most of the extensions. It was therefore decided to use Motej as the base for a Wii Remote library for Android. 
+The most complete Java based Wii Remote library that we found was Motej. Work on the library was discontinued in 2009, but supports all the main Wii Remote functionality, and most of its extensions. It was therefore decided to use Motej as the base for a Wii Remote library for Android. 
 
 Using the library is trivial, first you would create an instance of the Mote object, which takes care of handling the connection to the Wii Remote. The Mote constructor takes a string with the Bluetooth address of the Wii Remote to connect to as input. It is also possible to use the MoteFinder class to discover any Wii Remotes that are broadcasting for a connection. The Motej instance fires events whenever it receives data from the Wii Remote, these events can be listened to by implementing the different listeners in the motej.events package. 
 
-Wii Remote extensions are handled by the Motejx library, which is an extension to the Motej library. All supported extensions have to be added to a extensions.properties file, which contains the extension id and the corresponding class that handles the extension. This way Motej does not need to know about any of the different extension implementations in the Motejx library, because they all implement the Extension interface. To get data from the Wii Remote extensions, a listener has to be added to the extension class.
+Wii Remote extensions are handled by the Motejx library, which is an extension to the Motej library. All supported extensions have to be added to a extensions.properties file, which contains the extension id and the corresponding class that handles the extension. This way Motej does not need to know about the different extension implementations in the Motejx library, because they all implement the Extension interface. To get data from the Wii Remote extensions, a listener has to be added to the extension class.
 
 \subsection{Motej on Android}
 \label{sec:motejOnAndroid}
@@ -123,19 +123,19 @@ BluetoothSocket socket = constructor.newInstance(type, fd, auth,
 This method has limitations. Because there is no official support for L2CAP in Android, many vendors stock firmware will throw errors when trying to access L2CAP this way. Major vendors such as HTC and Samsung do, as of now, not support L2CAP connections.
 
 \subsection{MotionPlus Support}
-Motej support most of the Wii Remote extensions. Unfortunately, MotionPlus is not one of the supported extensions. MotionPlus was implemented using the already existing extension structure of the Motej library.
+Motej supports most of the Wii Remote extensions. Unfortunately, MotionPlus is not one of the supported extensions. MotionPlus was implemented using the already existing extension structure of the Motej library.
 
 Information on how to parse the incoming bytes from the Wii Remote was found on the WiiBrew wiki \cite{wiiBrew}. See appendix~\ref{app:gyroParse} for a more detailed description of how the data is parsed. 
 
-An additional class was added for manual calibration of the gyroscope. There is calibration data stored in the Wii Remote memory, but WiiBrew states that how to use these data for calibration is still unknown. Some suggestions on how to use the data exist, however the calibrated values are not very accurate compared to the manual calibration method. During manual calibration it is required that the Wii Remote is kept still. The calibration takes less than 1 second.
+An additional class was added for manual calibration of the gyroscope. There is calibration data stored in the Wii Remote memory, but WiiBrew states that how to use this data for calibration is still unknown. Some suggestions on how to use the data exist, however the calibrated values are not very accurate compared to the manual calibration method. During manual calibration it is required that the Wii Remote is kept still. The calibration takes less than 1 second.
 
 \subsection{Motea}
 \label{sec:motea}
 During the modification of the Motej library it soon became apparent that several parts of the library were outdated or not optimal for the current application. One problem was discovered when implementing rumbling response to alarm events. The rumble pack was turned off each time a request for status information was sent to the Wii Remote. This bug was caused by the fact that Motej did not modify the status information request with the current status of the rumble pack.
 
-Another issue with the Motej library is that it uses an outdated port to send requests to the Wii Remote. Motej uses the control pipe with report 0x52 to send requests. This method only works for the original Wii Remotes, and will not work for the newer models. During testing the original Wii Remote with external MotionPlus was used and therefore this problem was not discovered until later in the development phase.
+Another issue with the Motej library is that it uses an outdated port to send requests to the Wii Remote. Motej uses the a different channel than 0x13 to send requests. This method only works for the original Wii Remotes, and will not work for the newer models. During testing the original Wii Remote with external MotionPlus was used and therefore this problem was not discovered until later in the development phase.
 
-Because of all the bugs and the large portions of the library that were not being used, we decided to create a lightweight Wii Remote library from scratch and named it Motea. The new library was based on the general structure of our modified Motej library for Android. Much of the code for connecting and parsing data from the Wii Remote was reused. Motea uses the same data pipe, 0x13, for both sending and receiving data from the Wii Remote. Implementing support for the newer type of Wii Remotes should thus prove much simpler.
+Because of all the bugs and large portions of the library not being used, we decided to create a lightweight Wii Remote library from scratch and named it Motea. The new library was based on the general structure of our modified Motej library for Android. Much of the code for connecting and parsing data from the Wii Remote was reused. Motea uses the same data pipe, 0x13, for both sending and receiving data from the Wii Remote. Implementing support for the newer type of Wii Remotes should thus prove much simpler.
 
 Currently these input report modes are supported:
 \begin{description}
@@ -166,7 +166,7 @@ Our implementation of the Madgwick AHRS algorithm can be found in appendix~\ref{
 
 Quaternions extends the complex numbers, and is therefore hard to explain without using advanced mathematics, which is beyond the scope of this paper. Instead we will focus on describing the input and output of the Madgwick algorithm without going into the calculations. Figure~\ref{fig:orientationProcess} shows how we use the algorithm to calculate the orientation of the Wii Remote. 
 
-The two arrows on the top of the box represents two initial values that need be provided before using the algorithm. \emph{Sample period} is the time between input values. The Wii Remote sends 100 data reports each second and the sample period is therefore 1/100. \emph{Filter gain beta} is used to predict the error rate of the gyroscope data to minimize it. The filter gain beta is a constant between 0 and 0.5. In our application we have set this value to 0.5, since the gyroscope data is not very accurate.
+The two arrows on the top of the box represents two initial values that need be provided before using the algorithm. \emph{Sample period} is the time between input values. The Wii Remote sends 100 data reports each second and the sample period is therefore 1/100. \emph{Filter gain beta} is used to predict the error rate of the gyroscope data in order to minimize it. The filter gain beta is a constant between 0 and 0.5. In our application we have set this value to 0.5, since the gyroscope data is not very accurate.
 
 The arrows to the left describe the three types of sensor data that can be used to calculate the updated orientation. In our project, magnetometer data is not used because the Wii Remote does not contain this sensor. The box represents the calculations that are done using the input values (accelerometer and gyroscope data in our case). The arrow to the right represents the output of the algorithm. The output is in the form of a quaternion representing the orientation.
 
@@ -177,7 +177,7 @@ The arrows to the left describe the three types of sensor data that can be used 
     \label{fig:orientationProcess}
 \end{figure}
 
-Since quaternions are hard to understand, we convert the output from the Madgwick algorithm into Euler angles. After the conversion we get three values: pitch, roll and yaw. Pitch, roll and yaw defines the rotation around the x-, y- and z-axis respectively (see figure~\ref{fig:wiiAxis}). It should be noted that the conversion formulas in Madgwick’s paper \cite{madgwick} are incorrect. For the correct formulas for conversion see appendix~\ref{app:eulerConversion}
+Since quaternions are hard to understand, we convert the output from the Madgwick algorithm into Euler angles. After the conversion we get three values: pitch, roll and yaw. Pitch, roll and yaw defines the rotation around the x-, y- and z-axis respectively (see figure~\ref{fig:wiiAxis}). It should be noted that the conversion formulas in Madgwick’s paper \cite{madgwick} are incorrect. For the correct conversion formulas see appendix~\ref{app:eulerConversion}
 
 \begin{figure}[h!]
   \centering
