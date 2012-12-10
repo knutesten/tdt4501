@@ -156,19 +156,19 @@ Supported output reports are:
 The new library supports continuous rumbling and connecting the MotionPlus extension while rumbling, which was problematic with Motej. Motea sends requests for status information and checks if a MotionPlus extension is plugged in (if not connected) each second. This allows any class listening to status information events to get regular updates.
 
 \section{Orientation}
-In this section we will describe how the orientation of the Wii Remote is calculated using the its sensory data.
+In this section we will describe how the orientation of the Wii Remote is calculated using its sensory data.
 
-Two types of data is received, accelerometer data from the Wii Remote and gyroscope data from the MotionPlus extension. The accelerometer data represents the acceleration in each axis, while the gyroscope data represents the rotation around each axis.
+Two types of data is received: accelerometer data from the Wii Remote and gyroscope data from the MotionPlus extension. The accelerometer data represents the acceleration in each axis, while the gyroscope data represents the rotation around each axis.
 
-There are several algorithms that can be used to calculate the orientation of the Wii Remote. Based on general popularity, and a paper by Tryggestad \cite{Tryggestad} which uses Wii Remote sensor data, we decided to use the Madgwick altitude and heading reference system algorithm (AHRS) \cite{madgwick}. The Madgwick AHRS algorithm uses accelerometer and gyroscope data provided by the sensors to calculate and update the orientation, represented as a quaternion. Maltitude and heading reference system algorithmagnetometer data can also be utilized to increase the accuracy of the rotation around the z-axis (yaw).
+There are several algorithms that can be used to calculate the orientation of the Wii Remote. Based on general popularity, and a paper by Tryggestad \cite{Tryggestad} which uses Wii Remote sensor data, we decided to use the Madgwick altitude and heading reference system algorithm (AHRS) \cite{madgwick}. The Madgwick AHRS algorithm uses accelerometer and gyroscope data provided by the sensors to calculate and update the orientation, represented as a quaternion. Magnetometer data can also be utilized to increase the accuracy of the orientation around the z-axis.
 
 Our implementation of the Madgwick AHRS algorithm can be found in appendix~\ref{app:madgwickImplementation}. The implementation was based on a C\# implementation that is available on the x-io Techonologies Limited website \cite{opensourceMadgwick}. 
 
-Quaternions extends the complex numbers, and is therefore hard to explain without using advanced mathematics, which is beyond the scope of this paper. Instead we will focus on describing the input and output of the Madgwick algorithm without going into the calculations. Figure~\ref{orientationProcess} shows how we use the algorithm to calculate the orientation of the Wii Remote. 
+Quaternions extends the complex numbers, and is therefore hard to explain without using advanced mathematics, which is beyond the scope of this paper. Instead we will focus on describing the input and output of the Madgwick algorithm without going into the calculations. Figure~\ref{fig:orientationProcess} shows how we use the algorithm to calculate the orientation of the Wii Remote. 
 
-The two arrows on the top of the box represents the two initial values that need to be provided for the algorithm to function. Sample period is the time between input values. The Wii Remote sends 100 data reports each second and the sample period is therefore 1/100. Filter gain beta is used to predict the error rate of the gyroscope data to minimize it. The filter gain beta is a constant between 0 and 0.5. In our application we have set this value to 0.5, since the gyroscope data is not very accurate.
+The two arrows on the top of the box represents two initial values that need be provided before using the algorithm. \emph{Sample period} is the time between input values. The Wii Remote sends 100 data reports each second and the sample period is therefore 1/100. \emph{Filter gain beta} is used to predict the error rate of the gyroscope data to minimize it. The filter gain beta is a constant between 0 and 0.5. In our application we have set this value to 0.5, since the gyroscope data is not very accurate.
 
-The arrows to the left describe the three types of sensor data that can be used to calculate the updated orientation. In our project magnetometer data is not used. The box represents the calculations that are done using the input values (accelerometer and gyroscope data in our case). The arrow to the right represents the output of the algorithm. The output is in the form of a quaternion representing the orientation.
+The arrows to the left describe the three types of sensor data that can be used to calculate the updated orientation. In our project, magnetometer data is not used because the Wii Remote does not contain this sensor. The box represents the calculations that are done using the input values (accelerometer and gyroscope data in our case). The arrow to the right represents the output of the algorithm. The output is in the form of a quaternion representing the orientation.
 
 \begin{figure}[h!]
   \centering
@@ -177,7 +177,7 @@ The arrows to the left describe the three types of sensor data that can be used 
     \label{fig:orientationProcess}
 \end{figure}
 
-Since quaternions are hard to understand, we convert the output from Madgwick algorithm into Euler angles. After the conversion we get three values: pitch roll and yaw. Pitch, roll and yaw defines the rotation around the x-, y- and z-axis respectively (see figure~\ref{fig:wiiAxis}. It should be noted that the conversion formulas in Madgwick’s paper \cite{madgwick} are incorrect. For the correct formulas for conversion see appendix~\cite{app:eulerConversion}
+Since quaternions are hard to understand, we convert the output from the Madgwick algorithm into Euler angles. After the conversion we get three values: pitch, roll and yaw. Pitch, roll and yaw defines the rotation around the x-, y- and z-axis respectively (see figure~\ref{fig:wiiAxis}). It should be noted that the conversion formulas in Madgwick’s paper \cite{madgwick} are incorrect. For the correct formulas for conversion see appendix~\ref{app:eulerConversion}
 
 \begin{figure}[h!]
   \centering
