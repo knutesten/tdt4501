@@ -1,7 +1,9 @@
 \chapter{Final thoughts}
-
+In the first part of this chapter we discuss our findings and address threats to validity. Secondly, we draw conclusions about our results in respect to the research questions. Finally, we identify further work that needs to be done in order to create a functioning mobile biofeedback system.
 
 \section{Discussion}
+In this section we will discuss our findings in relation to the research questions. Threats to validity are also identified and reflected upon.
+
 \subsection{RQ1 - Software Architecture}
 Modifiability was one of the main focuses when designing the software architecture. Event-driven architecture was used to to achieve loose coupling between the different components. This gives us the option to replace the Wii Remote with other types of sensors without major changes to the rest of the code. A handler class for the Wii Remote was added to make it easier to implement support for multiple Wii Remotes at a later date. This class also helps separate the Wii Remote components from the rest of the system. 
 
